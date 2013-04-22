@@ -23,7 +23,7 @@
 
     require_once($CFG->dirroot.'/enrol/locallib.php');
     
-    $course_context = get_context_instance(CONTEXT_COURSE, $COURSE->id);
+    $course_context = context_course::instance($COURSE->id);
     $course = $DB->get_record('course', array('id'=>$COURSE->id), '*', MUST_EXIST);
     $manager = new course_enrolment_manager($PAGE,$course);
     $courseusers = $manager->get_users('lastname','ASC',0,250);
@@ -36,9 +36,9 @@
     $table->head = array("<b>$struser</b>", "<b>$strdeckstates</b>", "<b>$strcounts</b>");
     $table->size = array('30%', '50%', '20%');
     $table->width = '90%';
-    
-    echo $out;
-    
+ 
+	echo $out;
+   
     if (!empty($courseusers)){
         foreach($courseusers as $auser){
             $status = flashcard_get_deck_status($flashcard, $auser->id);

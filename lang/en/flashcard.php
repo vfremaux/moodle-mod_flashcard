@@ -8,6 +8,11 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+// Capabilities
+$string['flashback:manage'] = 'Manage the cards';
+$string['flashcard:canplayfree'] = 'Play free';
+$string['flashback:addinstance'] = 'Add a flashcard';
+
 $string['addone'] = 'Add a new question';
 $string['addthree'] = 'Add three new questions';
 $string['answer'] = 'Answers';
@@ -28,7 +33,7 @@ $string['cardsread'] = 'Card(s) read: ';
 $string['commands'] = '';
 $string['confirm'] = 'Confirm:';
 $string['counters'] = 'Counters';
-$string['customisation'] = 'To customize this instance of flashcard, get the stylesheet beneath, <br/>edit it and save it within the <a href=\"{$a}\">moddata/flashcard</a>/&lt;<i>instance</i>&gt; directory in the course\'s files.<br/> If you use images as background, save them in the same place, and invoke them with their simple names';
+$string['customisation'] = 'To customize this instance of flashcard, get the stylesheet beneath, <br/>edit it and save it within the <a href="{$a}">moddata/flashcard</a>/&lt;<i>instance</i>&gt; directory in the course\'s files.<br/> If you use images as background, save them in the same place, and invoke them with their simple names';
 $string['deck'] = 'Deck';
 $string['deck1_delay'] = 'Review triggering delay (deck 1)';
 $string['deck2_delay'] = 'Review triggering delay (deck 2)';
@@ -50,9 +55,6 @@ $string['editingcards2'] = 'Edit Flashcard Set';
 $string['emptyset'] = 'Flashcard Set is Empty';
 $string['endtime'] = 'End of time';
 $string['fieldsep'] = 'Field separator:';
-$string['flashback:manage'] = 'Manage the cards';
-$string['flashcard:canplayfree'] = 'Jouer en mode libre';
-$string['flashcard:manage'] = 'Gérer les jeux';
 $string['flipdeck'] = 'Flip answers and questions';
 $string['forcereload'] = 'Force reloading from question';
 $string['freegame'] = 'Free play';

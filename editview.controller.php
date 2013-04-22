@@ -90,7 +90,6 @@ if ($action == 'save') {
 }
 /* * ****************************** Prepare import **************************** */
 if ($action == 'import') {
-    echo $out;
     include 'import_form.php';
     $mform = new flashcard_import_form($flashcard->id);
     echo $OUTPUT->heading(get_string('importingcards', 'flashcard') . $OUTPUT->help_icon('import', 'flashcard'));

@@ -13,7 +13,11 @@
 if (!defined('MOODLE_INTERNAL')) {
     die('Direct access to this script is forbidden.'); /// It must be included from a Moodle page.
 }
+
+/// Print deferred header
+
 echo $out;
+
 /// get available decks for user and calculate deck state
 
 if (!$decks = flashcard_get_deck_status($flashcard)) {
@@ -92,7 +96,7 @@ if (!$decks = flashcard_get_deck_status($flashcard)) {
             </td>
             <?php
             if ($flashcard->decks >= 3) {
-                ?>
+            ?>
                 <td>
                     <?php
                     print_string('cardsindeck', 'flashcard', $decks->decks[2]->count);

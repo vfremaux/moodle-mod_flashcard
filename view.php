@@ -59,18 +59,10 @@
 
     $strflashcards = get_string('modulenameplural', 'flashcard');
     $strflashcard  = get_string('modulename', 'flashcard');
-    $navlinks[] = array('name' => $strflashcards, 'link' => "index.php?id={$course->id}", 'type' => 'url');
-    $navlinks[] = array('name' => $flashcard->name, 'link' => '', 'type' => 'title');
-    $navigation = build_navigation($navlinks);
-    $out = print_header( "$course->shortname: $flashcard->name", 
-                  "$course->fullname",
-                  $navigation, 
-                  '', 
-                  '', 
-                  true, 
-                  update_module_button($cm->id, $course->id, $strflashcard), 
-                  navmenu($course, $cm), false, '', true);
-
+    $PAGE->navbar->add($strflashcards, $CFG->wwwroot."index.php?id={$course->id}");
+    $PAGE->navbar->add($flashcard->name);
+    $PAGE->set_context($context);
+    $out = $OUTPUT->header();
     
 /// non visible trap for timerange (security)
     if (!has_capability('moodle/course:viewhiddenactivities', $context) && !$cm->visible){

@@ -16,8 +16,6 @@ if (!defined('MOODLE_INTERNAL')) {
     die('Direct access to this script is forbidden.'); /// It must be included from a Moodle page.
 }
 
-echo $out;
-
 // we need it in controller
 $deck = required_param('deck', PARAM_INT);
 
@@ -54,6 +52,10 @@ if ($cards = $DB->get_records_select('flashcard_card', $select, $params)) {
     notice(get_string('nomorecards', 'flashcard'), $thisurl . "?view=checkdecks&amp;id={$cm->id}");
     redirect($thisurl . "?view=checkdecks&amp;id={$cm->id}");
 }
+
+/// Print deferred header
+
+echo $out;
 
 /// randomize and get a question (obviously it is not a consumed question).
 

@@ -1,11 +1,5 @@
 <?php
 
-/* @var $DB mysqli_native_moodle_database */
-/* @var $OUTPUT core_renderer */
-/* @var $PAGE moodle_page */
-?>
-<?php
-
 /**
  * This view provides a way for editing questions
  * 
@@ -15,10 +9,11 @@
  * @contributors Valery Fremaux
  * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
  */
+
 /* @var $OUTPUT core_renderer */
 
 if (!defined('MOODLE_INTERNAL')) {
-    error("Illegal direct access to this screen");
+    die("Illegal direct access to this screen");
 }
 
 require_once('cardsedit_form.php');
@@ -88,7 +83,11 @@ if ($fromform && isset($fromform->addmore)) {
 } else {
     $pagedata = flashcard_get_page($flashcard, $page);
 }
+
+/// Print deferred header
+
 echo $out;
+
 $toform = new object();
 $toform->question = $pagedata->question;
 $toform->answer = $pagedata->answer;

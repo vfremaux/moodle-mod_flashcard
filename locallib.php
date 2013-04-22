@@ -1,11 +1,5 @@
 <?php
 
-/* @var $DB mysqli_native_moodle_database */
-/* @var $OUTPUT core_renderer */
-/* @var $PAGE moodle_page */
-?>
-<?php
-
 /**
  * internal library of functions and constants for module flashcard
  * @package mod-flashcard

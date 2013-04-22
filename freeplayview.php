@@ -9,9 +9,13 @@
  */
 // Security
 if (!defined('MOODLE_INTERNAL')) {
-    error("Illegal direct access to this screen");
+    die("Illegal direct access to this screen");
 }
+
+/// Print deferred header
+
 echo $out;
+
 $subquestions = $DB->get_records('flashcard_deckdata', array('flashcardid' => $flashcard->id));
 if (empty($subquestions)) {
     notice(get_string('nosubquestions', 'flashcard'));

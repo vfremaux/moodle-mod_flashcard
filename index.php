@@ -17,8 +17,9 @@
     $id = required_param('id', PARAM_INT);   // course
 
     if (! $course = $DB->get_record('course', array('id' => $id))) {
-        error("Course ID is incorrect");
+        print_error("coursemisconf");
     }
+    $context = context_course::instance($course->id);
 
     require_login($course->id);
 
@@ -32,17 +33,18 @@
 
 /// Print the header
 
-    $navlinks[] = array('name' => $strflashcards,
-                        'url' => '',
-                        'type' => 'title');
-    $navigation = build_navigation($navlinks);
-
-    print_header("$course->shortname: $strflashcards", "$course->fullname", $navigation, '', '', true, '', navmenu($course));
+	$PAGE->set_url($CFG->wwwroot.'/mod/flashcard/index.php?id='.$course->id);
+	$PAGE->set_context($context);
+	$PAGE->set_pagelayout('incourse');
+	$PAGE->navbar->add($strflashcards);
+	$PAGE->set_heading(format_string($course->fullname));
+	$PAGE->set_title(get_string('modulename', 'feedback').' '.get_string('activities'));
+	echo $OUTPUT->header();
 
 /// Get all the appropriate data
 
     if (! $flashcards = get_all_instances_in_course('flashcard', $course)) {
-        notice(get_string('noflashcards', 'flashcard'), "../../course/view.php?id=$course->id");
+        $OUTPUT->notification(get_string('noflashcards', 'flashcard'), "../../course/view.php?id=$course->id");
         die;
     }
 
@@ -52,6 +54,8 @@
     $strname  = get_string('name');
     $strweek  = get_string('week');
     $strtopic  = get_string('topic');
+    
+    $table = new html_table();
 
     if ($course->format == 'weeks') {
         $table->head  = array ($strweek, $strname);
@@ -82,10 +86,8 @@
 
     echo '<br/>';
 
-    print_table($table);
+    echo html_writer::table($table);
 
 /// Finish the page
 
-    print_footer($course);
-
-?>
+    echo $OUTPUT->footer($course);
