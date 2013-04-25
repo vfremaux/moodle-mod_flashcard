@@ -1,0 +1,54 @@
+
+.finished { 
+    background-image: url('pix/finished.jpg'); 
+    height: 201px; 
+    width: 307px 
+}
+
+.emptyset { 
+    color: red; 
+}
+
+.graphdeck{
+     background-image: url('pix/cardslice.png');
+     background-repeat: repeat-y;
+} 
+
+.error{
+    color: red; 
+}
+
+.bar{
+    background-image: url('pix/men.png');
+    background-repeat: repeat-x;
+    border: solid 1px #0B2386;
+}
+
+.flashcard_playbutton{
+    display: inline-block;
+    padding: 10px;
+}
+
+.flashcard-question{
+	border-style: dashed; 
+	margin: 10px auto 10px auto; 
+	padding: 10px 30px; 
+}
+
+.flashcard-answer{
+	border-style: dashed; 
+	margin: 10px auto 10px auto; 
+	padding: 10px 30px; 
+}
+
+.flashcard-question.backside-default { 
+    background-image: url('pix/front.jpg'); 
+	width: 300px; 
+	height: 200px; 
+}
+
+.flashcard-answer.frontside-default { 
+    background-image: url('pix/back.jpg'); 
+	width: 300px; 
+	height: 200px; 
+}
