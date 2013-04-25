@@ -1,4 +1,4 @@
-<?PHP // $Id: flashcard.php,v 1.6 2009/05/27 21:06:37 diml Exp $ 
+<?PHP // $Id: flashcard.php,v 1.1 2012-11-18 12:24:16 vf Exp $ 
       // matching.php - created with Moodle 1.9 development
 
 // Capabilities
@@ -10,6 +10,7 @@ $string['addone'] = 'Ajouter une question';
 $string['addthree'] = 'Ajouter trois questions';
 $string['answer'] = 'Réponses';
 $string['answersmediatype'] = 'Type de média des réponses ';
+$string['audiostart'] = 'Démarre les sons automatiquement';
 $string['autodowngrade'] = 'Activer l\'érosion des jeux ';
 $string['avgaccess'] = 'Accès moyen par carte ';
 $string['backside'] = 'Arrière du jeu de cartes';
@@ -76,7 +77,7 @@ $string['next'] = 'Carte suivante';
 $string['nocards'] = 'Pas de cartes dans le flashcard.';
 $string['nomorecards'] = 'Plus de cartes dans ce jeu.';
 $string['notinitialized'] = 'Cet étudiant n\'a jamais utilisé ce flashcard.';
-$string['noflashcards'] = 'Aucune activité du type \"cartes flash\" dans ce cours.';
+$string['noflashcards'] = 'Aucune activité du type "cartes flash" dans ce cours.';
 $string['nousers'] = 'Aucun étudiant dans ce cours.';
 $string['num'] = 'N°';
 $string['outoftimerange'] = 'Ce module est soumis à une temporisation. Vous ne pouvez pas l\'utiliser maintenant.';
@@ -99,6 +100,7 @@ $string['text'] = 'texte';
 $string['timetoreview'] = 'Il reste {$a} jours avant la révision';
 $string['trivialcards'] = 'Cartes évidentes';
 $string['undefinedquestionset'] = 'Aucun jeu de questions n\'a été défini pour ce jeu flash';
+$string['userdecks'] = 'Paquets des utilisateurs';
 $string['userdecks'] = 'Paquets des utilisateurs';
 $string['viewed'] = 'Affichages';
 

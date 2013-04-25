@@ -18,7 +18,7 @@
 /* @var $OUTPUT core_renderer */
 
 if (!defined('MOODLE_INTERNAL')) {
-    error("Illegal direct access to this screen");
+    die("Illegal direct access to this screen");
 }
 
 /* * ****************************** Add new blank fields **************************** */
@@ -28,7 +28,7 @@ if ($action == 'add') {
     $users = $DB->get_records_menu('flashcard_card', array('flashcardid' => $flashcard->id), '', 'DISTINCT userid, id');
     for ($i = 0; $i < $add; $i++) {
         if (!$newcardid = $DB->insert_record('flashcard_deckdata', $card)) {
-            error("Could not add card to deck");
+            print_error('erroraddcard', 'flashcard');
         }
         if ($users) {
             foreach (array_keys($users) as $userid) {
@@ -39,52 +39,155 @@ if ($action == 'add') {
                 $deckcard->deck = 1;
                 $deckcard->accesscount = 0;
                 if (!$DB->insert_record('flashcard_card', $deckcard)) {
-                    error("Could not bind card to user $userid deck");
+                    print_error('errorbindcard', 'flashcard', '', $userid);
                 }
             }
         }
     }
 }
 /* * ****************************** Delete a set of records **************************** */
-if ($action == 'delete') {
-    $items = required_param('items', PARAM_INT);
-    if (is_array($items)) $items = implode(',', $items);
-    $items = str_replace(",", "','", $items);
-
-    if (!$DB->delete_records_select('flashcard_deckdata', " id IN ('$items') ")) {
-        error("Could not add card to deck");
-    }
-
-    if (!$DB->delete_records_select('flashcard_card', " entryid IN ('$items') ")) {
-        error("Could not add card to deck");
-    }
+if (isset($data->deletesel)){
+	$keys = array_keys((array)$data);
+	$keyeditems = preg_grep('/^items_/', $keys);
+	foreach($keyeditem as $it){
+		if ($data->$it){
+			$items[] = str_replace('items_', '', $it);
+		}
+	}
+	$action = 'delete';
 }
-/* * ****************************** Save and update all questions **************************** */
-if ($action == 'save') {
-    $keys = array_keys($_POST);    // get the key value of all the fields submitted
+
+if ($action == 'delete') {
+	if (!isset($items))
+    	$items = required_param_array('items', PARAM_INT);
+    
+    foreach($items as $item){
+    
+    	$card = $DB->get_record('flashcard_deckdata', array('id' => $item));
+
+    	flashcard_delete_attached_files($card);
+    	
+	    if (!$DB->delete_records('flashcard_deckdata', array('id' => $item))) {
+	        print_error('errordeletecard', 'flashcard');
+	    }
+
+	    if (!$DB->delete_records_select('flashcard_card', array('entryid' => $item))) {
+	        print_error('errordeletecard', 'flashcard');
+	    }
+	}
+}
+/* ******************************* Save and update all questions **************************** */
+if (($action == 'update') && $data) {
+		
+    $keys = array_keys((array)$data);    // get the key value of all the fields submitted
+
     $qkeys = preg_grep('/^q/', $keys);   // filter out only the status
     $akeys = preg_grep('/^a/', $keys);   // filter out only the assigned updating
+    
+    $usercontext = context_user::instance($USER->id);
+    
+    foreach ($qkeys as $qkey) {
+    	
+    	if (strstr('qs', $qkey) === 0) continue; // avoid processing 'qs' entries twice. Processed with 'qi'
 
-    foreach ($qkeys as $akey) {
-        preg_match("/[qi](\d+)/", $akey, $matches);
-        $card->id = $matches[1];
-        $card->flashcardid = $flashcard->id;
-        if ($flashcard->questionsmediatype != FLASHCARD_MEDIA_IMAGE_AND_SOUND) {
-            $card->questiontext = required_param("q{$card->id}", PARAM_CLEAN);
+		// for new cards : get a new record, insert it and use it for udate    	
+    	if (preg_match('/qi?_new_/', $qkey)){
+    		$card = new StdClass;
+    		$card->flashcardid = $flashcard->id;
+    		$card->questiontext = '';
+    		$card->answertext = '';
+    		$card->id = $DB->insert_record('flashcard_deckdata', $card);
+    	} else {
+	        preg_match("/[qi](\d+)/", $qkey, $matches);
+	        $card->id = $matches[1];
+	        $card->flashcardid = $flashcard->id;
+	    }
+        if ($flashcard->questionsmediatype == FLASHCARD_MEDIA_TEXT) {
+            $card->questiontext = required_param($qkey, PARAM_CLEANHTML);
+        } else{
+    		$fs = get_file_storage();
+
+        	if ($flashcard->questionsmediatype == FLASHCARD_MEDIA_IMAGE) {
+	            $filepickeritemid = required_param($qkey, PARAM_INT);
+	            $card->questiontext = '';
+				if (!$fs->is_area_empty($usercontext->id, 'user', 'draft', $filepickeritemid, true)){
+					file_save_draft_area_files($filepickeritemid, $context->id, 'mod_flashcard', 'questionimagefile', $card->id);
+					$savedfiles = $fs->get_area_files($context->id, 'mod_flashcard', 'questionimagefile', $card->id);
+					$savedfile = array_pop($savedfiles);
+		        	$card->questiontext = $savedfile->id;
+				}
+	        } elseif ($flashcard->questionsmediatype == FLASHCARD_MEDIA_SOUND) {
+	            $filepickeritemid = required_param($qkey, PARAM_INT);
+	            $card->questiontext = '';
+				if (!$fs->is_area_empty($usercontext->id, 'user', 'draft', $filepickeritemid, true)){
+					file_save_draft_area_files($filepickeritemid, $context->id, 'mod_flashcard', 'questionsoundfile', $card->id);
+					$savedfiles = $fs->get_area_files($context->id, 'mod_flashcard', 'questionsoundfile', $card->id);
+					$savedfile = array_pop($savedfiles);
+		        	$card->questiontext = $savedfile->get_id();
+		        }
+	        } elseif ($flashcard->questionsmediatype == FLASHCARD_MEDIA_VIDEO) {
+	            $filepickeritemid = required_param($qkey, PARAM_INT);
+	            $card->questiontext = '';
+				if (!$fs->is_area_empty($usercontext->id, 'user', 'draft', $filepickeritemid, true)){
+					file_save_draft_area_files($filepickeritemid, $context->id, 'mod_flashcard', 'questionvideofile', $card->id);
+					$savedfiles = $fs->get_area_files($context->id, 'mod_flashcard', 'questionvideofile', $card->id);
+					$savedfile = array_pop($savedfiles);
+		        	$card->questiontext = $savedfile->get_id();
+		        }
+	        } else {
+	            // combine image and sound in one single field
+	            $filepickeritemid = required_param($qkey, PARAM_INT);
+	            $imagesavedid = '';
+				if (!$fs->is_area_empty($usercontext->id, 'user', 'draft', $filepickeritemid, true)){
+					file_save_draft_area_files($filepickeritemid, $context->id, 'mod_flashcard', 'questionimagefile', $card->id);
+					$imagesavedfiles = $fs->get_area_files($context->id, 'mod_flashcard', 'questionimagefile', $card->id);
+					$imagesavedfile = array_pop($imagesavedfiles);
+					$imagesavedid = $imagesavedfile->get_id();
+				}
+	            $soundsavedid = '';
+	            $filepickeritemid = required_param(preg_replace('/^qi/', 'qs', $qkey), PARAM_INT);
+				if (!$fs->is_area_empty($usercontext->id, 'user', 'draft', $filepickeritemid, true)){
+					file_save_draft_area_files($filepickeritemid, $context->id, 'mod_flashcard', 'questionsoundfile', $card->id);
+					$soundsavedfiles = $fs->get_area_files($context->id, 'mod_flashcard', 'questionimagefile', $card->id);
+					$soundsavedfile = array_pop($soundsavedfiles);
+					$soundsavedid = $soundsavedfile->get_id();
+				}
+	        	$card->questiontext = $imagesavedid.'@'.$soundsavedid;
+	        }
+	    }
+	    
+	    $akey = preg_replace('/^q/', 'a', $qkey);
+
+		// get answer side related files
+		if ($flashcard->answersmediatype == FLASHCARD_MEDIA_TEXT) {
+            $card->answertext = required_param($akey, PARAM_CLEANHTML);
+        } elseif ($flashcard->answersmediatype == FLASHCARD_MEDIA_IMAGE) {
+            $filepickeritemid = required_param($akey, PARAM_INT);
+			file_save_draft_area_files($filepickeritemid, $context->id, 'mod_flashcard', 'answerimagefile', $card->id);
+			$savedfile = $fs->get_file($context->id, 'mod_flashcard', 'answerimagefile', $card->id);
+        	$card->answertext = $savedfile->id;
+        } elseif ($flashcard->answersmediatype == FLASHCARD_MEDIA_SOUND) {
+            $filepickeritemid = required_param($akey, PARAM_INT);
+			file_save_draft_area_files($filepickeritemid, $context->id, 'mod_flashcard', 'answersoundfile', $card->id);
+			$savedfile = $fs->get_file($context->id, 'mod_flashcard', 'answersoundfile', $card->id);
+        	$card->answertext = $savedfile->id;
+        } elseif ($flashcard->answersmediatype == FLASHCARD_MEDIA_VIDEO) {
+            $filepickeritemid = required_param($akey, PARAM_INT);
+			file_save_draft_area_files($filepickeritemid, $context->id, 'mod_flashcard', 'answervideofile', $card->id);
+			$savedfile = $fs->get_file($context->id, 'mod_flashcard', 'answervideofile', $card->id);
+        	$card->answertext = $savedfile->id;
         } else {
             // combine image and sound in one single field
-            $card->questiontext = required_param("i{$card->id}", PARAM_CLEAN) . '@' . required_param("s{$card->id}",
-                            PARAM_CLEAN);
-        }
-        if ($flashcard->answersmediatype != FLASHCARD_MEDIA_IMAGE_AND_SOUND) {
-            $card->answertext = required_param("a{$card->id}", PARAM_CLEAN);
-        } else {
-            // combine image and sound in one single field
-            $card->answertext = required_param("i{$card->id}", PARAM_CLEAN) . '@' . required_param("s{$card->id}",
-                            PARAM_CLEAN);
+            $filepickeritemid = required_param($akey, PARAM_CLEANHTML);
+			file_save_draft_area_files($filepickeritemid, $context->id, 'mod_flashcard', 'answerimagefile', $card->id);
+			$imagesavedfile = $fs->get_file($context->id, 'mod_flashcard', 'answerimagefile', $card->id);
+            $filepickeritemid = required_param(preg_replace('/^ai/', 'as', $akey), PARAM_CLEANHTML);
+			file_save_draft_area_files($filepickeritemid, $context->id, 'mod_flashcard', 'answersoundfile', $card->id);
+			$soundsavedfile = $fs->get_file($context->id, 'mod_flashcard', 'answersoundfile', $card->id);
+        	$card->answertext = $imagesavedfile->id.'@'.$soundsavedfile->id;
         }
         if (!$DB->update_record('flashcard_deckdata', $card)) {
-            error("Could not update deck card");
+            print_error('errorupdatecard', 'flashcard');
         }
     }
 }
@@ -174,7 +277,7 @@ if ($action == 'doimport') {
                 }
 
                 echo "<center>";
-                $OUTPUT->box($reportstr, 'reportbox');
+                echo $OUTPUT->box($reportstr, 'reportbox');
                 echo "</center>";
             }
         }

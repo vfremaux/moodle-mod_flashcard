@@ -13,7 +13,7 @@
 
     // security
     if (!defined('MOODLE_INTERNAL')){
-        print_error("Illegal direct access to this screen");
+        die("Illegal direct access to this screen");
     }
 
     if ($action == 'reset'){
@@ -26,7 +26,7 @@
     $course_context = context_course::instance($COURSE->id);
     $course = $DB->get_record('course', array('id'=>$COURSE->id), '*', MUST_EXIST);
     $manager = new course_enrolment_manager($PAGE,$course);
-    $courseusers = $manager->get_users('lastname','ASC',0,250);
+    $courseusers = $manager->get_users('lastseen');
 
     $struser = get_string('username');
     $strdeckstates = get_string('deckstates', 'flashcard');
@@ -36,9 +36,7 @@
     $table->head = array("<b>$struser</b>", "<b>$strdeckstates</b>", "<b>$strcounts</b>");
     $table->size = array('30%', '50%', '20%');
     $table->width = '90%';
- 
-	echo $out;
-   
+    
     if (!empty($courseusers)){
         foreach($courseusers as $auser){
             $status = flashcard_get_deck_status($flashcard, $auser->id);
@@ -57,7 +55,7 @@
         echo html_writer::table($table);
     } else {
         echo '<center>';
-        $OUTPUT->box(get_string('nousers', 'flashcard'));
+        echo $OUTPUT->box(get_string('nousers', 'flashcard'));
         echo '</center>';
     }
 

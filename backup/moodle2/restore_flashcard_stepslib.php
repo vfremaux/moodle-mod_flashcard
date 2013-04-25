@@ -32,6 +32,8 @@ class restore_flashcard_activity_structure_step extends restore_activity_structu
         $data->timemodified = $this->apply_date_offset($data->timemodified);
         $data->starttime = $this->apply_date_offset($data->starttime);
         $data->endtime = $this->apply_date_offset($data->endtime);
+
+        if (!isset($data->audiostart)) = $data->audiostart = 0;
         
         $newid = $DB->insert_record('flashcard', $data);
         $this->apply_activity_instance($newid);

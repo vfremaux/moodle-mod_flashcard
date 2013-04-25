@@ -17,6 +17,7 @@ $string['addone'] = 'Add a new question';
 $string['addthree'] = 'Add three new questions';
 $string['answer'] = 'Answers';
 $string['answersmediatype'] = 'Media type for answers';
+$string['audiostart'] = 'Start sounds automatically';
 $string['autodowngrade'] = 'Enable autodowngrade';
 $string['avgaccess'] = 'Mean ticks per card ';
 $string['backside'] = 'Flash Card Back';
@@ -32,8 +33,21 @@ $string['cardsremaining'] = 'Cards Remaining';
 $string['cardsread'] = 'Card(s) read: ';
 $string['commands'] = '';
 $string['confirm'] = 'Confirm:';
+$string['completionallviewed'] = 'Student must have viewed all cards once:';
+$string['completionallviewedgroup'] = 'Require viewing all cards';
+$string['completiondiscussionshelp'] = 'requiring that all cards are viewed at least once';
+$string['completionallgood'] = 'Student bring all cards in last deck:';
+$string['completionallgoodgroup'] = 'Require all cards are known';
+$string['completionallgoodhelp'] = 'requiring all cards are in last deck to complete';
+$string['customisationfiles'] = 'Card customisation files';
+$string['cardfront'] = 'Front card image';
+$string['cardback'] = 'Back card image';
+$string['emptydeck'] = 'Empty deck image';
+$string['reviewback'] = 'Needs review deck image';
+$string['reviewedback'] = 'Reviewed deck image';
+$string['reviewedempty'] = 'Empty reviewed deck image';
 $string['counters'] = 'Counters';
-$string['customisation'] = 'To customize this instance of flashcard, get the stylesheet beneath, <br/>edit it and save it within the <a href="{$a}">moddata/flashcard</a>/&lt;<i>instance</i>&gt; directory in the course\'s files.<br/> If you use images as background, save them in the same place, and invoke them with their simple names';
+// $string['customisation'] = 'To customize this instance of flashcard, get the stylesheet beneath, <br/>edit it and save it within the <a href="{$a}">moddata/flashcard</a>/&lt;<i>instance</i>&gt; directory in the course\'s files.<br/> If you use images as background, save them in the same place, and invoke them with their simple names';
 $string['deck'] = 'Deck';
 $string['deck1_delay'] = 'Review triggering delay (deck 1)';
 $string['deck2_delay'] = 'Review triggering delay (deck 2)';
@@ -52,6 +66,10 @@ $string['easycards'] = 'Easy set';
 $string['edit'] = 'Edit the cards';
 $string['editingcards1'] = 'Edit Flashcard Set';
 $string['editingcards2'] = 'Edit Flashcard Set';
+$string['erroraddcard'] = 'Could not add card to deck';
+$string['errorbindcard'] = 'Could not bind card to user {$a} deck';
+$string['errorupdatecard'] = 'Could not update deck card';
+$string['errordeletecard'] = 'Could not delete cards from deck';
 $string['emptyset'] = 'Flashcard Set is Empty';
 $string['endtime'] = 'End of time';
 $string['fieldsep'] = 'Field separator:';
@@ -163,12 +181,12 @@ Typically, the Leitner system uses 3 decks. 4 decks will enlarge the memorizatio
 $string['autodowngrade_help'] = 'This option enables automatic downgrade of cards. A game is eroded if the learner does not review the game for some time (see times below). Cards that are too old back in the packets more difficult to return the first packet. The erosion rate depends on the setting of various delays for each packet.';
 $string['deck_release_help'] = 'Time in hours after which the cards go back into the upper deck. Each packet can be set differently.';
 $string['deck_delay_help'] = 'Adjustable time in hours at which the packet is marked to be revised.';
-$string['import_help'] = "You may massively import question/Answer pairs within a flashcard using the
+$string['import_help'] = 'You may massively import question/Answer pairs within a flashcard using the
 card bulk import feature.
 
-You just need to make a file with a list of questions/answers pairs and paste the content of that file in the importer's textarea.
+You just need to make a file with a list of questions/answers pairs and paste the content of that file in the importer\'s textarea.
 You may decide to encode this file with some kinds of common separators, on Linux or
-Windows systems. The most common may be \"one pair by line\" files, using ':' or comma to
+Windows systems. The most common may be "one pair by line" files, using \':\' or comma to
 separate questions from answers.
 
 Questions will only comme first, and MUST always have an answer. Empty lines or black lines will be ignored, also those starting with a # or a slash (/).
@@ -176,4 +194,4 @@ Questions will only comme first, and MUST always have an answer. Empty lines or 
 The importer will make a fast check of the text you want to import. It will reject
 the import if the text sequence is not well formed and tell you how many pairs are wrong in the file.
 
-As successfuly importing will erase all data from the decks but also belonging to participants, a confirmation checkbox needs to be checked in to force the import to be performed.";
+As successfuly importing will erase all data from the decks but also belonging to participants, a confirmation checkbox needs to be checked in to force the import to be performed.';

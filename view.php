@@ -17,11 +17,15 @@
     require_once('../../config.php');
     require_once($CFG->dirroot.'/mod/flashcard/lib.php');
     require_once($CFG->dirroot.'/mod/flashcard/locallib.php');
+    require_once($CFG->dirroot.'/mod/flashcard/renderers.php');
+
+    $PAGE->requires->js('/mod/flashcard/js/ufo.js', true);
+    $PAGE->requires->js('/mod/flashcard/js/module.js', true);
 
     $id = optional_param('id', '', PARAM_INT);    // Course Module ID, or
-    $a = optional_param('a', '', PARAM_INT);     // flashcard ID
+    $f = optional_param('f', '', PARAM_INT);     // flashcard ID
     $view = optional_param('view', 'checkdecks', PARAM_ACTION);     // view
-    $subview = optional_param('subview', '', PARAM_ACTION);     // subview
+    $page = optional_param('page', '', PARAM_ACTION);     // page
     $action = optional_param('what', '', PARAM_ACTION);     // command
     
     $thisurl = $CFG->wwwroot.'/mod/flashcard/view.php';
@@ -39,7 +43,7 @@
             print_error('errorinvalidflashcardid', 'flashcard');
         }
     } else {
-        if (! $flashcard = $DB->get_record('flashcard', array('id' => $a))) {
+        if (! $flashcard = $DB->get_record('flashcard', array('id' => $f))) {
             print_error('invalidcoursemodule');
         }
         if (! $course = $DB->get_record('course', array('id' => $flashcard->course))) {
@@ -51,7 +55,7 @@
     }
 
     require_login($course->id);
-    $context = get_context_instance(CONTEXT_MODULE, $cm->id);
+    $context = context_module::instance($cm->id);
 
     add_to_log($course->id, 'flashcard', 'view', $thisurl."?id={$cm->id}", "{$flashcard->name}");
 
@@ -59,14 +63,22 @@
 
     $strflashcards = get_string('modulenameplural', 'flashcard');
     $strflashcard  = get_string('modulename', 'flashcard');
-    $PAGE->navbar->add($strflashcards, $CFG->wwwroot."index.php?id={$course->id}");
+    $PAGE->set_title("$course->shortname: $flashcard->name");
+    $PAGE->set_heading("$course->fullname");
+    /* SCANMSG: may be additional work required for $navigation variable */
+    $PAGE->navbar->add($strflashcards, $CFG->wwwroot."/mod/flashcard/index.php?id=".$course->id);
     $PAGE->navbar->add($flashcard->name);
-    $PAGE->set_context($context);
+    $PAGE->set_focuscontrol('');
+    $PAGE->set_cacheable(true);
+    $PAGE->set_headingmenu(navmenu($course, $cm));
     $out = $OUTPUT->header();
-    
+
 /// non visible trap for timerange (security)
     if (!has_capability('moodle/course:viewhiddenactivities', $context) && !$cm->visible){
-        notice(get_string('activityiscurrentlyhidden'));
+    	echo $out;
+        echo $OUTPUT->notification(get_string('activityiscurrentlyhidden'));
+        echo $OUTPUT->footer();
+        die;
     }
 
 /// non manager trap for timerange
@@ -74,7 +86,10 @@
     if (!has_capability('mod/flashcard:manage', $context)){
         $now = time();
         if (($flashcard->starttime != 0 && $now < $flashcard->starttime) || ($flashcard->endtime != 0 && $now > $flashcard->endtime)){
-            notice('outoftimerange', 'flashcard');
+        	echo $out;
+            echo $OUTPUT->notification(get_string('outoftimerange', 'flashcard'));
+	        echo $OUTPUT->footer();
+	        die;
         }
     }    
 
@@ -91,7 +106,7 @@
                 $localstyleurl = $CFG->wwwroot.'/file.php'.$localstyle;
             }
         }
-        echo "<link rel=\"stylesheet\" type=\"text/css\" href=\"{$localstyleurl}\" />";
+        $out .= "<link rel=\"stylesheet\" type=\"text/css\" href=\"{$localstyleurl}\" />";
     }
 
 /// Determine the current tab
@@ -102,7 +117,6 @@
         case 'freeplay' : $currenttab = 'freeplay'; break;
         case 'summary' : $currenttab = 'summary'; break;
         case 'edit' : $currenttab = 'edit'; break;
-        case 'add' : $currenttab = 'edit'; break;        
         default : $currenttab = 'play';
     }
     
@@ -111,14 +125,14 @@
     }
     
 /// print tabs
-    if (!preg_match("/(summary)|(freeplay)|(play)|(checkdecks)|(edit)|(add)/", $view)) $view = 'checkdecks';
+    if (!preg_match("/summary|freeplay|play|checkdecks|edit/", $view)) $view = 'checkdecks';
     $tabname = get_string('leitnergame', 'flashcard');
     $row[] = new tabobject('play', $thisurl."?id={$cm->id}&amp;view=checkdecks", $tabname);
     $tabname = get_string('freegame', 'flashcard');
     $row[] = new tabobject('freeplay', $thisurl."?view=freeplay&amp;id={$cm->id}", $tabname);
     if (has_capability('mod/flashcard:manage', $context)){
         $tabname = get_string('teachersummary', 'flashcard');
-        $row[] = new tabobject('summary', $thisurl."?view=summary&amp;id={$cm->id}&amp;subview=byusers", $tabname);
+        $row[] = new tabobject('summary', $thisurl."?view=summary&amp;id={$cm->id}&amp;page=byusers", $tabname);
         $tabname = get_string('edit', 'flashcard');
         $row[] = new tabobject('edit', $thisurl."?view=edit&amp;id={$cm->id}", $tabname);
         $tabname = get_string('import', 'flashcard');
@@ -131,7 +145,7 @@
 /// print second line
 
     if ($view == 'summary'){
-        switch($subview){
+        switch($page){
             case 'bycards' : {
                 $currenttab = 'bycards';
                 $activated[] = 'summary'; 
@@ -144,29 +158,22 @@
         }
 
         $tabname = get_string('byusers', 'flashcard');
-        $row1[] = new tabobject('byusers', $thisurl."?id={$cm->id}&amp;view=summary&amp;subview=byusers", $tabname);
+        $row1[] = new tabobject('byusers', $thisurl."?id={$cm->id}&amp;view=summary&amp;page=byusers", $tabname);
         $tabname = get_string('bycards', 'flashcard');
-        $row1[] = new tabobject('bycards', $thisurl."?id={$cm->id}&amp;view=summary&amp;subview=bycards", $tabname);
+        $row1[] = new tabobject('bycards', $thisurl."?id={$cm->id}&amp;view=summary&amp;page=bycards", $tabname);
         $tabrows[] = $row1;
     }
 
     $out .= print_tabs($tabrows, $currenttab, null, $activated, true);
 
-/// print summary
-
-    if (!empty($flashcard->summary)) {
-        $out .= $OUTPUT->box_start();
-        $out .= format_text($flashcard->summary, $flashcard->summaryformat, NULL, $course->id);
-        $out .= $OUTPUT->box_end();
-    }
-
 /// print active view
+
     switch ($view){
         case 'summary' : 
             if (!has_capability('mod/flashcard:manage', $context)){
                 redirect($thisurl."?view=checkdecks&amp;id={$cm->id}");
             }
-            if ($subview == 'bycards'){
+            if ($page == 'bycards'){
                 include $CFG->dirroot.'/mod/flashcard/cardsummaryview.php';
             } else {
                 include $CFG->dirroot.'/mod/flashcard/usersummaryview.php';
@@ -177,12 +184,6 @@
                 redirect($thisurl."?view=checkdecks&amp;id={$cm->id}");
             }
             include $CFG->dirroot.'/mod/flashcard/editview.php';
-            break;
-        case 'add' : 
-            if (!has_capability('mod/flashcard:manage', $context)){
-                redirect($thisurl."?view=checkdecks&amp;id={$cm->id}");
-            }
-            include $CFG->dirroot.'/mod/flashcard/addview.php';
             break;
         case 'freeplay' :
             include $CFG->dirroot.'/mod/flashcard/freeplayview.php';
@@ -195,4 +196,6 @@
     }
 
 /// Finish the page
+
     echo $OUTPUT->footer($course);
+?>

@@ -10,13 +10,42 @@
 /**
  * Includes and requires
  */
-if (file_exists($CFG->libdir . '/filesystemlib.php')) {
-    require_once($CFG->libdir . '/filesystemlib.php');
-} else {
-    require_once($CFG->dirroot . '/mod/flashcard/filesystemlib.php');
-}
+
 require_once($CFG->dirroot . '/lib/ddllib.php');
 require_once($CFG->dirroot . '/mod/flashcard/locallib.php');
+
+/**
+ * Indicates API features that the forum supports.
+ *
+ * @uses FEATURE_GROUPS
+ * @uses FEATURE_GROUPINGS
+ * @uses FEATURE_GROUPMEMBERSONLY
+ * @uses FEATURE_MOD_INTRO
+ * @uses FEATURE_COMPLETION_TRACKS_VIEWS
+ * @uses FEATURE_COMPLETION_HAS_RULES
+ * @uses FEATURE_GRADE_HAS_GRADE
+ * @uses FEATURE_GRADE_OUTCOMES
+ * @param string $feature
+ * @return mixed True if yes (some features may use other values)
+ */
+function flashcard_supports($feature) {
+    switch($feature) {
+        case FEATURE_GROUPS:                  return false;
+        case FEATURE_GROUPINGS:               return false;
+        case FEATURE_GROUPMEMBERSONLY:        return false;
+        case FEATURE_MOD_INTRO:               return true;
+        case FEATURE_COMPLETION_TRACKS_VIEWS: return true;
+        case FEATURE_COMPLETION_HAS_RULES:    return true;
+        case FEATURE_GRADE_HAS_GRADE:         return true;
+        case FEATURE_GRADE_OUTCOMES:          return false;
+        case FEATURE_RATE:                    return false;
+        case FEATURE_BACKUP_MOODLE2:          return true;
+        case FEATURE_SHOW_DESCRIPTION:        return true;
+
+        default: return null;
+    }
+}
+
 
 /**
  * Given an object containing all the necessary data, 
@@ -38,7 +67,18 @@ function flashcard_add_instance($flashcard) {
         $flashcard->endtime = 0;
     }
 
+	// saves draft customization image files into definitive filearea    
+    $customimages = array('custombackfileid', 'customfrontfileid', 'customemptyfileid', 'customreviewfileid', 'customreviewedfileid', 'customreviewemptyfileid');
+    foreach($customimages as $ci){
+	    flashcard_save_draft_customimage($flashcard, $ci);
+	}
+
     $newid = $DB->insert_record('flashcard', $flashcard);
+
+    // Import all information from question
+    if (isset($flashcard->forcereload) && $flashcard->forcereload) {
+        flashcard_import($flashcard);
+    }
 
     return $newid;
 }
@@ -56,9 +96,10 @@ function flashcard_update_instance($flashcard) {
     $flashcard->timemodified = time();
     $flashcard->id = $flashcard->instance;
 
-    // Make physical repository for customisation
-    if (!file_exists($COURSE->id . '/moddata/flashcard/' . $flashcard->id)) {
-        filesystem_create_dir($COURSE->id . '/moddata/flashcard/' . $flashcard->id, FS_RECURSIVE);
+    // update first deck with questions that might be added
+
+    if (isset($flashcard->forcereload) && $flashcard->forcereload) {
+        flashcard_import($flashcard);
     }
 
     if (!isset($flashcard->starttimeenable)) {
@@ -69,7 +110,15 @@ function flashcard_update_instance($flashcard) {
         $flashcard->endtime = 0;
     }
 
-    return $DB->update_record('flashcard', $flashcard);
+	// saves draft customization image files into definitive filearea    
+    $customimages = array('custombackfileid', 'customfrontfileid', 'customemptyfileid', 'customreviewfileid', 'customreviewedfileid', 'customreviewemptyfileid');
+    foreach($customimages as $ci){
+	    flashcard_save_draft_customimage($flashcard, $ci);
+	}
+	
+    $return = $DB->update_record('flashcard', $flashcard);
+
+    return $return;
 }
 
 /**
@@ -81,18 +130,24 @@ function flashcard_update_instance($flashcard) {
 function flashcard_delete_instance($id) {
     global $COURSE, $DB;
 
-    // clear anyway what remains here
-    filesystem_clear_dir($COURSE->id . '/moddata/flashcard/' . $id, FS_FULL_DELETE);
-
     if (!$flashcard = $DB->get_record('flashcard', array('id' => $id))) {
         return false;
     }
+    if (!$cm = get_coursemodule_from_instance('flashcard', $flashcard->id)) {
+        return false;
+    }
+
+    $context = get_context_instance(CONTEXT_MODULE, $cm->id);
 
     $result = true;
 
     // Delete any dependent records here
-
+    $DB->delete_records('flashcard_deckdata', array('flashcardid' => $flashcard->id));
     $DB->delete_records('flashcard_card', array('flashcardid' => $flashcard->id));
+
+    // now get rid of all files
+    $fs = get_file_storage();
+    $fs->delete_area_files($context->id);
 
     if (!$DB->delete_records('flashcard', array('id' => $flashcard->id))) {
         $result = false;
@@ -226,77 +281,129 @@ function flashcard_scale_used($flashcardid, $scaleid) {
     return $return;
 }
 
-function flashcard_supports($feature) {
-    switch ($feature) {
-        case FEATURE_MOD_INTRO: return true;
-        case FEATURE_GRADE_HAS_GRADE: return true;
-        case FEATURE_GRADE_OUTCOMES: return false;
-        case FEATURE_RATE: return false;
-        case FEATURE_GROUPS: return false;
-        case FEATURE_GROUPINGS: return false;
-        case FEATURE_GROUPMEMBERSONLY: return false;
-        case FEATURE_COMPLETION_TRACKS_VIEWS: return false;
-        case FEATURE_BACKUP_MOODLE2: return true;
-
-        default: return null;
-    }
-}
-
-
+/**
+ * Serves the files included in flashcard. Implements needed access control ;-)
+ *
+ * There are several situations in general where the files will be sent.
+ * 1) filearea = 'questionsoundfile', 
+ * 2) filearea = 'questionimagefile',
+ * 3) filearea = 'questionvideofile',
+ * 4) filearea = 'answersoundfile', 
+ * 5) filearea = 'answerimagefile',
+ * 6) filearea = 'answervideofile'
+ *
+ * @param object $course
+ * @param object $cm
+ * @param object $context
+ * @param string $filearea
+ * @param array $args
+ * @param bool $forcedownload
+ * @return bool false if file not found, does not return if found - justsend the file
+ */
 function flashcard_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload) {
-  global $CFG, $DB, $USER;
+    global $CFG, $DB;
 
-  require_login($course, false, $cm);
-
-  $itemid = (int) array_shift($args);
-
-  require_course_login($course, true, $cm);
-
-  $relativepath = implode('/', $args);
-  $fullpath = "/$context->id/mod_flashcard/$filearea/$itemid/$relativepath";
-
-  $fs = get_file_storage();
-  if (!$file = $fs->get_file_by_hash(sha1($fullpath)) or $file->is_directory()) {
-    return false;
-  }
-/*
-  if (!$cm = get_coursemodule_from_id('journal', $cm->id)) {
-    return false;
-  }
-
-  if (!$journal = $DB->get_record("journal", array("id" => $cm->instance))) {
-    return false;
-  }
-
- // $userjournal = journal_get_userjournal($journal, $USER);
-  if(!$entry = $DB->get_record('journal_entries', array('id'=>$itemid))) {
-    return false;
-  }
-
- // $context = get_context_instance(CONTEXT_MODULE, $context->id);
-
-  //allow if it is my own entry or teacher 
-  if (!has_capability('mod/journal:manageentries', $context)) {
-    require_capability('mod/journal:addentries', $context);
-    //plus my own journal entry
-    if ($entry->userid != $USER->id) {
-      return false;
+	require_login($course);
+	
+    if ($context->contextlevel != CONTEXT_MODULE) {
+    	return false;
     }
-  }
-*/
-  // finally send the file
-  send_stored_file($file, 0, 0, true); // download MUST be forced - security!
 
-  return false;
+    if (!in_array($filearea, array('questionsoundfile', 'questionimagefile', 'questionvideofile', 'answersoundfile', 'answerimagefile', 'answervideofile', 'customfront', 'customempty', 'customback', 'customreview', 'customreviewed', 'customreviewempty'))) {
+        return false;
+    }
+
+	$itemid = (int)array_shift($args);
+
+    $fs = get_file_storage();
+    
+    if ($files = $fs->get_area_files($context->id, 'mod_flashcard', $filearea, $itemid, "sortorder, itemid, filepath, filename", false)){
+    	$file = array_pop($files);
+
+	    // finally send the file
+	    send_stored_file($file, 0, 0, $forcedownload);
+    }
+
+
+    return false;
 }
-
 
 /**
- * Scale is not used anywhere by flashcard module
+ * Obtains the automatic completion state for this flashcard 
  *
- * @param int $scaleid
- * @return bool
+ * @global object
+ * @global object
+ * @param object $course Course
+ * @param object $cm Course-module
+ * @param int $userid User ID
+ * @param bool $type Type of comparison (or/and; can be used as return value if no conditions)
+ * @return bool True if completed, false if not. (If no conditions, then return
+ *   value depends on comparison type)
  */
-function flashcard_scale_used_anywhere($scaleid) {
-    return false;
+function flashcard_get_completion_state($course, $cm, $userid, $type) {
+    global $CFG, $DB;
+
+    // Get flashcard details
+    if (!($flashcard = $DB->get_record('flashcard', array('id' => $cm->instance)))) {
+        throw new Exception("Can't find flashcard {$cm->instance}");
+    }
+
+    $result = $type; // Default return value
+    
+    // completion condition 1 is have no cards in deck
+
+    if ($flashcard->completionallviewed) {
+
+		// match any card that may not be viewed by this user    	
+    	$sql = "
+    		SELECT
+    			COUNT(*)
+    		FROM
+    			{flashcard_deckdata} dd
+    		LEFT JOIN
+    			{flashcard_card} c
+    		ON 
+    			c.entryid = dd.id AND
+    			c.userid = ?
+    		WHERE
+    			dd.id is NULL    			
+    	";
+    	$unviewed = $DB->get_records_sql($sql, array($userid));
+
+        if ($type == COMPLETION_AND) {
+            $result = $result && empty($unviewed);
+        } else {
+            $result = $result || empty($unviewed);
+        }
+    }
+
+    // completion condition 2 is : all cards in last deck (easiest)
+
+    if ($flashcard->completionallgood) {
+
+		// match any card that are NOT in last deck
+    	$sql = "
+    		SELECT
+    			COUNT(*)
+    		FROM
+    			{flashcard_deckdata} dd
+    		LEFT JOIN
+    			{flashcard_card} c
+    		ON 
+    			c.entryid = dd.id AND
+    			c.userid = ?
+    		WHERE
+    			dd.id is NULL OR
+    			c.deck != ?
+    	";
+    	$nogood = $DB->get_records_sql($sql, array($userid, $flashcard->decks - 1));
+		
+        if ($type == COMPLETION_AND) {
+            $result = $result && empty($nogood);
+        } else {
+            $result = $result || empty($nogood);
+        }
+    }
+
+    return $result;
 }
