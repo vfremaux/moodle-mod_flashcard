@@ -113,7 +113,7 @@
             }
             ?>
         </div>
-        <div id="answerdiv" class="flashcard-answer-default frontside-default" onclick="javascript:togglecard()" style="display:none;">
+        <div id="answerdiv" class="flashcard-answer frontside-default" onclick="javascript:togglecard()" style="display:none;">
             <?php
             if ($flashcard->answersmediatype == FLASHCARD_MEDIA_IMAGE) {
                 flashcard_print_image($flashcard, $subquestion->answertext);

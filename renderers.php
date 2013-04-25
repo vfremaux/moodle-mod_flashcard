@@ -2,21 +2,21 @@
 
 require_once($CFG->dirroot.'/repository/lib.php');
 
-function flashcard_filepicker($elname, $maxbytes, $accepted_types = '*', $current = null){
+function flashcard_filepicker($elname, $value, $contextid, $filearea, $cardid, $maxbytes, $accepted_types = '*'){
 	global $COURSE, $PAGE, $OUTPUT, $USER;
+
+    $html = '';
 
 	$usercontext = context_user::instance($USER->id);
 	$fs = get_file_storage();
 	
     // no existing area info provided - let's use fresh new draft area
-    $draftitemid = file_get_unused_draft_itemid();
-    if (!empty($current)){
-		// we have current file registered, make a temp copy in user's draft area
-		$file_record->filearea = 'draft';
-		$file_record->component = 'user';
-		$file_record->itemid = $draftitemid;
-		$file_record->contextid = $usercontext->id;
-		$fs->create_file_from_storedfile($file_record, $current->get_id());
+	if ($value){
+	    $draftitemid = file_get_submitted_draft_itemid($filearea);
+		$maxbytes = 100000;
+		file_prepare_draft_area($draftitemid, $contextid, 'mod_flashcard', $filearea, $cardid, array('subdirs' => 0, 'maxbytes' => $maxbytes, 'maxfiles' => 1));
+	} else {
+        $draftitemid = file_get_unused_draft_itemid();
 	}
 
     if ($COURSE->id == SITEID) {
@@ -33,12 +33,10 @@ function flashcard_filepicker($elname, $maxbytes, $accepted_types = '*', $curren
     $args->return_types = FILE_INTERNAL;
     $args->itemid = $draftitemid;
     $args->maxbytes = $maxbytes;
-    $args->context = $PAGE->context;
     $args->buttonname = $elname.'choose';
     $args->elementname = $elname;
     $id = $elname;
 
-    $html = '';
     $fp = new file_picker($args);
     $options = $fp->options;
     $options->context = $PAGE->context;
@@ -80,19 +78,19 @@ function flashcard_filepicker($elname, $maxbytes, $accepted_types = '*', $curren
 * @uses $CFG
 */
 function flashcard_print_deck(&$flashcard, &$cm, $deck){
-    global $CFG;
+    global $CFG, $OUTPUT;
     
-    $emptydeckurl = "{$CFG->wwwroot}/mod/flashcard/pix/emptydeck.jpg";
+    $emptydeckurl = $OUTPUT->pix_url('emptydeck', 'flashcard');
     if ($flashcard->customreviewemptyfileid){
     	$emptydeckurl = flashcard_get_file_url($flashcard->customreviewemptyfileid);
     }
     
-    $decktoreviewurl = "{$CFG->wwwroot}/mod/flashcard/pix/enableddeck.jpg";
+    $decktoreviewurl = $OUTPUT->pix_url('enableddeck', 'flashcard');
     if ($flashcard->customreviewfileid){
     	$decktoreviewurl = flashcard_get_file_url($flashcard->customreviewfileid);
     }
 
-    $deckreviewedurl = "{$CFG->wwwroot}/mod/flashcard/pix/disableddeck.jpg";
+    $deckreviewedurl = $OUTPUT->pix_url('disableddeck', 'flashcard');
     if ($flashcard->customreviewedfileid){
     	$deckreviewedurl = flashcard_get_file_url($flashcard->customreviewedfileid);
     }
@@ -374,7 +372,7 @@ function flashcard_play_sound(&$flashcard, $soundfileid, $autostart = 'false', $
     return $soundhtml;
 }
 
-function flashcard_get_file_url($filerecid){
+function flashcard_get_file_url($filerecid, $asobject = false){
 	global $CFG;
 	
 	$fs = get_file_storage();
@@ -385,5 +383,14 @@ function flashcard_get_file_url($filerecid){
     $filearea = $file->get_filearea();
     $itemid = $file->get_itemid();
         
-    return $CFG->wwwroot."/pluginfile.php/{$contextid}/mod_flashcard/{$filearea}/{$itemid}/{$filename}";
+    $url = $CFG->wwwroot."/pluginfile.php/{$contextid}/mod_flashcard/{$filearea}/{$itemid}/{$filename}";
+    
+    if ($asobject){
+	    $f->pathname = $file->get_pathname();    	
+	    $f->filename = $filename;
+	    $f->url = $url;
+	    return $f;
+    }
+    
+    return $url;
 }

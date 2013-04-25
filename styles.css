@@ -41,13 +41,13 @@
 	padding: 10px 30px; 
 }
 
-.flashcard-question.frontside-default { 
+.flashcard-question.backside-default { 
     background-image: url('pix/front.jpg'); 
 	width: 300px; 
 	height: 200px; 
 }
 
-.flashcard-answer.backside-default { 
+.flashcard-answer.frontside-default { 
     background-image: url('pix/back.jpg'); 
 	width: 300px; 
 	height: 200px; 

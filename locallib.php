@@ -351,18 +351,45 @@ function flashcard_delete_attached_files(&$cm, $card){
 }
 
 function flashcard_save_draft_customimage(&$flashcard, $customimage){
+	global $USER;
 	
+	$usercontext = context_user::instance($USER->id);
+	$context = context_module::instance($flashcard->coursemodule);
+
     $filepickeritemid = optional_param($customimage, 0, PARAM_INT);
-
+    
 	if (!$filepickeritemid) return;
-
+	
 	$fs = get_file_storage();
 
     $flashcard->$customimage = 0;
 	if (!$fs->is_area_empty($usercontext->id, 'user', 'draft', $filepickeritemid, true)){
-		file_save_draft_area_files($filepickeritemid, $context->id, 'mod_flashcard', $customimage, 0);
-		$savedfiles = $fs->get_area_files($context->id, 'mod_flashcard', $customimage, 0);
+		$filearea = str_replace('fileid', '', $customimage);
+		file_save_draft_area_files($filepickeritemid, $context->id, 'mod_flashcard', $filearea, 0);
+		$savedfiles = $fs->get_area_files($context->id, 'mod_flashcard', $filearea, 0);
 		$savedfile = array_pop($savedfiles);
-    	$flashcard->$customimage = $savedfile->id;
+    	$flashcard->$customimage = $savedfile->get_id();
 	}	
 }
+
+/**
+* this initializes a draft copy of the actual stored file
+*
+*/
+/*
+function flashcard_get_initialized_draft_zone($fileid){
+	global $USER;
+	
+	$fs = get_file_storage();
+
+	$usercontext = context_user::instance($USER->id);
+	$fr->contextid = $usercontext->id;
+	$fr->component = 'user';
+	$fr->filearea = 'draft';
+	$fr->itemid = file_get_unused_draft_itemid();
+
+	create_file_from_storedfile($fr, $fileid);
+	
+	return $fr->itemid;
+}
+*/

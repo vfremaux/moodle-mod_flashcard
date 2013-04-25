@@ -35,6 +35,7 @@
             echo $OUTPUT->notification(get_string('nocards', 'flashcard'), $url);
         }
     }
+    // print_object($flashcard);
 ?>
 
 <center>
@@ -68,9 +69,9 @@ if ($flashcard->decks >= 4){
     <tr valign="top">
         <td>
             <?php
-                print_string('cardsindeck', 'flashcard', $decks->decks[0]->count);
+                print_string('cardsindeck', 'flashcard', 0 + @$decks->decks[0]->count);
                 echo "<br/>";
-                if ($decks->decks[0]->count == 0){
+                if (@$decks->decks[0]->count == 0){
                      flashcard_print_deck($flashcard, $cm, 0);
                 } else {
                     if ($decks->decks[0]->reactivate){
@@ -83,9 +84,9 @@ if ($flashcard->decks >= 4){
         </td>
         <td>
             <?php
-                print_string('cardsindeck', 'flashcard', $decks->decks[1]->count);
+                print_string('cardsindeck', 'flashcard', 0 + @$decks->decks[1]->count);
                 echo "<br/>";
-                if ($decks->decks[1]->count == 0){
+                if (@$decks->decks[1]->count == 0){
                      flashcard_print_deck($flashcard, $cm, 0);
                 } else {
                     if ($decks->decks[1]->reactivate){
@@ -101,9 +102,9 @@ if ($flashcard->decks >= 3){
 ?>
         <td>
             <?php
-                print_string('cardsindeck', 'flashcard', $decks->decks[2]->count);
+                print_string('cardsindeck', 'flashcard', 0 + @$decks->decks[2]->count);
                 echo "<br/>";
-                if ($decks->decks[2]->count == 0){
+                if (@$decks->decks[2]->count == 0){
                      flashcard_print_deck($flashcard, $cm, 0);
                 } else {
                     if ($decks->decks[2]->reactivate){
@@ -120,9 +121,9 @@ if ($flashcard->decks >= 4){
 ?>
         <td>
             <?php
-                print_string('cardsindeck', 'flashcard', $decks->decks[3]->count);
+                print_string('cardsindeck', 'flashcard', 0 + @$decks->decks[3]->count);
                 echo "<br/>";
-                if ($decks->decks[3]->count == 0){
+                if (@$decks->decks[3]->count == 0){
                      flashcard_print_deck($flashcard, $cm, 0);
                 } else {
                     if ($decks->decks[3]->reactivate){

@@ -20,9 +20,10 @@
     require_once($CFG->dirroot.'/mod/flashcard/renderers.php');
 
     $PAGE->requires->js('/mod/flashcard/js/ufo.js', true);
+    $PAGE->requires->js('/mod/flashcard/js/module.js', true);
 
     $id = optional_param('id', '', PARAM_INT);    // Course Module ID, or
-    $a = optional_param('a', '', PARAM_INT);     // flashcard ID
+    $f = optional_param('f', '', PARAM_INT);     // flashcard ID
     $view = optional_param('view', 'checkdecks', PARAM_ACTION);     // view
     $page = optional_param('page', '', PARAM_ACTION);     // page
     $action = optional_param('what', '', PARAM_ACTION);     // command
@@ -42,7 +43,7 @@
             print_error('errorinvalidflashcardid', 'flashcard');
         }
     } else {
-        if (! $flashcard = $DB->get_record('flashcard', array('id' => $a))) {
+        if (! $flashcard = $DB->get_record('flashcard', array('id' => $f))) {
             print_error('invalidcoursemodule');
         }
         if (! $course = $DB->get_record('course', array('id' => $flashcard->course))) {

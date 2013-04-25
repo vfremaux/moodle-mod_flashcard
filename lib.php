@@ -115,8 +115,10 @@ function flashcard_update_instance($flashcard) {
     foreach($customimages as $ci){
 	    flashcard_save_draft_customimage($flashcard, $ci);
 	}
+	
+    $return = $DB->update_record('flashcard', $flashcard);
 
-    return $DB->update_record('flashcard', $flashcard);
+    return $return;
 }
 
 /**
@@ -307,7 +309,7 @@ function flashcard_pluginfile($course, $cm, $context, $filearea, $args, $forcedo
     	return false;
     }
 
-    if (!in_array($filearea, array('questionsoundfile', 'questionimagefile', 'questionvideofile', 'answersoundfile', 'answerimagefile', 'answervideofile'))) {
+    if (!in_array($filearea, array('questionsoundfile', 'questionimagefile', 'questionvideofile', 'answersoundfile', 'answerimagefile', 'answervideofile', 'customfront', 'customempty', 'customback', 'customreview', 'customreviewed', 'customreviewempty'))) {
         return false;
     }
 

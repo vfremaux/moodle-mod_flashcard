@@ -22,12 +22,13 @@ require_once ($CFG->dirroot.'/mod/flashcard/locallib.php');
 * overrides moodleform for flashcard setup
 */
 class mod_flashcard_mod_form extends moodleform_mod {
+	
+	var $currentfiles = array();
 
 	function definition() {
 		global $CFG, $COURSE, $DB;
 
         $mform    =& $this->_form;
-
 
         $mform->addElement('header', 'general', get_string('general', 'form'));
 
@@ -73,10 +74,11 @@ class mod_flashcard_mod_form extends moodleform_mod {
             $qoptions[$question->id] = $question->name;
         }
         $mform->addElement('select', 'questionid', get_string('questionid', 'flashcard'), $qoptions);
-
+		$mform->setAdvanced('questionid');
         $mform->addHelpButton('questionid', 'sourcequestion', 'flashcard');
 
         $mform->addElement('checkbox', 'forcereload', get_string('forcereload', 'flashcard'));
+		$mform->setAdvanced('forcereload');
         $mform->addHelpButton('forcereload', 'forcereload', 'flashcard');
 
 		/*
@@ -155,30 +157,78 @@ class mod_flashcard_mod_form extends moodleform_mod {
         $mform->disabledIf('deck4_delay', 'decks', 'neq', 4);
 
         $mform->addElement('header', 'customfiles_head', get_string('customisationfiles', 'flashcard'));
-
+        $mform->setAdvanced('customfiles_head');
+        
 		$maxbytes = 100000;
-        $mform->addElement('filepicker', 'cardfront', get_string('cardfront', 'flashcard'), null, array('maxbytes' => $maxbytes, 'accepted_types' => array('.jpg', '.png', '.gif')));
-        $mform->addElement('filepicker', 'cardback', get_string('cardback', 'flashcard'), null, array('maxbytes' => $maxbytes, 'accepted_types' => array('.jpg', '.png', '.gif')));
-        $mform->addElement('filepicker', 'emptydeck', get_string('emptydeck', 'flashcard'), null, array('maxbytes' => $maxbytes, 'accepted_types' => array('.jpg', '.png', '.gif')));
-        $mform->addElement('filepicker', 'reviewback', get_string('reviewback', 'flashcard'), null, array('maxbytes' => $maxbytes, 'accepted_types' => array('.jpg', '.png', '.gif')));
-        $mform->addElement('filepicker', 'reviewedback', get_string('reviewedback', 'flashcard'), null, array('maxbytes' => $maxbytes, 'accepted_types' => array('.jpg', '.png', '.gif')));
-        $mform->addElement('filepicker', 'reviewedempty', get_string('reviewedempty', 'flashcard'), null, array('maxbytes' => $maxbytes, 'accepted_types' => array('.jpg', '.png', '.gif')));
+        $mform->addElement('filepicker', 'custombackfileid', get_string('cardfront', 'flashcard'), null, array('maxbytes' => $COURSE->maxbytes, 'accepted_types' => array('.jpg', '.png', '.gif')));
+        $mform->setAdvanced('custombackfileid');
+        $mform->addElement('filepicker', 'customfrontfileid', get_string('cardback', 'flashcard'), null, array('maxbytes' => $COURSE->maxbytes, 'accepted_types' => array('.jpg', '.png', '.gif')));
+        $mform->setAdvanced('customfrontfileid');
+        $mform->addElement('filepicker', 'customemptyfileid', get_string('emptydeck', 'flashcard'), null, array('maxbytes' => $COURSE->maxbytes, 'accepted_types' => array('.jpg', '.png', '.gif')));
+        $mform->setAdvanced('customemptyfileid');
+        $mform->addElement('filepicker', 'customreviewfileid', get_string('reviewback', 'flashcard'), null, array('maxbytes' => $COURSE->maxbytes, 'accepted_types' => array('.jpg', '.png', '.gif')));
+        $mform->setAdvanced('customreviewfileid');
+        $mform->addElement('filepicker', 'customreviewedfileid', get_string('reviewedback', 'flashcard'), null, array('maxbytes' => $COURSE->maxbytes, 'accepted_types' => array('.jpg', '.png', '.gif')));
+        $mform->setAdvanced('customreviewedfileid');
+        $mform->addElement('filepicker', 'customreviewemptyfileid', get_string('reviewedempty', 'flashcard'), null, array('maxbytes' => $COURSE->maxbytes, 'accepted_types' => array('.jpg', '.png', '.gif')));
+        $mform->setAdvanced('customreviewemptyfileid');
 
         $this->standard_coursemodule_elements();
 
         $this->add_action_buttons();
 	}
+	
+	function set_data($data){
+		
+		if ($data->coursemodule){
+			$context = context_module::instance($data->coursemodule);
+			 
+			$draftitemid = file_get_submitted_draft_itemid('customfront');		 
+			$maxbytes = 100000;
+			file_prepare_draft_area($draftitemid, $context->id, 'mod_flashcard', 'customfront', 0, array('subdirs' => 0, 'maxbytes' => $maxbytes, 'maxfiles' => 1));		 
+			$data->customfrontfileid = $draftitemid;
 
-    /**	
+			$draftitemid = file_get_submitted_draft_itemid('customback');		 
+			$maxbytes = 100000;
+			file_prepare_draft_area($draftitemid, $context->id, 'mod_flashcard', 'customback', 0, array('subdirs' => 0, 'maxbytes' => $maxbytes, 'maxfiles' => 1));		 
+			$data->custombackfileid = $draftitemid;
+
+			$draftitemid = file_get_submitted_draft_itemid('customempty');		 
+			$maxbytes = 100000;
+			file_prepare_draft_area($draftitemid, $context->id, 'mod_flashcard', 'customempty', 0, array('subdirs' => 0, 'maxbytes' => $maxbytes, 'maxfiles' => 1));		 
+			$data->customemptyfileid = $draftitemid;
+
+			$draftitemid = file_get_submitted_draft_itemid('customreview');		 
+			$maxbytes = 100000;
+			file_prepare_draft_area($draftitemid, $context->id, 'mod_flashcard', 'customreview', 0, array('subdirs' => 0, 'maxbytes' => $maxbytes, 'maxfiles' => 1));		 
+			$data->customreviewfileid = $draftitemid;
+
+			$draftitemid = file_get_submitted_draft_itemid('customreview');		 
+			$maxbytes = 100000;
+			file_prepare_draft_area($draftitemid, $context->id, 'mod_flashcard', 'customreviewed', 0, array('subdirs' => 0, 'maxbytes' => $maxbytes, 'maxfiles' => 1));		 
+			$data->customreviewedfileid = $draftitemid;
+
+			$draftitemid = file_get_submitted_draft_itemid('customreviewempty');		 
+			$maxbytes = 100000;
+			file_prepare_draft_area($draftitemid, $context->id, 'mod_flashcard', 'customreviewempty', 0, array('subdirs' => 0, 'maxbytes' => $maxbytes, 'maxfiles' => 1));		 
+			$data->customreviewemptyfileid = $draftitemid;
+		}
+		
+		parent::set_data($data);
+	}
+
 	function definition_after_data(){
+
 		$mform    =& $this->_form;
+		/*
         $startfrom =&$mform->getElement('startfrom');
         $elements = $startfrom->getElements();
         print_object($elements[1]->getValue());
         if ($mform->getElementValue('starttime') != 0){
             $starttimeenable->setValue(true);
         }
-	}*/
+        */
+	}
 	
 	function validation($data, $files = array()) {
 	    $errors = array();
