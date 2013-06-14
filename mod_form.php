@@ -114,24 +114,28 @@ class mod_flashcard_mod_form extends moodleform_mod {
 
         $mform->addElement('selectyesno', 'autodowngrade', get_string('autodowngrade', 'flashcard'));
         $mform->addHelpButton('autodowngrade', 'autodowngrade', 'flashcard');
+		$mform->setAdvanced('autodowngrade');
 
         $mform->addElement('text', 'deck2_release', get_string('deck2_release', 'flashcard'), array('size'=>'5'));
         $mform->addHelpButton('deck2_release', 'deck_release', 'flashcard');
         $mform->setType('deck2_release', PARAM_INT);
         $mform->setDefault('deck2_release', 96);
         $mform->addRule('deck2_release', get_string('numericrequired', 'flashcard'), 'numeric', null, 'client');
+		$mform->setAdvanced('deck2_release');
  
         $mform->addElement('text', 'deck3_release', get_string('deck3_release', 'flashcard'), array('size'=>'5'));
         $mform->setType('deck3_release', PARAM_INT);
         $mform->setDefault('deck3_release', 96);
         $mform->addRule('deck3_release', get_string('numericrequired', 'flashcard'), 'numeric', null, 'client');
         $mform->disabledIf('deck3_release', 'decks', 'eq', 2);
+		$mform->setAdvanced('deck3_release');
 
         $mform->addElement('text', 'deck4_release', get_string('deck4_release', 'flashcard'), array('size'=>'5'));
         $mform->setType('deck4_release', PARAM_INT);
         $mform->setDefault('deck4_release', 96);
         $mform->addRule('deck4_release', get_string('numericrequired', 'flashcard'), 'numeric', null, 'client');
         $mform->disabledIf('deck4_release', 'decks', 'neq', 4);
+		$mform->setAdvanced('deck4_release');
 
         $mform->addElement('text', 'deck1_delay', get_string('deck1_delay', 'flashcard'), array('size'=>'5'));
         $mform->addHelpButton('deck1_delay', 'deck_delay', 'flashcard');

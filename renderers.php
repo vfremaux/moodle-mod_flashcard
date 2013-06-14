@@ -81,17 +81,17 @@ function flashcard_print_deck(&$flashcard, &$cm, $deck){
     global $CFG, $OUTPUT;
     
     $emptydeckurl = $OUTPUT->pix_url('emptydeck', 'flashcard');
-    if ($flashcard->customreviewemptyfileid){
+    if (!empty($flashcard->customreviewemptyfileid)){
     	$emptydeckurl = flashcard_get_file_url($flashcard->customreviewemptyfileid);
     }
     
     $decktoreviewurl = $OUTPUT->pix_url('enableddeck', 'flashcard');
-    if ($flashcard->customreviewfileid){
+    if (!empty($flashcard->customreviewfileid)){
     	$decktoreviewurl = flashcard_get_file_url($flashcard->customreviewfileid);
     }
 
     $deckreviewedurl = $OUTPUT->pix_url('disableddeck', 'flashcard');
-    if ($flashcard->customreviewedfileid){
+    if (!empty($flashcard->customreviewedfileid)){
     	$deckreviewedurl = flashcard_get_file_url($flashcard->customreviewedfileid);
     }
     
@@ -315,13 +315,13 @@ function flashcard_print_image(&$flashcard, $imagefileid, $return = false){
         return "<span class=\"error\">$strmissingimage</span>";
     }
     
-    $filename = $soundfile->get_filename();
-    $contextid = $soundfile->get_contextid();
-    $filearea = $soundfile->get_filearea();
-    $itemid = $soundfile->get_itemid();
+    $filename = $imagefile->get_filename();
+    $contextid = $imagefile->get_contextid();
+    $filearea = $imagefile->get_filearea();
+    $itemid = $imagefile->get_itemid();
         
     $magic = rand(0,100000);
-    if ($htmlname == '') $htmlname = "bell_{$magic}";
+    if (empty($htmlname)) $htmlname = "bell_{$magic}";
     
     $imagefileurl = $CFG->wwwroot."/pluginfile.php/{$contextid}/mod_flashcard/{$filearea}/{$itemid}/{$filename}";
 

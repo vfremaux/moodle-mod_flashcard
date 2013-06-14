@@ -22,6 +22,8 @@
     }
     */
 
+    echo $out; // deffered header()
+
     $cards = flashcard_get_card_status($flashcard);
         
     $strcard = get_string('card', 'flashcard');

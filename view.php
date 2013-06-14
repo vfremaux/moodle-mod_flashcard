@@ -71,6 +71,7 @@
     $PAGE->set_focuscontrol('');
     $PAGE->set_cacheable(true);
     $PAGE->set_headingmenu(navmenu($course, $cm));
+
     $out = $OUTPUT->header();
 
 /// non visible trap for timerange (security)
@@ -125,7 +126,7 @@
     }
     
 /// print tabs
-    if (!preg_match("/summary|freeplay|play|checkdecks|edit/", $view)) $view = 'checkdecks';
+    if (!preg_match("/summary|freeplay|play|checkdecks|manage|edit/", $view)) $view = 'checkdecks';
     $tabname = get_string('leitnergame', 'flashcard');
     $row[] = new tabobject('play', $thisurl."?id={$cm->id}&amp;view=checkdecks", $tabname);
     $tabname = get_string('freegame', 'flashcard');
@@ -134,9 +135,12 @@
         $tabname = get_string('teachersummary', 'flashcard');
         $row[] = new tabobject('summary', $thisurl."?view=summary&amp;id={$cm->id}&amp;page=byusers", $tabname);
         $tabname = get_string('edit', 'flashcard');
-        $row[] = new tabobject('edit', $thisurl."?view=edit&amp;id={$cm->id}", $tabname);
-        $tabname = get_string('import', 'flashcard');
-        $row[] = new tabobject('import', $thisurl."?what=import&amp;view=edit&amp;id={$cm->id}", $tabname);  
+        $row[] = new tabobject('manage', $thisurl."?view=manage&amp;id={$cm->id}", $tabname);
+        
+        if ($flashcard->questionsmediatype == FLASHCARD_MEDIA_TEXT && $flashcard->answersmediatype == FLASHCARD_MEDIA_TEXT){
+	        $tabname = get_string('import', 'flashcard');
+	        $row[] = new tabobject('import', $thisurl."?what=import&amp;view=manage&amp;id={$cm->id}", $tabname);
+	    }
     }
     $tabrows[] = $row;
     
@@ -144,7 +148,9 @@
 
 /// print second line
 
-    if ($view == 'summary'){
+    if ($view == 'edit'){
+        $currenttab = 'manage';
+    } elseif ($view == 'summary'){
         switch($page){
             case 'bycards' : {
                 $currenttab = 'bycards';
@@ -178,6 +184,12 @@
             } else {
                 include $CFG->dirroot.'/mod/flashcard/usersummaryview.php';
             }
+            break;
+        case 'manage' : 
+            if (!has_capability('mod/flashcard:manage', $context)){
+                redirect($thisurl."?view=checkdecks&amp;id={$cm->id}");
+            }
+            include $CFG->dirroot.'/mod/flashcard/managecards.php';
             break;
         case 'edit' : 
             if (!has_capability('mod/flashcard:manage', $context)){

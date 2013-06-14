@@ -10,11 +10,14 @@
     * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
     * @version Moodle 2.0
     */
+    
 
     // security
     if (!defined('MOODLE_INTERNAL')){
         die("Illegal direct access to this screen");
     }
+
+    echo $out; // deffered header()
 
     if ($action == 'reset'){
         $userid = required_param('userid', PARAM_INT);

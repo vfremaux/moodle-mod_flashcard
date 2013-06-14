@@ -83,7 +83,7 @@ foreach($subquestions as $subquestion){
                         <?php
                         if ($flashcard->questionsmediatype == FLASHCARD_MEDIA_IMAGE) {
                             flashcard_print_image($flashcard, $subquestion->questiontext);
-                        } elseif ($flashcard->questionsmediatype == FLASHCARD_MEDIA_SOUND){                            
+                        } elseif ($flashcard->questionsmediatype == FLASHCARD_MEDIA_SOUND){
                             flashcard_play_sound($flashcard, $subquestion->questiontext, 'false', false, "bell_f$i");
                         } elseif ($flashcard->questionsmediatype == FLASHCARD_MEDIA_IMAGE_AND_SOUND){                            
                             list($image, $sound) = split('@', $subquestion->questiontext);
