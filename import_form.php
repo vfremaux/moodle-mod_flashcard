@@ -13,19 +13,12 @@ require_once($CFG->libdir.'/formslib.php');
 
 class flashcard_import_form extends moodleform{
 
-    var $flashcardid;
-    
-    function flashcard_import_form($flashcardid){
-        $this->flashcardid = $flashcardid;
-        parent::moodleform();
-    }
-
     function definition(){
         
         $mform =& $this->_form;
-        $mform->addElement('hidden', 'a', $this->flashcardid); 
-        $mform->addElement('hidden', 'what', 'doimport'); 
-        $mform->addElement('hidden', 'view', 'edit'); 
+        $mform->addElement('hidden', 'what'); 
+        $mform->addElement('hidden', 'view'); 
+        $mform->addElement('hidden', 'id'); 
         
         $mform->addElement('header', 'cardimport', ''); 
         

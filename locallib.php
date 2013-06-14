@@ -79,6 +79,7 @@ function flashcard_initialize(&$flashcard, $userid){
     if ($subquestions = $DB->get_records('flashcard_deckdata', array('flashcardid' => $flashcard->id), '', 'id,id')){
         foreach($subquestions as $subquestion){
             if (in_array($subquestion->id, $registered)) continue;
+            $card = new StdClass;
             $card->userid = $userid;
             $card->flashcardid = $flashcard->id;
             $card->lastaccessed = time() - ($flashcard->deck1_delay * HOURSECS);
@@ -151,15 +152,20 @@ function flashcard_get_deck_status(&$flashcard, $userid = 0){
     $dk3 = 0;
     $dk4 = 0;
     $dk1 = $DB->count_records('flashcard_card', array('flashcardid' => $flashcard->id, 'userid' => $userid, 'deck' => 1));
+    $status = new StdClass;
+    $status->decks[0] = new StdClass;
     $status->decks[0]->count = $dk1;
     $dk2 = $DB->count_records('flashcard_card', array('flashcardid' => $flashcard->id, 'userid' => $userid, 'deck' => 2));
+    $status->decks[1] = new StdClass;
     $status->decks[1]->count = $dk2;
     if ($flashcard->decks >= 3){
         $dk3 = $DB->count_records('flashcard_card', array('flashcardid' => $flashcard->id, 'userid'=> $userid, 'deck' => 3));
+    	$status->decks[2] = new StdClass;
         $status->decks[2]->count = $dk3;
     }
     if ($flashcard->decks >= 4){
         $dk4 = $DB->count_records('flashcard_card', array('flashcardid' => $flashcard->id, 'userid' => $userid, 'deck' => 4));
+    	$status->decks[3] = new StdClass;
         $status->decks[3]->count = $dk4;
     }
     
@@ -307,7 +313,7 @@ function flashcard_mp3_player(&$flashcard, $url) {
 </script>';
 }
 
-function flashcard_delete_attached_files(&$cm, $card){
+function flashcard_delete_attached_files(&$cm, &$flashcard, $card){
 	
 	$fs = get_file_storage();
 

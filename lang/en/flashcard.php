@@ -42,6 +42,7 @@ $string['completionallgoodhelp'] = 'requiring all cards are in last deck to comp
 $string['customisationfiles'] = 'Card customisation files';
 $string['cardfront'] = 'Front card image';
 $string['cardback'] = 'Back card image';
+$string['deleteselected'] = 'Delete selected cards';
 $string['emptydeck'] = 'Empty deck image';
 $string['reviewback'] = 'Needs review deck image';
 $string['reviewedback'] = 'Reviewed deck image';
@@ -182,7 +183,7 @@ $string['autodowngrade_help'] = 'This option enables automatic downgrade of card
 $string['deck_release_help'] = 'Time in hours after which the cards go back into the upper deck. Each packet can be set differently.';
 $string['deck_delay_help'] = 'Adjustable time in hours at which the packet is marked to be revised.';
 $string['import_help'] = 'You may massively import question/Answer pairs within a flashcard using the
-card bulk import feature.
+card bulk import feature. (Import can only be used for Text/Text flashcards.)
 
 You just need to make a file with a list of questions/answers pairs and paste the content of that file in the importer\'s textarea.
 You may decide to encode this file with some kinds of common separators, on Linux or
