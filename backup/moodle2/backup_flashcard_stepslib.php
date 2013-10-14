@@ -26,6 +26,12 @@ class backup_flashcard_activity_structure_step extends backup_activity_structure
         $card = new backup_nested_element('card', array('id'), array(
                     'userid','entryid','deck','lastaccessed','accesscount'
                         ));
+
+        $deckstates = new backup_nested_element('deckstates');
+
+        $deckstate = new backup_nested_element('deckstate', array('id'), array(
+                    'userid','deck','state'
+                        ));
         
         $flashcard->add_child($decks);
         $decks->add_child($deck);
@@ -33,19 +39,36 @@ class backup_flashcard_activity_structure_step extends backup_activity_structure
         $flashcard->add_child($cards);
         $cards->add_child($card);
 
+        $flashcard->add_child($deckstates);
+        $deckstates->add_child($deckstate);
+
         // Sources
         $flashcard->set_source_table('flashcard', array('id' => backup::VAR_ACTIVITYID));
         $deck->set_source_table('flashcard_deckdata', array('flashcardid' => backup::VAR_PARENTID));
         
         if ($this->get_setting_value('userinfo')) {
             $card->set_source_table('flashcard_card', array('flashcardid' => backup::VAR_PARENTID));
+            $deckstate->set_source_table('flashcard_userdeck_state', array('flashcardid' => backup::VAR_PARENTID));
         }
 
         // Define id annotations
         $card->annotate_ids('user', 'userid');
+        $deckstate->annotate_ids('user', 'userid');
 
         // Define file annotations
         $flashcard->annotate_files('mod_flashcard', 'intro', null); // This file areas haven't itemid
+		$deck->annotate_files('mod_flashcard', 'questionsoundfile', 'id');
+		$deck->annotate_files('mod_flashcard', 'questionimagefile', 'id');
+		$deck->annotate_files('mod_flashcard', 'questionvideofile', 'id');
+		$deck->annotate_files('mod_flashcard', 'answersoundfile', 'id');
+		$deck->annotate_files('mod_flashcard', 'answerimagefile', 'id');
+		$deck->annotate_files('mod_flashcard', 'answervideofile', 'id');
+		$flashcard->annotate_files('mod_flashcard', 'customfront', null);
+		$flashcard->annotate_files('mod_flashcard', 'customempty', null);
+		$flashcard->annotate_files('mod_flashcard', 'customback', null);
+		$flashcard->annotate_files('mod_flashcard', 'customreview', null);
+		$flashcard->annotate_files('mod_flashcard', 'customreviewed', null);
+		$flashcard->annotate_files('mod_flashcard', 'customreviewempty', null);
 
         return $this->prepare_activity_structure($flashcard);
     }

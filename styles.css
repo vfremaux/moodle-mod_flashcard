@@ -29,26 +29,33 @@
     padding: 10px;
 }
 
+.flashcard-question-container{
+	display:block;
+	margin: 10px auto 10px auto; 
+}
+
+.flashcard-answer-container{
+	display:block;
+	margin: 10px auto 10px auto; 
+}
+
 .flashcard-question{
 	border-style: dashed; 
-	margin: 10px auto 10px auto; 
 	padding: 10px 30px; 
+	width: 300px; 
+	height: 200px; 
+	background-position:50% 50%;
+	vertical-align:middle;
+	display: table-cell;
 }
 
 .flashcard-answer{
 	border-style: dashed; 
 	margin: 10px auto 10px auto; 
 	padding: 10px 30px; 
-}
-
-.flashcard-question.backside-default { 
-    background-image: url('pix/front.jpg'); 
 	width: 300px; 
 	height: 200px; 
-}
-
-.flashcard-answer.frontside-default { 
-    background-image: url('pix/back.jpg'); 
-	width: 300px; 
-	height: 200px; 
+	background-position:50% 50%;
+	vertical-align:middle;
+	display: table-cell;
 }

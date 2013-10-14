@@ -20,7 +20,7 @@
     require_once($CFG->dirroot.'/mod/flashcard/renderers.php');
 
     $PAGE->requires->js('/mod/flashcard/js/ufo.js', true);
-    $PAGE->requires->js('/mod/flashcard/js/module.js', true);
+    $PAGE->requires->js('/mod/flashcard/js/module.js', false);
 
     $id = optional_param('id', '', PARAM_INT);    // Course Module ID, or
     $f = optional_param('f', '', PARAM_INT);     // flashcard ID
@@ -28,9 +28,9 @@
     $page = optional_param('page', '', PARAM_ACTION);     // page
     $action = optional_param('what', '', PARAM_ACTION);     // command
     
-    $thisurl = $CFG->wwwroot.'/mod/flashcard/view.php';
-    
-    $url = new moodle_url('/mod/flashcard/view.php');
+    $thisurl = $CFG->wwwroot.'/mod/flashcard/view.php';    
+    $url = new moodle_url('/mod/flashcard/view.php', array('id' => $id));
+
     $PAGE->set_url($url);
     if ($id) {
         if (! $cm = $DB->get_record('course_modules', array('id' => $id))) {
@@ -54,10 +54,8 @@
         }
     }
 
-    require_login($course->id);
+    require_course_login($course->id, true, $cm);
     $context = context_module::instance($cm->id);
-
-    add_to_log($course->id, 'flashcard', 'view', $thisurl."?id={$cm->id}", "{$flashcard->name}");
 
 /// Print the page header
 
@@ -70,6 +68,7 @@
     $PAGE->navbar->add($flashcard->name);
     $PAGE->set_focuscontrol('');
     $PAGE->set_cacheable(true);
+    $PAGE->set_button($OUTPUT->update_module_button($cm->id, 'flashcard'));
     $PAGE->set_headingmenu(navmenu($course, $cm));
 
     $out = $OUTPUT->header();
@@ -118,6 +117,7 @@
         case 'freeplay' : $currenttab = 'freeplay'; break;
         case 'summary' : $currenttab = 'summary'; break;
         case 'edit' : $currenttab = 'edit'; break;
+        case 'manage' : $currenttab = 'manage'; break;
         default : $currenttab = 'play';
     }
     
@@ -179,6 +179,7 @@
             if (!has_capability('mod/flashcard:manage', $context)){
                 redirect($thisurl."?view=checkdecks&amp;id={$cm->id}");
             }
+    		add_to_log($course->id, 'flashcard', 'view summary', $thisurl."?id={$cm->id}", "{$flashcard->name}");
             if ($page == 'bycards'){
                 include $CFG->dirroot.'/mod/flashcard/cardsummaryview.php';
             } else {
@@ -189,21 +190,26 @@
             if (!has_capability('mod/flashcard:manage', $context)){
                 redirect($thisurl."?view=checkdecks&amp;id={$cm->id}");
             }
+    		add_to_log($course->id, 'flashcard', 'manage', $thisurl."?id={$cm->id}", "{$flashcard->name}");
             include $CFG->dirroot.'/mod/flashcard/managecards.php';
             break;
         case 'edit' : 
             if (!has_capability('mod/flashcard:manage', $context)){
                 redirect($thisurl."?view=checkdecks&amp;id={$cm->id}");
             }
+    		add_to_log($course->id, 'flashcard', 'edit', $thisurl."?id={$cm->id}", "{$flashcard->name}");
             include $CFG->dirroot.'/mod/flashcard/editview.php';
             break;
         case 'freeplay' :
+    		add_to_log($course->id, 'flashcard', 'freeplay', $thisurl."?id={$cm->id}", "{$flashcard->name}");
             include $CFG->dirroot.'/mod/flashcard/freeplayview.php';
             break;
         case 'play' :
+    		add_to_log($course->id, 'flashcard', 'play', $thisurl."?id={$cm->id}", "{$flashcard->name}");
             include $CFG->dirroot.'/mod/flashcard/playview.php';
             break;
         default :
+    		add_to_log($course->id, 'flashcard', 'view', $thisurl."?id={$cm->id}", "{$flashcard->name}");
             include $CFG->dirroot.'/mod/flashcard/checkview.php';
     }
 

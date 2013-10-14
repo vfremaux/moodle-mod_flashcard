@@ -16,11 +16,13 @@ function xmldb_flashcard_upgrade($oldversion = 0) {
     // this should patch the question_match anyway
 
     $table = new xmldb_table('question_match');
-    $field = new xmldb_field('numquestions');
-    $field->set_attributes (XMLDB_TYPE_INTEGER, '10', 'true', 'true', null, null, null, '0');
-    if (!$dbman->field_exists($table, $field)){
-        $dbman->add_field($table, $field, true, true);
-    }
+    if ($dbman->table_exists($table)){
+	    $field = new xmldb_field('numquestions');
+	    $field->set_attributes (XMLDB_TYPE_INTEGER, '10', 'true', 'true', null, null, null, '0');
+	    if (!$dbman->field_exists($table, $field)){
+	        $dbman->add_field($table, $field, true, true);
+	    }
+	}
 
     if ($oldversion < 2008050400){
     
@@ -122,7 +124,7 @@ function xmldb_flashcard_upgrade($oldversion = 0) {
         $result = $result && $dbman->add_field($table, $field);    
     }
 
-    if ($result && $oldversion < 2008050800) {
+    if ($oldversion < 2008050800) {
 
     /// Define table flashcard_deckdata to be created
         $table = new xmldb_table('flashcard_deckdata');
@@ -137,10 +139,10 @@ function xmldb_flashcard_upgrade($oldversion = 0) {
         $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
 
     /// Launch create table for flashcard_deckdata
-        $result = $result && $dbman->create_table($table);
+        $dbman->create_table($table);
     }
 
-    if ($result && $oldversion < 2008050900) {
+    if ($oldversion < 2008050900) {
 
     /// Define field accesscount to be added to flashcard_card
         $table = new xmldb_table('flashcard_card');
@@ -148,10 +150,10 @@ function xmldb_flashcard_upgrade($oldversion = 0) {
         $field->set_attributes(XMLDB_TYPE_INTEGER, '11', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, '0', 'lastaccessed');
 
     /// Launch add field accesscount
-        $result = $result && $dbman->add_field($table, $field);
+        $dbman->add_field($table, $field);
     }
 
-    if ($result && $oldversion < 2008051100) {
+    if ($oldversion < 2008051100) {
 
     /// Rename field questionsasimages on table flashcard to questionsmediatype
         $table = new xmldb_table('flashcard');
@@ -159,7 +161,7 @@ function xmldb_flashcard_upgrade($oldversion = 0) {
         $field->set_attributes(XMLDB_TYPE_INTEGER, '1', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, '0', 'deck4_delay');
 
     /// Launch rename field questionsmediatype
-        $result = $result && $dbman->rename_field($table, $field, 'questionsmediatype');
+        $dbman->rename_field($table, $field, 'questionsmediatype');
 
     /// Rename field answersasimages on table flashcard to answersmediatype
         $table = new xmldb_table('flashcard');
@@ -167,7 +169,7 @@ function xmldb_flashcard_upgrade($oldversion = 0) {
         $field->set_attributes(XMLDB_TYPE_INTEGER, '1', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, '0', 'deck4_delay');
 
     /// Launch rename field questionsmediatype
-        $result = $result && $dbman->rename_field($table, $field, 'answersmediatype');
+        $dbman->rename_field($table, $field, 'answersmediatype');
 
     /// Define field flipdeck to be added to flashcard
         $table = new xmldb_table('flashcard');
@@ -182,7 +184,7 @@ function xmldb_flashcard_upgrade($oldversion = 0) {
 
 	/// first of all we need reencode all files stored in all cards and bring back files in our fileareas
 	
-    if ($result && $oldversion < 2012040200) {
+    if ($oldversion < 2012040200) {
     	
     	require_once $CFG->dirroot.'/mod/flashcard/locallib.php';
 
@@ -193,7 +195,7 @@ function xmldb_flashcard_upgrade($oldversion = 0) {
 
 		if ($flashcards){
 			foreach($flashcards as $f){
-				$cm = get_coursemodule_from_instance('flashcard', $f->id);
+				if (!$cm = get_coursemodule_from_instance('flashcard', $f->id)) continue;
 				$context = context_module::instance($cm->id);
 				$cards = $DB->get_records('flashcard_deckdata', array('flashcardid' => $f->id));
 				if ($cards){
@@ -210,7 +212,7 @@ function xmldb_flashcard_upgrade($oldversion = 0) {
 	
 	/// then continue upgrade
 
-    if ($result && $oldversion < 2012040200) {
+    if ($oldversion < 2012040200) {
     /// Rename summary into intro and	summaryformat into introformat
        $table = new xmldb_table('flashcard');
 
@@ -233,7 +235,7 @@ function xmldb_flashcard_upgrade($oldversion = 0) {
        upgrade_mod_savepoint(true, 2012040200, 'flashcard');
     }
 
-    if ($result && $oldversion < 2012040201) {
+    if ($oldversion < 2012040201) {
        	$table = new xmldb_table('flashcard');
 		
        	$field = new xmldb_field('audiostart');
@@ -245,7 +247,7 @@ function xmldb_flashcard_upgrade($oldversion = 0) {
        	upgrade_mod_savepoint(true, 2012040201, 'flashcard');
     }
 
-    if ($result && $oldversion < 2012040202) {
+    if ($oldversion < 2012040202) {
        	$table = new xmldb_table('flashcard');
 		
        	$field = new xmldb_field('custombackfileid');
@@ -298,6 +300,49 @@ function xmldb_flashcard_upgrade($oldversion = 0) {
        	upgrade_mod_savepoint(true, 2012040202, 'flashcard');
     }
     
+    if ($oldversion < 2013093000){
+       	$table = new xmldb_table('flashcard');
+
+    /// Launch add field extracss
+        $field = new xmldb_field('extracss');
+        $field->set_attributes(XMLDB_TYPE_TEXT, 'small', null, null, null, null, 'customreviewemptyfileid');
+        if (!$dbman->field_exists($table, $field)){
+	        $dbman->add_field($table, $field);
+		}
+       	upgrade_mod_savepoint(true, 2013093000, 'flashcard');
+    }
+
+    if ($oldversion < 2013101100){
+       	$table = new xmldb_table('flashcard');
+
+    /// Launch add field extracss
+        $field = new xmldb_field('remindusers');
+        $field->set_attributes(XMLDB_TYPE_INTEGER, '1', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, 0, 'completionallgood');
+        if (!$dbman->field_exists($table, $field)){
+	        $dbman->add_field($table, $field);
+		}
+
+    /// Define table flashcard_deckdata to be created
+        $table = new xmldb_table('flashcard_userdeck_state');
+
+    /// Adding fields to table flashcard_userdeck_data
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('flashcardid', XMLDB_TYPE_INTEGER, '11', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, '0');
+        $table->add_field('userid', XMLDB_TYPE_INTEGER, '11', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, '0');
+        $table->add_field('deck', XMLDB_TYPE_INTEGER, '4', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, '0');
+        $table->add_field('state', XMLDB_TYPE_INTEGER, '4', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, '0');
+
+    /// Adding keys to table flashcard_deckdata
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+
+    /// Launch create table for flashcard_deckdata
+    	if (!$dbman->table_exists($table)){
+	        $dbman->create_table($table);
+	    }
+
+       	upgrade_mod_savepoint(true, 2013101100, 'flashcard');
+    }
+    
     return true;
 }
 
@@ -327,13 +372,17 @@ function convert_flashcard_file($side, $card, $flashcard, $contextid, $fs){
 		$soundid = '';
 		$imageid = '';
 		list($image, $sound) = explode('@', $card->$infokey);
-		if ($filerec = process_flashcard_file($image, $side.'imagefile', $card, $flashcard, $contextid, $fs)){
-			$stored_file = $fs->get_file($filerec->contextid, $filerec->component, $filerec->filearea, $filerec->itemid, '/', $filerec->filename);
-			$imageid = $stored_file->get_id();
+		if (!empty($image)){
+			if ($filerec = process_flashcard_file($image, $side.'imagefile', $card, $flashcard, $contextid, $fs)){
+				$stored_file = $fs->get_file($filerec->contextid, $filerec->component, $filerec->filearea, $filerec->itemid, '/', $filerec->filename);
+				$imageid = $stored_file->get_id();
+			}
 		}
-		if ($filerec = process_flashcard_file($sound, $side.'soundfile', $card, $flashcard, $contextid, $fs)){
-			$stored_file = $fs->get_file($filerec->contextid, $filerec->component, $filerec->filearea, $filerec->itemid, '/', $filerec->filename);
-			$soundid = $stored_file->get_id();
+		if (!empty($sound)){
+			if ($filerec = process_flashcard_file($sound, $side.'soundfile', $card, $flashcard, $contextid, $fs)){
+				$stored_file = $fs->get_file($filerec->contextid, $filerec->component, $filerec->filearea, $filerec->itemid, '/', $filerec->filename);
+				$soundid = $stored_file->get_id();
+			}
 		}
 		$card->$infokey = "$imageid@$soundid";
 	}
@@ -360,7 +409,7 @@ function process_flashcard_file($filename, $filearea, $card, $flashcard, $contex
 		$filerec->filepath = '/';
 		$filerec->filename = basename($matches[2]);
 		if (file_exists($CFG->dataroot.'/'.$flashcard->course.'/'.$filename)){
-			print_object($filerec);
+			// print_object($filerec);
 			$fs->create_file_from_pathname($filerec, $CFG->dataroot.'/'.$flashcard->course.'/'.$filename);
 		} else {
 			return false;
@@ -374,12 +423,19 @@ function process_flashcard_file($filename, $filearea, $card, $flashcard, $contex
 		$filerec->filename = basename($filename);
 		// files should be in legacy files
 		$coursecontext = context_course::instance($flashcard->course);
-		$file = $fs->get_file($coursecontext->id, 'course', 'legacy', 0, $filerec->filepath, $filerec->filename);
-		if ($file){
-			$fs->create_file_from_storedfile($filerec, $file);
-		} else {
-			mtrace("Missing file : $flashcard->course / $filename<br/>");
-			return false;
+		if (!empty($filerec->filename)){
+			$file = $fs->get_file($coursecontext->id, 'course', 'legacy', 0, $filerec->filepath, $filerec->filename);
+			if ($file){
+				// quick fix on non compatible names
+				$filerec->filename = str_replace('?', '', $filerec->filename);
+				$filerec->filename = str_replace('!', '', $filerec->filename);
+				$filerec->filename = str_replace('/', '', $filerec->filename);
+				$filerec->filename = str_replace(' ', '_', $filerec->filename);
+				$fs->create_file_from_storedfile($filerec, $file);
+			} else {
+				mtrace("Missing file : $flashcard->course / $filename<br/>");
+				return false;
+			}
 		}
 	}
 	return $filerec;
