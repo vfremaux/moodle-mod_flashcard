@@ -34,7 +34,7 @@
 
     $table->head = array("<b>$strcard</b>", "<b>$strdecks</b>", "<b>$strviewed</b>");
     $table->size = array('30%', '35%', '35%');
-    $table->width = "90%";
+    $table->width = "100%";
     
     foreach($cards as $cardquestion => $acard){
         $cardcounters = flashcard_print_cardcounts($flashcard, $acard, true);

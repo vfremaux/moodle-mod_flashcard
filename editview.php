@@ -34,7 +34,6 @@
 
 		$validqkeys = array();
 
-		print_object($data);
 		// add or update cards
 		
 		if ($data->what == 'update'){
@@ -95,7 +94,7 @@
 						file_save_draft_area_files($filepickeritemid, $context->id, 'mod_flashcard', 'questionimagefile', $card->id);
 						$savedfiles = $fs->get_area_files($context->id, 'mod_flashcard', 'questionimagefile', $card->id);
 						$savedfile = array_pop($savedfiles);
-			        	$card->questiontext = $savedfile->id;
+			        	// $card->questiontext = $savedfile->id;
 					}
 		        } elseif ($flashcard->questionsmediatype == FLASHCARD_MEDIA_SOUND) {
 		            $filepickeritemid = required_param($qkey, PARAM_INT);
@@ -104,7 +103,7 @@
 						file_save_draft_area_files($filepickeritemid, $context->id, 'mod_flashcard', 'questionsoundfile', $card->id);
 						$savedfiles = $fs->get_area_files($context->id, 'mod_flashcard', 'questionsoundfile', $card->id);
 						$savedfile = array_pop($savedfiles);
-			        	$card->questiontext = $savedfile->get_id();
+			        	// $card->questiontext = $savedfile->get_id();
 			        }
 		        } elseif ($flashcard->questionsmediatype == FLASHCARD_MEDIA_VIDEO) {
 		            $filepickeritemid = required_param($qkey, PARAM_INT);
@@ -113,7 +112,7 @@
 						file_save_draft_area_files($filepickeritemid, $context->id, 'mod_flashcard', 'questionvideofile', $card->id);
 						$savedfiles = $fs->get_area_files($context->id, 'mod_flashcard', 'questionvideofile', $card->id, '', false);
 						$savedfile = array_pop($savedfiles);
-			        	$card->questiontext = $savedfile->get_id();
+			        	// $card->questiontext = $savedfile->get_id();
 			        }
 		        } else {
 		            // combine image and sound in one single field
@@ -123,7 +122,7 @@
 						file_save_draft_area_files($filepickeritemid, $context->id, 'mod_flashcard', 'questionimagefile', $card->id);
 						$imagesavedfiles = $fs->get_area_files($context->id, 'mod_flashcard', 'questionimagefile', $card->id, '', false);
 						$imagesavedfile = array_pop($imagesavedfiles);
-						$imagesavedid = $imagesavedfile->get_id();
+						// $imagesavedid = $imagesavedfile->get_id();
 					}
 		            $soundsavedid = '';
 		            $filepickeritemid = required_param(preg_replace('/^qi/', 'qs', $qkey), PARAM_INT);
@@ -131,9 +130,9 @@
 						file_save_draft_area_files($filepickeritemid, $context->id, 'mod_flashcard', 'questionsoundfile', $card->id);
 						$soundsavedfiles = $fs->get_area_files($context->id, 'mod_flashcard', 'questionimagefile', $card->id, '', false);
 						$soundsavedfile = array_pop($soundsavedfiles);
-						$soundsavedid = $soundsavedfile->get_id();
+						// $soundsavedid = $soundsavedfile->get_id();
 					}
-		        	$card->questiontext = $imagesavedid.'@'.$soundsavedid;
+		        	// $card->questiontext = $imagesavedid.'@'.$soundsavedid;
 		        }
 		    }
 		    
@@ -148,44 +147,44 @@
 		        if ($flashcard->answersmediatype == FLASHCARD_MEDIA_IMAGE) {
 		            $filepickeritemid = required_param($akey, PARAM_INT);
 					file_save_draft_area_files($filepickeritemid, $context->id, 'mod_flashcard', 'answerimagefile', $card->id);
-					$savedfiles = $fs->get_area_files($context->id, 'mod_flashcard', 'answerimagefile', $card->id, '', false);
+					// $savedfiles = $fs->get_area_files($context->id, 'mod_flashcard', 'answerimagefile', $card->id, '', false);
 					// there should be only one
-					$savedfile = array_pop($savedfiles);
-		        	$card->answertext = $savedfile->get_id();
+					// $savedfile = array_pop($savedfiles);
+		        	// $card->answertext = $savedfile->get_id();
 		        } elseif ($flashcard->answersmediatype == FLASHCARD_MEDIA_SOUND) {
 		            $filepickeritemid = required_param($akey, PARAM_INT);
 					file_save_draft_area_files($filepickeritemid, $context->id, 'mod_flashcard', 'answersoundfile', $card->id);
-					$savedfiles = $fs->get_area_files($context->id, 'mod_flashcard', 'answersoundfile', $card->id, '', false);
+					// $savedfiles = $fs->get_area_files($context->id, 'mod_flashcard', 'answersoundfile', $card->id, '', false);
 					// there should be only one
-					$savedfile = array_pop($savedfiles);
-		        	$card->answertext = $savedfile->get_id();
+					// $savedfile = array_pop($savedfiles);
+		        	// $card->answertext = $savedfile->get_id();
 		        } elseif ($flashcard->answersmediatype == FLASHCARD_MEDIA_VIDEO) {
 		            $filepickeritemid = required_param($akey, PARAM_INT);
 					file_save_draft_area_files($filepickeritemid, $context->id, 'mod_flashcard', 'answervideofile', $card->id);
-					$savedfiles = $fs->get_area_files($context->id, 'mod_flashcard', 'answervideofile', $card->id, '', false);
+					// $savedfiles = $fs->get_area_files($context->id, 'mod_flashcard', 'answervideofile', $card->id, '', false);
 					// there should be only one
-					$savedfile = array_pop($savedfiles);
-		        	$card->answertext = $savedfile->get_id();
+					// $savedfile = array_pop($savedfiles);
+		        	// $card->answertext = $savedfile->get_id();
 		        } else {
 		            // combine image and sound in one single field
 		            $imagesavedid = '';
 		            $filepickeritemid = required_param($akey, PARAM_CLEANHTML);
 					if (!$fs->is_area_empty($usercontext->id, 'user', 'draft', $filepickeritemid, true)){
 						file_save_draft_area_files($filepickeritemid, $context->id, 'mod_flashcard', 'answerimagefile', $card->id);
-						$imagesavedfiles = $fs->get_area_file($context->id, 'mod_flashcard', 'answerimagefile', $card->id, '', false);
-						$imagesavedfile = array_pop($imagesavedfiles);
-						$imagesavedid = $imagesavedfile->get_id();
+						// $imagesavedfiles = $fs->get_area_file($context->id, 'mod_flashcard', 'answerimagefile', $card->id, '', false);
+						// $imagesavedfile = array_pop($imagesavedfiles);
+						// $imagesavedid = $imagesavedfile->get_id();
 					}
 
-		            $soundsavedid = '';
+		            // $soundsavedid = '';
 		            $filepickeritemid = required_param(preg_replace('/^ai/', 'as', $akey), PARAM_CLEANHTML);
 					if (!$fs->is_area_empty($usercontext->id, 'user', 'draft', $filepickeritemid, true)){
 						file_save_draft_area_files($filepickeritemid, $context->id, 'mod_flashcard', 'answersoundfile', $card->id);
-						$soundsavedfiles = $fs->get_area_file($context->id, 'mod_flashcard', 'answersoundfile', $card->id, '', false);
-						$soundsavedfile = array_pop($soundsavedfiles);
-						$soundsavedid = $soundsavedfile->get_id();
+						// $soundsavedfiles = $fs->get_area_file($context->id, 'mod_flashcard', 'answersoundfile', $card->id, '', false);
+						// $soundsavedfile = array_pop($soundsavedfiles);
+						// $soundsavedid = $soundsavedfile->get_id();
 					}
-	        		$card->answertext = $imagesavedid.'@'.$soundsavedid;
+	        		// $card->answertext = $imagesavedid.'@'.$soundsavedid;
 		        }
 		    }
 	        if (!$DB->update_record('flashcard_deckdata', $card)) {
@@ -193,8 +192,13 @@
 	        }
 	    }
 		
+    	/*
+    	echo $out;
 		echo $OUTPUT->continue_button($CFG->wwwroot.'/mod/flashcard/view.php?id='.$id.'&view=manage');
-		// redirect($CFG->wwwroot.'/mod/flashcard/view.php?id='.$id.'&view=manage');
+		echo $OUTPUT->footer();
+		die;
+		*/
+		redirect($CFG->wwwroot.'/mod/flashcard/view.php?id='.$id.'&view=manage');
 	}
     
     echo $out;

@@ -100,8 +100,10 @@ class mod_flashcard_mod_form extends moodleform_mod {
 		$yesnooptions['0'] = get_string('no');
 		$yesnooptions['1'] = get_string('yes');
         $mform->addElement('select', 'audiostart', get_string('audiostart', 'flashcard'), $yesnooptions);
+        $mform->setType('audiostart', PARAM_BOOL);
 
         $mform->addElement('selectyesno', 'flipdeck', get_string('flipdeck', 'flashcard'));
+        $mform->setType('flipdeck', PARAM_BOOL);
         $mform->addHelpButton('flipdeck', 'flipdeck', 'flashcard');
 
         $options['2'] = 2;
@@ -160,27 +162,74 @@ class mod_flashcard_mod_form extends moodleform_mod {
         $mform->addRule('deck4_delay', get_string('numericrequired', 'flashcard'), 'numeric', null, 'client');
         $mform->disabledIf('deck4_delay', 'decks', 'neq', 4);
 
+        $mform->addElement('header', 'notifications_head', get_string('notifications', 'flashcard'));
+
+        $mform->addElement('select', 'remindusers', get_string('remindusers', 'flashcard'), $yesnooptions);
+        $mform->setType('remindusers', PARAM_BOOL);
+
         $mform->addElement('header', 'customfiles_head', get_string('customisationfiles', 'flashcard'));
         $mform->setAdvanced('customfiles_head');
         
+        $customcardoptions = array('maxfiles' => 1, 'maxbytes' => $COURSE->maxbytes, 'accepted_types' => array('.jpg', '.png', '.gif'));
+        
 		$maxbytes = 100000;
-        $mform->addElement('filepicker', 'custombackfileid', get_string('cardfront', 'flashcard'), null, array('maxbytes' => $COURSE->maxbytes, 'accepted_types' => array('.jpg', '.png', '.gif')));
+        $mform->addElement('filepicker', 'custombackfileid', get_string('cardfront', 'flashcard'), null, $customcardoptions);
         $mform->setAdvanced('custombackfileid');
-        $mform->addElement('filepicker', 'customfrontfileid', get_string('cardback', 'flashcard'), null, array('maxbytes' => $COURSE->maxbytes, 'accepted_types' => array('.jpg', '.png', '.gif')));
+        $mform->addElement('filepicker', 'customfrontfileid', get_string('cardback', 'flashcard'), null, $customcardoptions);
         $mform->setAdvanced('customfrontfileid');
-        $mform->addElement('filepicker', 'customemptyfileid', get_string('emptydeck', 'flashcard'), null, array('maxbytes' => $COURSE->maxbytes, 'accepted_types' => array('.jpg', '.png', '.gif')));
+        $mform->addElement('filepicker', 'customemptyfileid', get_string('emptydeck', 'flashcard'), null, $customcardoptions);
         $mform->setAdvanced('customemptyfileid');
-        $mform->addElement('filepicker', 'customreviewfileid', get_string('reviewback', 'flashcard'), null, array('maxbytes' => $COURSE->maxbytes, 'accepted_types' => array('.jpg', '.png', '.gif')));
+        $mform->addElement('filepicker', 'customreviewfileid', get_string('reviewback', 'flashcard'), null, $customcardoptions);
         $mform->setAdvanced('customreviewfileid');
-        $mform->addElement('filepicker', 'customreviewedfileid', get_string('reviewedback', 'flashcard'), null, array('maxbytes' => $COURSE->maxbytes, 'accepted_types' => array('.jpg', '.png', '.gif')));
+        $mform->addElement('filepicker', 'customreviewedfileid', get_string('reviewedback', 'flashcard'), null, $customcardoptions);
         $mform->setAdvanced('customreviewedfileid');
-        $mform->addElement('filepicker', 'customreviewemptyfileid', get_string('reviewedempty', 'flashcard'), null, array('maxbytes' => $COURSE->maxbytes, 'accepted_types' => array('.jpg', '.png', '.gif')));
+        $mform->addElement('filepicker', 'customreviewemptyfileid', get_string('reviewedempty', 'flashcard'), null, $customcardoptions);
         $mform->setAdvanced('customreviewemptyfileid');
+
+        $mform->addElement('textarea', 'extracss', get_string('extracss', 'flashcard'), array('cols'=>'60', 'rows' => 15));
+        $mform->setAdvanced('extracss');
 
         $this->standard_coursemodule_elements();
 
         $this->add_action_buttons();
 	}
+
+      function add_completion_rules() {
+        $mform =& $this->_form;
+
+        $group = array();
+        $group[] =& $mform->createElement('checkbox', 'completionallviewedenabled', '', get_string('completionallviewed', 'flashcard'));
+        $group[] =& $mform->createElement('text', 'completionallviewed', '', array('size' => 3));
+        $mform->setType('completionallviewed', PARAM_INT);
+        $mform->addGroup($group, 'completionallviewedgroup', get_string('completionallviewedgroup', 'flashcard'), array(' '), false);
+        $mform->disabledIf('completionallviewedgroup', 'completionallgoodenabled', 'checked');
+
+        $group = array();
+        $group[] =& $mform->createElement('checkbox', 'completionallgoodenabled', '', get_string('completionallgoodenabled', 'flashcard'));
+        $mform->addGroup($group, 'completionallgoodgroup', get_string('completionallgoodgroup', 'flashcard'), array(' '), false);
+
+        return array('completionallviewedgroup','completionallgoodgroup');
+    }
+
+    function completion_rule_enabled($data) {
+        return (!empty($data['completionallviewedenabled']) && $data['completionallviewed']!=0) ||
+            (!empty($data['completionallgood']));
+    }
+
+    function data_preprocessing(&$default_values) {
+        parent::data_preprocessing($default_values);
+
+        // Set up the completion checkboxes which aren't part of standard data.
+        // We also make the default value (if you turn on the checkbox) for those
+        // numbers to be 1, this will not apply unless checkbox is ticked.
+        $default_values['completionallviewedenabled'] =
+            !empty($default_values['completionallviewed']) ? 1 : 0;
+        if (empty($default_values['completionallviewed'])) {
+            $default_values['completionallviewed'] = 999;
+        }
+        $default_values['completionallgoodenabled'] = !empty($default_values['completionallgood']) ? 1 : 0;
+    }
+
 	
 	function set_data($data){
 		
@@ -218,20 +267,47 @@ class mod_flashcard_mod_form extends moodleform_mod {
 			$data->customreviewemptyfileid = $draftitemid;
 		}
 		
+		if (empty($data->extracss)){
+			$data->extracss = '
+/* panel div for question */
+.flashcard-question{
+}
+/* panel div for answer */
+.flashcard-answer{
+}
+			';
+		}
+		
 		parent::set_data($data);
 	}
-
-	function definition_after_data(){
-
-		$mform    =& $this->_form;
-		/*
-        $startfrom =&$mform->getElement('startfrom');
-        $elements = $startfrom->getElements();
-        print_object($elements[1]->getValue());
-        if ($mform->getElementValue('starttime') != 0){
-            $starttimeenable->setValue(true);
+	
+	function get_data(){
+        $data = parent::get_data();
+        if (!$data) {
+            return false;
         }
-        */
+        
+        // Turn off completion settings if the checkboxes aren't ticked
+        if (!empty($data->completionunlocked)) {
+
+            // weird effect of form resubmission. but why ?
+        	$data->completionallviewedenabled = @$_POST['completionallviewedenabled'];
+        	$data->completionallviewed = @$_POST['completionallviewed'];
+        	$data->completionallgoodenabled = @$_POST['completionallgoodenabled'];
+        	
+            $autocompletion = !empty($data->completion) && $data->completion == COMPLETION_TRACKING_AUTOMATIC;
+            if (empty($data->completionallviewedenabled) || !$autocompletion) {
+                $data->completionallviewed = 0;
+            } else {
+                $data->completionallviewed = 999;
+            }
+            if (empty($data->completionallgoodenabled) || !$autocompletion) {
+                $data->completionallgood = 0;
+            } else {
+                $data->completionallgood = 1;
+            }
+        }
+        return $data;
 	}
 	
 	function validation($data, $files = array()) {

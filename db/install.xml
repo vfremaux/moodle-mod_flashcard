@@ -33,9 +33,11 @@
         <FIELD NAME="customemptyfileid" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" COMMENT="Default comment for the field, please edit me" PREVIOUS="customfrontfileid" NEXT="customreviewfileid" />
         <FIELD NAME="customreviewfileid" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" COMMENT="Default comment for the field, please edit me" PREVIOUS="customemptyfileid" NEXT="customreviewedfileid" />
         <FIELD NAME="customreviewedfileid" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" COMMENT="Default comment for the field, please edit me" PREVIOUS="customreviewfileid" NEXT="customreviewemptyfileid" />
-        <FIELD NAME="customreviewemptyfileid" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" COMMENT="Default comment for the field, please edit me" PREVIOUS="customreviewedfileid" NEXT="completionallviewed" />
-        <FIELD NAME="completionallviewed" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" COMMENT="Default comment for the field, please edit me" PREVIOUS="customreviewemptyfileid" NEXT="completionallgood" />
-        <FIELD NAME="completionallgood" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" COMMENT="Default comment for the field, please edit me" PREVIOUS="completionallviewed" />
+        <FIELD NAME="customreviewemptyfileid" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" COMMENT="Default comment for the field, please edit me" PREVIOUS="customreviewedfileid" NEXT="extracss" />
+        <FIELD NAME="extracss" TYPE="text" LENGTH="small" NOTNULL="false" SEQUENCE="false" COMMENT="Additional css" PREVIOUS="customreviewemptyfileid" NEXT="completionallviewed" />
+        <FIELD NAME="completionallviewed" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" COMMENT="Default comment for the field, please edit me" PREVIOUS="extracss" NEXT="completionallgood" />
+        <FIELD NAME="completionallgood" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" COMMENT="Default comment for the field, please edit me" PREVIOUS="completionallviewed" NEXT="remindusers" />
+        <FIELD NAME="remindusers" TYPE="int" LENGTH="1" NOTNULL="false" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" COMMENT="Default comment for the field, please edit me" PREVIOUS="completionallgood" />
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key for flashcard"/>
@@ -55,7 +57,7 @@
         <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="primary key of the table"/>
       </KEYS>
     </TABLE>
-    <TABLE NAME="flashcard_deckdata" COMMENT="holds questions/responses" PREVIOUS="flashcard_card">
+    <TABLE NAME="flashcard_deckdata" COMMENT="holds questions/responses" PREVIOUS="flashcard_card" NEXT="flashcard_userdeck_state">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" COMMENT="id of the table, please edit me" NEXT="flashcardid"/>
         <FIELD NAME="flashcardid" TYPE="int" LENGTH="11" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" COMMENT="Default comment for the field, please edit me" PREVIOUS="id" NEXT="questiontext"/>
@@ -64,6 +66,18 @@
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="primary key of the table, please edit me"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="flashcard_userdeck_state" COMMENT="holds deck state for each user" PREVIOUS="flashcard_deckdata">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" COMMENT="primary key" NEXT="flashcardid"/>
+        <FIELD NAME="flashcardid" TYPE="int" LENGTH="11" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" COMMENT="the flashcard" PREVIOUS="id" NEXT="userid"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="11" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" COMMENT="User id" PREVIOUS="flashcardid" NEXT="deck"/>
+        <FIELD NAME="deck" TYPE="int" LENGTH="4" NOTNULL="false" SEQUENCE="false" COMMENT="Deck index" PREVIOUS="userid" NEXT="state"/>
+        <FIELD NAME="state" TYPE="int" LENGTH="4" NOTNULL="false" SEQUENCE="false" COMMENT="States if notified" PREVIOUS="deck"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="primary id"/>
       </KEYS>
     </TABLE>
   </TABLES>

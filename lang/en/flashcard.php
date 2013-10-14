@@ -9,9 +9,9 @@
  */
 
 // Capabilities
-$string['flashback:manage'] = 'Manage the cards';
+$string['flashcard:manage'] = 'Manage the cards';
 $string['flashcard:canplayfree'] = 'Play free';
-$string['flashback:addinstance'] = 'Add a flashcard';
+$string['flashcard:addinstance'] = 'Add a flashcard';
 
 $string['addone'] = 'Add a new question';
 $string['addthree'] = 'Add three new questions';
@@ -27,28 +27,22 @@ $string['badcards'] = 'Rejected card(s): ';
 $string['bycards'] = 'By cards';
 $string['byusers'] = 'By users';
 $string['card'] = 'Card';
-$string['cardsindeck'] = 'Remains : {$a} card(s)';
+$string['cardback'] = 'Back card image';
+$string['cardfront'] = 'Front card image';
 $string['cardsep'] = 'Card Separator in text import:';
-$string['cardsremaining'] = 'Cards Remaining';
+$string['cardsindeck'] = 'Remains : {$a} card(s)';
 $string['cardsread'] = 'Card(s) read: ';
+$string['cardsremaining'] = 'Cards Remaining';
 $string['commands'] = '';
-$string['confirm'] = 'Confirm:';
-$string['completionallviewed'] = 'Student must have viewed all cards once:';
-$string['completionallviewedgroup'] = 'Require viewing all cards';
-$string['completiondiscussionshelp'] = 'requiring that all cards are viewed at least once';
-$string['completionallgood'] = 'Student bring all cards in last deck:';
+$string['completionallgoodenabled'] = 'Student must bring all cards in last deck to complete';
 $string['completionallgoodgroup'] = 'Require all cards are known';
 $string['completionallgoodhelp'] = 'requiring all cards are in last deck to complete';
-$string['customisationfiles'] = 'Card customisation files';
-$string['cardfront'] = 'Front card image';
-$string['cardback'] = 'Back card image';
-$string['deleteselected'] = 'Delete selected cards';
-$string['emptydeck'] = 'Empty deck image';
-$string['reviewback'] = 'Needs review deck image';
-$string['reviewedback'] = 'Reviewed deck image';
-$string['reviewedempty'] = 'Empty reviewed deck image';
+$string['completionallviewed'] = 'Student must have viewed all cards once or at least some amount of them (cards):';
+$string['completionallviewedgroup'] = 'Require viewing all cards';
+$string['completiondiscussionshelp'] = 'requiring that all cards are viewed at least once';
+$string['confirm'] = 'Confirm:';
 $string['counters'] = 'Counters';
-// $string['customisation'] = 'To customize this instance of flashcard, get the stylesheet beneath, <br/>edit it and save it within the <a href="{$a}">moddata/flashcard</a>/&lt;<i>instance</i>&gt; directory in the course\'s files.<br/> If you use images as background, save them in the same place, and invoke them with their simple names';
+$string['customisationfiles'] = 'Card customisation files';
 $string['deck'] = 'Deck';
 $string['deck1_delay'] = 'Review triggering delay (deck 1)';
 $string['deck2_delay'] = 'Review triggering delay (deck 2)';
@@ -61,19 +55,23 @@ $string['deck_delay'] = 'Review triggering';
 $string['deck_release'] = 'Autodowngrade';
 $string['decks'] = 'Decks';
 $string['deckstates'] = 'Decks state';
+$string['deleteselected'] = 'Delete selected cards';
 $string['deleteselection'] = 'Delete the selection';
 $string['difficultcards'] = 'Hard set';
 $string['easycards'] = 'Easy set';
 $string['edit'] = 'Edit the cards';
 $string['editingcards1'] = 'Edit Flashcard Set';
 $string['editingcards2'] = 'Edit Flashcard Set';
-$string['erroraddcard'] = 'Could not add card to deck';
-$string['errorbindcard'] = 'Could not bind card to user {$a} deck';
-$string['errorupdatecard'] = 'Could not update deck card';
-$string['errordeletecard'] = 'Could not delete cards from deck';
+$string['emptydeck'] = 'Empty deck image';
 $string['emptyset'] = 'Flashcard Set is Empty';
 $string['endtime'] = 'End of time';
+$string['erroraddcard'] = 'Could not add card to deck';
+$string['errorbindcard'] = 'Could not bind card to user {$a} deck';
+$string['errordeletecard'] = 'Could not delete cards from deck';
+$string['errorupdatecard'] = 'Could not update deck card';
+$string['extracss'] = 'Extra css';
 $string['fieldsep'] = 'Field separator:';
+$string['flashcardneedsreview'] = 'Flashcard needs review';
 $string['flipdeck'] = 'Flip answers and questions';
 $string['forcereload'] = 'Force reloading from question';
 $string['freegame'] = 'Free play';
@@ -86,11 +84,12 @@ $string['igotit'] = 'I got it !';
 $string['image'] = 'image';
 $string['imageplussound'] = 'image + sound';
 $string['import'] = 'Import';
-$string['importingcards'] = 'Import cards';
 $string['importadvice'] = 'When importing new card set, you will remove all old cardset along with the previous information about user\'s plays';
 $string['imported'] = 'Import:';
-$string['importreport'] = '<b>Flashcard a importé des nouvelles cartes :</b>';
+$string['importingcards'] = 'Import cards';
+$string['importreport'] = '<b>Flashcard imported new cards:</b>';
 $string['instructions'] = 'Click on the flashcard to turn it over and see the other side';
+$string['lastaccessed'] = 'Last accessed';
 $string['leitnergame'] = 'Leitner play';
 $string['matchingquestion'] = 'Matching question from question bank';
 $string['maxaccess'] = 'More viewed ticks ';
@@ -100,6 +99,51 @@ $string['minaccess'] = 'Less viewed ticks ';
 $string['missingimage'] = '{missing image file}';
 $string['missingsound'] = '{missing sound file}';
 $string['modulename'] = 'Flash Card Set';
+$string['modulenameplural'] = 'Flash Cards';
+$string['next'] = 'Next card';
+$string['nocards'] = 'No cards defined.';
+$string['noflashcards'] = 'No flashcards in this course.';
+$string['nomorecards'] = 'No more cards. ';
+$string['nosubquestions'] = 'Error: Missing subquestions for this question!';
+$string['notinitialized'] = 'This student never used this flashcard.';
+$string['notifications'] = 'Notifications';
+$string['nousers'] = 'No student in this course.';
+$string['num'] = 'N°';
+$string['numericrequired'] = 'A number is required.';
+$string['outoftimerange'] = 'This module is closed by time range. You cannot use it now.';
+$string['playwithme'] = 'Learn with that deck';
+$string['pluginadministration'] = 'Flashcard administration.';
+$string['pluginname'] = 'Flashcard';
+$string['previous'] = 'Previous card';
+$string['question'] = 'Questions';
+$string['questionid'] = 'Question to import';
+$string['questionsmediatype'] = 'Question media type';
+$string['reinforce'] = 'Review this deck';
+$string['removecard'] = 'Remove card';
+$string['remindusers'] = 'Remind users';
+$string['reset'] = 'Reset cardset';
+$string['resetflashcardstates'] = 'Reset all flashcard states';
+$string['reviewback'] = 'Needs review deck image';
+$string['reviewedback'] = 'Reviewed deck image';
+$string['reviewedempty'] = 'Empty reviewed deck image';
+$string['sound'] = 'sound';
+$string['sourcequestion'] = 'Question to import';
+$string['starttime'] = 'Start time ';
+$string['stylesheet'] = 'Obtain the stylesheet';
+$string['styling'] = 'Customisation';
+$string['sumaccess'] = 'Total viewed cards ';
+$string['summary'] = 'Flash Card Set Summary';
+$string['teachersummary'] = 'Summary';
+$string['text'] = 'text';
+$string['timetoreview'] = '{$a} days remaining before review';
+$string['trivialcards'] = 'Trivial cards';
+$string['undefinedquestionset'] = 'No matching question was elected in quizzes for this flashcard set';
+$string['userdecks'] = 'Users\' decks';
+$string['userdecksummary'] = 'Deck {$a->deckid}: {$a->count} cards ({$a->cardcount} hits in total on the deck)';
+$string['viewed'] = 'Viewes';
+
+/* Strings for the help section */
+
 $string['modulename_help'] = '<p>
 This module provide students a way of fast memoizing list of "things". This is a typical
 indexing exercise, where a map of coupled things should be learned and retained. We say "thing"
@@ -123,43 +167,7 @@ deck.
 The module allows also a free use of the cards, enabled by module configuration. The module is
 customisable graphically using a teacher defined CSS and image set.
 </p>';
-$string['modulenameplural'] = 'Flash Cards';
-$string['next'] = 'Next card';
-$string['nocards'] = 'No cards defined.';
-$string['noflashcards'] = 'No flashcards in this course.';
-$string['nomorecards'] = 'No more cards. ';
-$string['nosubquestions'] = 'Error: Missing subquestions for this question!';
-$string['notinitialized'] = 'This student never used this flashcard.';
-$string['nousers'] = 'No student in this course.';
-$string['num'] = 'N°';
-$string['numericrequired'] = 'A number is required.';
-$string['outoftimerange'] = 'This module is closed by time range. You cannot use it now.';
-$string['playwithme'] = 'Learn with that deck';
-$string['pluginadministration'] = 'Flashcard administration.';
-$string['pluginname'] = 'Flashcard';
-$string['previous'] = 'Previous card';
-$string['question'] = 'Questions';
-$string['questionid'] = 'Question to import';
-$string['questionsmediatype'] = 'Question media type';
-$string['reinforce'] = 'Review this deck';
-$string['removecard'] = 'Remove card';
-$string['reset'] = 'Reset cardset';
-$string['sound'] = 'sound';
-$string['sourcequestion'] = 'Question to import';
-$string['starttime'] = 'Start time ';
-$string['stylesheet'] = 'Obtain the stylesheet';
-$string['styling'] = 'Customisation';
-$string['sumaccess'] = 'Total viewed cards ';
-$string['summary'] = 'Flash Card Set Summary';
-$string['teachersummary'] = 'Summary';
-$string['text'] = 'text';
-$string['timetoreview'] = '{$a} days remaining before review';
-$string['trivialcards'] = 'Trivial cards';
-$string['undefinedquestionset'] = 'No matching question was elected in quizzes for this flashcard set';
-$string['userdecks'] = 'Users\' decks';
-$string['viewed'] = 'Viewes';
 
-/* Strings for the help section */
 $string['sourcequestion_help'] = 'Choose a question as a source.
 
 You may quickly setup a flashcard deck from a matching question of the question base. To proceed, choose a question in the list and check the "force reload" checkbox. All previous cards will be deleted and the flashcard will be reloaded with the question data.

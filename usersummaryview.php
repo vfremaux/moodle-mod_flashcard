@@ -19,17 +19,24 @@
 
     echo $out; // deffered header()
 
+	// small controller here...
     if ($action == 'reset'){
         $userid = required_param('userid', PARAM_INT);
         $DB->delete_records('flashcard_card', array('flashcardid' => $flashcard->id, 'userid' => $userid));
+ 
+		$completion = new completion_info($course);
+	 	if (($flashcard->completionallgood || $flashcard->completionallviewed) && $completion->is_enabled($cm)){			
+			// Unmark completion state
+		    $completion->update_state($cm, COMPLETION_INCOMPLETE, $userid);
+		}
+
     }
 
     require_once($CFG->dirroot.'/enrol/locallib.php');
     
-    $course_context = context_course::instance($COURSE->id);
-    $course = $DB->get_record('course', array('id'=>$COURSE->id), '*', MUST_EXIST);
-    $manager = new course_enrolment_manager($PAGE,$course);
-    $courseusers = $manager->get_users('lastseen');
+    $coursecontext = context_course::instance($COURSE->id);
+    $course = $DB->get_record('course', array('id' => $COURSE->id), '*', MUST_EXIST);
+    $courseusers = get_enrolled_users($coursecontext);
 
     $struser = get_string('username');
     $strdeckstates = get_string('deckstates', 'flashcard');
@@ -38,7 +45,7 @@
     $table = new html_table();
     $table->head = array("<b>$struser</b>", "<b>$strdeckstates</b>", "<b>$strcounts</b>");
     $table->size = array('30%', '50%', '20%');
-    $table->width = '90%';
+    $table->width = '100%';
     
     if (!empty($courseusers)){
         foreach($courseusers as $auser){

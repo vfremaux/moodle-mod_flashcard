@@ -305,27 +305,33 @@ function flashcard_print_deckcounts($flashcard, $return, $userid = 0){
 * @uses $COURSE
 */
 function flashcard_print_image(&$flashcard, $imagefileid, $return = false){
-    global $CFG, $COURSE;
+    global $CFG, $COURSE, $OUTPUT;
 
     $strmissingimage = get_string('missingimage', 'flashcard');
 
     $fs = get_file_storage();
     
-    if (!$imagefile = $fs->get_file_by_id($imagefileid)){
-        return "<span class=\"error\">$strmissingimage</span>";
-    }
-    
+	// new way : probably no effective fielids storage needed anymore
+	$cm = get_coursemodule_from_instance('flashcard', $flashcard->id);
+	$context = context_module::instance($cm->id);
+	$contextid = $context->id;
+	list($filearea, $itemid) = explode('/', $imagefileid);
+	$imagefiles = $fs->get_area_files($context->id, 'mod_flashcard', $filearea, $itemid);
+	if (empty($imagefiles)){
+		$imagefileurl = $OUTPUT->pix_url('notfound', 'flashcard');
+		$imagehtml = "<img src=\"{$imagefileurl}\" width=\"100%\" height=\"100%\" />";
+	    if (!$return) echo $imagehtml;
+	    return $imagehtml;
+	}
+	$imagefile = array_pop($imagefiles);
     $filename = $imagefile->get_filename();
-    $contextid = $imagefile->get_contextid();
-    $filearea = $imagefile->get_filearea();
-    $itemid = $imagefile->get_itemid();
         
     $magic = rand(0,100000);
     if (empty($htmlname)) $htmlname = "bell_{$magic}";
     
     $imagefileurl = $CFG->wwwroot."/pluginfile.php/{$contextid}/mod_flashcard/{$filearea}/{$itemid}/{$filename}";
 
-    $imagehtml = "<img src=\"{$imagefileurl}\" />";
+    $imagehtml = "<img src=\"{$imagefileurl}\" width=\"100%\" height=\"100%\" />";
 
     if (!$return) echo $imagehtml;
     return $imagehtml;
@@ -341,20 +347,26 @@ function flashcard_print_image(&$flashcard, $imagefileid, $return = false){
 * @uses $COURSE
 */
 function flashcard_play_sound(&$flashcard, $soundfileid, $autostart = 'false', $return = false, $htmlname = ''){
-    global $CFG, $COURSE;
+    global $CFG, $COURSE, $OUTPUT;
 
     $strmissingsound = get_string('missingsound', 'flashcard');
     
     $fs = get_file_storage();
     
-    if (!$soundfile = $fs->get_file_by_id($soundfileid)){
-        return "<span class=\"error\">$strmissingsound</span>";
-    }
-    
+	// new way : probably no effective fieldids storage needed anymore
+	$cm = get_coursemodule_from_instance('flashcard', $flashcard->id);
+	$context = context_module::instance($cm->id);
+	$contextid = $context->id;
+	list($filearea, $itemid) = explode('/', $soundfileid);
+	$soundfiles = $fs->get_area_files($context->id, 'mod_flashcard', $filearea, $itemid);
+	if (empty($soundfiles)){
+		$soundfileurl = $OUTPUT->pix_url('notfound', 'flashcard');
+		$soundhtml = "<img src=\"{$soundfileurl}\" />";
+	    if (!$return) echo $soundhtml;
+	    return $soundhtml;
+	}
+	$soundfile = array_pop($soundfiles);
     $filename = $soundfile->get_filename();
-    $contextid = $soundfile->get_contextid();
-    $filearea = $soundfile->get_filearea();
-    $itemid = $soundfile->get_itemid();
         
     $magic = rand(0,100000);
     if ($htmlname == '') $htmlname = "bell_{$magic}";
@@ -362,10 +374,10 @@ function flashcard_play_sound(&$flashcard, $soundfileid, $autostart = 'false', $
     $soundfileurl = $CFG->wwwroot."/pluginfile.php/{$contextid}/mod_flashcard/{$filearea}/{$itemid}/{$filename}";
     
     if (!preg_match('/\.mp3$/i', $filename)){
-        $soundhtml = "<embed src=\"{$soundfileurl}\" autostart=\"{$autostart}\" hidden=\"false\" id=\"{$htmlname}\" height=\"20\" width=\"200\" />";
+        $soundhtml = "<embed src=\"{$soundfileurl}\" autostart=\"{$autostart}\" hidden=\"false\" id=\"{$htmlname}_player\" height=\"20\" width=\"200\" />";
         $soundhtml = "<a href=\"{$soundfileurl}\" autostart=\"{$autostart}\" hidden=\"false\" id=\"{$htmlname}\" height=\"20\" width=\"200\" />";
     } else {
-		$soundhtml = flashcard_mp3_player($flashcard, $soundfileurl);
+		$soundhtml = flashcard_mp3_player($flashcard, $soundfileurl, $htmlname);
     }
 
     if (!$return) echo $soundhtml;
@@ -392,5 +404,26 @@ function flashcard_get_file_url($filerecid, $asobject = false){
 	    return $f;
     }
     
+    return $url;
+}
+
+function flashcard_print_custom_url(&$flashcard, $filearea, $itemid){
+	global $CFG;
+	
+	// new way : probably no effective fieldids storage needed anymore
+	$cm = get_coursemodule_from_instance('flashcard', $flashcard->id);
+	$context = context_module::instance($cm->id);
+	$contextid = $context->id;
+	
+	$fs = get_file_storage();
+	
+	$customfiles = $fs->get_area_files($context->id, 'mod_flashcard', $filearea, 0);
+	if (empty($customfiles)){
+		return;
+	}
+	$customfile = array_pop($customfiles);
+    $filename = $customfile->get_filename();
+	
+    $url = $CFG->wwwroot."/pluginfile.php/{$contextid}/mod_flashcard/{$filearea}/{$itemid}/{$filename}";
     return $url;
 }

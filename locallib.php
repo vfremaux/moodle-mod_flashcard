@@ -79,7 +79,7 @@ function flashcard_initialize(&$flashcard, $userid){
     if ($subquestions = $DB->get_records('flashcard_deckdata', array('flashcardid' => $flashcard->id), '', 'id,id')){
         foreach($subquestions as $subquestion){
             if (in_array($subquestion->id, $registered)) continue;
-            $card = new StdClass;
+            $card = new StdClass();
             $card->userid = $userid;
             $card->flashcardid = $flashcard->id;
             $card->lastaccessed = time() - ($flashcard->deck1_delay * HOURSECS);
@@ -152,21 +152,25 @@ function flashcard_get_deck_status(&$flashcard, $userid = 0){
     $dk3 = 0;
     $dk4 = 0;
     $dk1 = $DB->count_records('flashcard_card', array('flashcardid' => $flashcard->id, 'userid' => $userid, 'deck' => 1));
-    $status = new StdClass;
-    $status->decks[0] = new StdClass;
+    $status = new StdClass();
+    $status->decks[0] = new StdClass();
     $status->decks[0]->count = $dk1;
+    $status->decks[0]->deckid = 1;
     $dk2 = $DB->count_records('flashcard_card', array('flashcardid' => $flashcard->id, 'userid' => $userid, 'deck' => 2));
-    $status->decks[1] = new StdClass;
+    $status->decks[1] = new StdClass();
     $status->decks[1]->count = $dk2;
+    $status->decks[1]->deckid = 2;
     if ($flashcard->decks >= 3){
         $dk3 = $DB->count_records('flashcard_card', array('flashcardid' => $flashcard->id, 'userid'=> $userid, 'deck' => 3));
-    	$status->decks[2] = new StdClass;
+    	$status->decks[2] = new StdClass();
         $status->decks[2]->count = $dk3;
+        $status->decks[2]->deckid = 3;
     }
     if ($flashcard->decks >= 4){
         $dk4 = $DB->count_records('flashcard_card', array('flashcardid' => $flashcard->id, 'userid' => $userid, 'deck' => 4));
-    	$status->decks[3] = new StdClass;
+    	$status->decks[3] = new StdClass();
         $status->decks[3]->count = $dk4;
+        $status->decks[3]->deckid = 4;
     }
     
     // not initialized for this user
@@ -289,7 +293,7 @@ function flashcard_print_cardcounts(&$flashcard, $card, $return=false){
 * new media renderers cannot be used because not tunable in autoplay
 *
 */
-function flashcard_mp3_player(&$flashcard, $url) {
+function flashcard_mp3_player(&$flashcard, $url, $htmlid) {
     global $CFG, $THEME;
 
 	$audiostart = ($flashcard->audiostart) ? 'no' : 'yes&autoPlay=yes' ;
@@ -299,16 +303,16 @@ function flashcard_mp3_player(&$flashcard, $url) {
 
     static $count = 0;
     $count++;
-    $id = 'flashcard_filter_mp3_'.time().$count; //we need something unique because it might be stored in text cache
+    $id = ($htmlid) ? $htmlid : 'flashcard_filter_mp3_'.time().$count ; //we need something unique because it might be stored in text cache
 
     $url = addslashes_js($url);
 
-    return '<span class="mediaplugin mediaplugin_mp3" id="'.$id.'">('.'mp3audio'.')</span>
+    return '<span class="mediaplugin mediaplugin_mp3" id="'.$id.'_player">('.'mp3audio'.')</span>
 <script type="text/javascript">
 //<![CDATA[
   var FO = { movie:"'.$CFG->wwwroot.'/mod/flashcard/players/mp3player.swf?src='.$url.'",
     width:"90", height:"15", majorversion:"6", build:"40", flashvars:"'.$c.'", quality: "high" };
-  UFO.create(FO, "'.$id.'");
+  UFO.create(FO, "'.$id.'_player");
 //]]>
 </script>';
 }

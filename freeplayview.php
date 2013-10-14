@@ -47,9 +47,12 @@ var atype = "<?php echo $flashcard->answersmediatype ?>";
 //]]>
 </script>
 
-<p>
-<?php print_string('freeplayinstructions', 'flashcard'); ?>.
-</p>
+<p><?php print_string('freeplayinstructions', 'flashcard'); ?>.</p>
+
+<style>
+	<?php echo $flashcard->extracss ?>
+</style>
+
 <table class="flashcard_board" width="100%">
     <tr>
         <td rowspan="6">
@@ -67,8 +70,25 @@ foreach($subquestions as $subquestion){
     echo '<center>';
     $divid = "f$i";
     $divstyle = ($i > 0) ? 'display:none' : '' ;
-    echo "<div id=\"{$divid}\" style=\"{$divstyle}\" class=\"backside\"";
-    echo " onclick=\"javascript:clicked('f', '{$i}')\">";
+    echo '<div id="'.$divid.'" ';
+    echo 'class="flashcard-question" style="'.$divstyle.';background-repeat:no-repeat;background-image:url('.flashcard_print_custom_url($flashcard, 'customback', 0).')" ';
+    echo ' onclick="javascript:clicked(\'f\', \''.$i.'\')">';
+
+    $back = 'question';
+    $front = 'answer';
+
+    if ($flashcard->flipdeck){
+        // flip card side values
+        $tmp = $subquestion->answertext;
+        $subquestion->answertext = $subquestion->questiontext;
+        $subquestion->questiontext = $tmp;
+        $back = 'answer';
+        $front = 'question';
+        // flip media types
+        $tmp = $flashcard->answersmediatype;
+        $flashcard->answersmediatype = $flashcard->questionsmediatype;
+        $flashcard->questionsmediatype = $tmp;
+    }
     
     if ($flashcard->flipdeck){
         // flip card side values
@@ -77,19 +97,20 @@ foreach($subquestions as $subquestion){
         $subquestion->questiontext = $tmp;
     }
 ?>
-            <table class="flashcard_question" width="100%" height="100%">
+            <table width="100%" height="100%">
                 <tr>
                     <td align="center" valign="center">
                         <?php
                         if ($flashcard->questionsmediatype == FLASHCARD_MEDIA_IMAGE) {
-                            flashcard_print_image($flashcard, $subquestion->questiontext);
+                            flashcard_print_image($flashcard, "{$back}imagefile/{$subquestion->id}");
                         } elseif ($flashcard->questionsmediatype == FLASHCARD_MEDIA_SOUND){
-                            flashcard_play_sound($flashcard, $subquestion->questiontext, 'false', false, "bell_f$i");
+                            flashcard_play_sound($flashcard, "{$back}soundfile/{$subquestion->id}", 'false', false, "bell_b$i");
+			            } elseif ($flashcard->questionsmediatype == FLASHCARD_MEDIA_VIDEO){
+			                flashcard_play_video($flashcard, "{$back}videofile/{$subquestion->id}", $autoplay, false, "bell_b$i");
                         } elseif ($flashcard->questionsmediatype == FLASHCARD_MEDIA_IMAGE_AND_SOUND){                            
-                            list($image, $sound) = split('@', $subquestion->questiontext);
-                            flashcard_print_image($flashcard, $image);
-                            echo "<br/>";
-                            flashcard_play_sound($flashcard, $sound, 'false', false, "bell_f$i");
+			            	flashcard_print_image($flashcard, "{$back}imagefile/{$subquestion->id}");
+			                echo "<br/>";
+			                flashcard_play_sound($flashcard, "{$back}soundfile/{$subquestion->id}", $autoplay, false, "bell_b$i");
                         } else {
                             echo format_text($subquestion->questiontext,FORMAT_HTML);
                         }
@@ -101,22 +122,24 @@ foreach($subquestions as $subquestion){
             </center>
             <center>
 <?php
-        echo "<div id=\"b{$i}\" style=\"display: none\" class=\"frontside\"";
+        echo "<div id=\"b{$i}\" ";
+    	echo 'class="flashcard-answer" style="display:none;background-repeat:no-repeat;background-image:url('.flashcard_print_custom_url($flashcard, 'customfront', 0).')" ';
         echo " onclick=\"javascript:clicked('b', '{$i}')\">";
 ?>
-    		<table class="flashcard_answer" width="100%" height="100%">
+    		<table width="100%" height="100%">
     		    <tr>
     		        <td align="center" valign="center" style="">
     		            <?php 
                         if ($flashcard->answersmediatype == FLASHCARD_MEDIA_IMAGE) {
-                            flashcard_print_image($flashcard, $subquestion->answertext);
+                            flashcard_print_image($flashcard, "{$front}imagefile/{$subquestion->id}");
                         } elseif ($flashcard->answersmediatype == FLASHCARD_MEDIA_SOUND){                          
-                            flashcard_play_sound($flashcard, $subquestion->answertext, 'false', false, "bell_b$i");
+                            flashcard_play_sound($flashcard, "{$front}soundfile/{$subquestion->id}", 'false', false, "bell_f$i");
+			            } elseif ($flashcard->answersmediatype == FLASHCARD_MEDIA_VIDEO){
+			                flashcard_play_video($flashcard, "{$front}videofile/{$subquestion->id}", $autoplay, false, "bell_f$i");
                         } elseif ($flashcard->answersmediatype == FLASHCARD_MEDIA_IMAGE_AND_SOUND){                            
-                            list($image, $sound) = split('@', $subquestion->answertext);
-                            flashcard_print_image($flashcard, $image);
-                            echo "<br/>";
-                            flashcard_play_sound($flashcard, $sound, 'false', false, "bell_b$i");
+			            	flashcard_print_image($flashcard, "{$front}imagefile/{$subquestion->id}");
+			                echo "<br/>";
+			                flashcard_play_sound($flashcard, "{$front}soundfile/{$subquestion->id}", $autoplay, false, "bell_f$i");
                         } else {
                             echo format_text($subquestion->answertext,FORMAT_HTML);
                         }
@@ -151,17 +174,17 @@ foreach($subquestions as $subquestion){
     </tr>
     <tr>
         <td width="200px">
-            <input id="next" type="button" value="<?php print_string('next', 'flashcard') ?>" onclick="javascript:next()" />
+            <input id="next" type="button" value="<?php print_string('next', 'flashcard') ?>" onclick="javascript:next_card()" />
         </td>
     </tr>
     <tr>
         <td width="200px">
-            <input id="previous" type="button" value="<?php print_string('previous', 'flashcard') ?>" onclick="javascript:previous()" />
+            <input id="previous" type="button" value="<?php print_string('previous', 'flashcard') ?>" onclick="javascript:previous_card()" />
         </td>
     </tr>
     <tr>
         <td width="200px">
-            <input id="remove" type="button" value="<?php print_string('removecard', 'flashcard') ?>" onclick="javascript:remove()" />
+            <input id="remove" type="button" value="<?php print_string('removecard', 'flashcard') ?>" onclick="javascript:remove_card()" />
         </td>
     </tr>
     <tr>
