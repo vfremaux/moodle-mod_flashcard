@@ -31,7 +31,7 @@ require_once($CFG->dirroot . '/mod/flashcard/mailtemplatelib.php');
  */
 function flashcard_supports($feature) {
     switch($feature) {
-        case FEATURE_GROUPS:                  return false;
+        case FEATURE_GROUPS:                  return true;
         case FEATURE_GROUPINGS:               return false;
         case FEATURE_GROUPMEMBERSONLY:        return false;
         case FEATURE_MOD_INTRO:               return true;
