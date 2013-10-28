@@ -22,19 +22,12 @@ class flashcard_import_form extends moodleform{
         
         $mform->addElement('header', 'cardimport', ''); 
         
-        $cardsepoptions[0] = ':';
-        $cardsepoptions[1] = ';';
-        $cardsepoptions[2] = '[CR]';
-        $cardsepoptions[3] = '[CR][LF]';
-        $mform->addElement('select', 'cardsep', get_string('cardsep', 'flashcard'), $cardsepoptions);
-
         $fieldsepoptions[0] = ',';
         $fieldsepoptions[1] = ':';
-        $fieldsepoptions[2] = '[TAB]';
-        $fieldsepoptions[3] = '[SP]';
+        $fieldsepoptions[2] = ';';
         $mform->addElement('select', 'fieldsep', get_string('fieldsep', 'flashcard'), $fieldsepoptions);
 
-        $mform->addElement('textarea', 'import', get_string('imported', 'flashcard'), array('ROWS' => 10, 'COLS' => 40));
+        $mform->addElement('textarea', 'import', get_string('imported', 'flashcard'), array('ROWS' => 20, 'COLS' => 60));
 
         $mform->addElement('checkbox', 'confirm', get_string('confirm', 'flashcard'), get_string('importadvice', 'flashcard'));
 
@@ -42,5 +35,3 @@ class flashcard_import_form extends moodleform{
     }
 
 }
-
-?>

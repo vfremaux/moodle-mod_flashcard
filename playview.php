@@ -178,11 +178,13 @@
 	        ?>
 			<br />
 	        <?php
+	        /*
 	        $options['id'] = $cm->id;
 	        $options['what'] = 'reset';
 	        $options['view'] = 'play';
 	        $options['deck'] = $deck;
 	        echo $OUTPUT->single_button(new moodle_url('view.php', $options), get_string('reset', 'flashcard'), 'post');
+	        */
 	        ?>
 	        <br/>
 	        <a href="<?php echo $thisurl ?>?id=<?php echo $cm->id ?>&amp;view=checkdecks"><?php print_string('backtodecks', 'flashcard') ?></a>
