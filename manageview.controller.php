@@ -60,21 +60,14 @@ if ($action == 'doimport') {
     include 'import_form.php';
     $form = new flashcard_import_form();
 
-    $CARDSEPPATTERNS[0] = ':';
-    $CARDSEPPATTERNS[1] = ';';
-    $CARDSEPPATTERNS[2] = "\n";
-    $CARDSEPPATTERNS[3] = "\r\n";
-
     $FIELDSEPPATTERNS[0] = ',';
     $FIELDSEPPATTERNS[1] = ':';
-    $FIELDSEPPATTERNS[2] = " ";
-    $FIELDSEPPATTERNS[3] = "\t";
+    $FIELDSEPPATTERNS[2] = ';';
 
     if ($data = $form->get_data()) {
 
         if (!empty($data->confirm)) {
 
-            $cardsep = $CARDSEPPATTERNS[$data->cardsep];
             $fieldsep = $FIELDSEPPATTERNS[$data->fieldsep];
 
             // filters comments and non significant lines
@@ -84,7 +77,7 @@ if ($action == 'doimport') {
             $data->import = preg_replace("/(\\r?\\n)\\r?\\n/", '$1', $data->import);
             $data->import = trim($data->import);
 
-            $pairs = explode($cardsep, $data->import);
+            $pairs = preg_split("/\r?\n/", $data->import);
             if (!empty($pairs)) {
                 /// first integrity check
                 $report = new StdClass;

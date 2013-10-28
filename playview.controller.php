@@ -96,7 +96,7 @@ if ($action == 'ifailed'){
     $card = $DB->get_record('flashcard_card', array('id' => $card->id));
     $card->lastaccessed = time();
     $card->accesscount++ ;
-    $card->deck--; // just for debug
+    // $card->deck--; // just for debug
     if (!$DB->update_record('flashcard_card', $card)){
         print_error('dbcouldnotupdate', 'flashcard', '', get_string('cardinfo', 'flashcard'));
     }

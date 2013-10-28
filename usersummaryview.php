@@ -36,7 +36,15 @@
     
     $coursecontext = context_course::instance($COURSE->id);
     $course = $DB->get_record('course', array('id' => $COURSE->id), '*', MUST_EXIST);
-    $courseusers = get_enrolled_users($coursecontext);
+
+	$groupmode = groups_get_activity_groupmode($cm, $COURSE);
+	if ($groupmode != NOGROUPS){
+	    $groupid = groups_get_activity_group($cm, true);
+		groups_print_activity_menu($cm, $url.'&view=summary&page=byusers');
+	} else {
+		$groupid = 0;
+	}
+    $courseusers = get_enrolled_users($coursecontext, '', $groupid);
 
     $struser = get_string('username');
     $strdeckstates = get_string('deckstates', 'flashcard');
