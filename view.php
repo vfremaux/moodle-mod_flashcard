@@ -20,7 +20,6 @@
     require_once($CFG->dirroot.'/mod/flashcard/renderers.php');
 
     $PAGE->requires->js('/mod/flashcard/js/ufo.js', true);
-    $PAGE->requires->js('/mod/flashcard/js/module.js', false);
 
     $id = optional_param('id', '', PARAM_INT);    // Course Module ID, or
     $f = optional_param('f', '', PARAM_INT);     // flashcard ID
@@ -63,13 +62,11 @@
     $strflashcard  = get_string('modulename', 'flashcard');
     $PAGE->set_title("$course->shortname: $flashcard->name");
     $PAGE->set_heading("$course->fullname");
-    /* SCANMSG: may be additional work required for $navigation variable */
     $PAGE->navbar->add($strflashcards, $CFG->wwwroot."/mod/flashcard/index.php?id=".$course->id);
     $PAGE->navbar->add($flashcard->name);
     $PAGE->set_focuscontrol('');
     $PAGE->set_cacheable(true);
     $PAGE->set_button($OUTPUT->update_module_button($cm->id, 'flashcard'));
-    $PAGE->set_headingmenu(navmenu($course, $cm));
 
     $out = $OUTPUT->header();
 
@@ -92,22 +89,6 @@
 	        die;
         }
     }    
-
-/// loads "per instance" customisation styles
-
-    $localstyle = "{$course->id}/moddata/flashcard/{$flashcard->id}/flashcard.css";
-    if (file_exists("{$CFG->dataroot}/{$localstyle}")){
-        if ($CFG->slasharguments) {
-            $localstyleurl = $CFG->wwwroot.'/file.php/'.$localstyle;
-        } else {
-            if ($CFG->slasharguments){
-                $localstyleurl = $CFG->wwwroot.'/file.php?file='.$localstyle;
-            } else {
-                $localstyleurl = $CFG->wwwroot.'/file.php'.$localstyle;
-            }
-        }
-        $out .= "<link rel=\"stylesheet\" type=\"text/css\" href=\"{$localstyleurl}\" />";
-    }
 
 /// Determine the current tab
 

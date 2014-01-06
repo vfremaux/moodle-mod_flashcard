@@ -91,6 +91,7 @@ class mod_flashcard_mod_form extends moodleform_mod {
         $mediaoptions[FLASHCARD_MEDIA_IMAGE] = get_string('image', 'flashcard');
         $mediaoptions[FLASHCARD_MEDIA_SOUND] = get_string('sound', 'flashcard');
         $mediaoptions[FLASHCARD_MEDIA_IMAGE_AND_SOUND] = get_string('imageplussound', 'flashcard');
+        $mediaoptions[FLASHCARD_MEDIA_VIDEO] = get_string('video', 'flashcard'). ' (Experimental)';
         $mform->addElement('select', 'questionsmediatype', get_string('questionsmediatype', 'flashcard'), $mediaoptions);
         $mform->addHelpButton('questionsmediatype', 'mediatypes', 'flashcard');
         

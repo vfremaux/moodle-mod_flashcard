@@ -67,7 +67,12 @@
 
 /// print deferred header
 
+    // $PAGE->requires->js('/mod/flashcard/players/swfobject.js');
+    $PAGE->requires->js('/mod/flashcard/players/flowplayer/flowplayer.js');
+
 	echo $out;
+	
+	echo '<link href="'.$CFG->wwwroot.'/mod/flashcard/players/flowplayer/skin/minimalist.css" rel="stylesheet" type="text/css" />';
     
 /// randomize and get a question (obviously it is not a consumed question).
     
@@ -88,17 +93,21 @@
         $tmp = $flashcard->answersmediatype;
         $flashcard->answersmediatype = $flashcard->questionsmediatype;
         $flashcard->questionsmediatype = $tmp;
+
     }
 
+    $acardvideoclass = ($flashcard->answersmediatype == FLASHCARD_MEDIA_VIDEO) ? '-video' : '' ;
+    $qcardvideoclass = ($flashcard->answersmediatype == FLASHCARD_MEDIA_VIDEO) ? '-video' : '' ;
+    
     $autoplay = ($flashcard->audiostart) ? 'true' : 'false';
 ?>
-
 		<script type="text/javascript">
 		var qtype = "<?php echo $flashcard->questionsmediatype ?>";
 		var atype = "<?php echo $flashcard->answersmediatype ?>";
 		var maxitems = <?php echo count($cards) ?>;
 		</script>
-		
+		<script src="<?php echo $CFG->wwwroot ?>/mod/flashcard/js/module.js">
+		</script>
 		<style>
 			<?php echo $flashcard->extracss ?>
 		</style>
@@ -110,7 +119,7 @@
 
           </div>
 		<center>
-        <div id="questiondiv" style=";background-repeat:no-repeat;background-image:url(<?php echo flashcard_print_custom_url($flashcard, 'customback', 0) ?>)" class="flashcard-question" onclick="javascript:togglecard()">
+        <div id="questiondiv" style=";background-repeat:no-repeat;background-image:url(<?php echo flashcard_print_custom_url($flashcard, 'customback', 0) ?>)" class="flashcard-question<?php echo $qcardvideoclass ?>" onclick="javascript:togglecard()">
             <?php
             if ($flashcard->questionsmediatype == FLASHCARD_MEDIA_IMAGE) {
                 // flashcard_print_image($flashcard, $subquestion->questiontext);
@@ -133,7 +142,7 @@
             }
             ?>
         </div>
-        <div id="answerdiv" style="display:none;background-repeat:no-repeat;background-image:url(<?php echo flashcard_print_custom_url($flashcard, 'customfront', 0) ?>)" class="flashcard-answer" onclick="javascript:togglecard()">
+        <div id="answerdiv" style="display:none;background-repeat:no-repeat;background-image:url(<?php echo flashcard_print_custom_url($flashcard, 'customfront', 0) ?>)" class="flashcard-answer<?php echo $acardvideoclass ?>" onclick="javascript:togglecard()">
             <?php
             if ($flashcard->answersmediatype == FLASHCARD_MEDIA_IMAGE) {
                 // flashcard_print_image($flashcard, $subquestion->answertext);
