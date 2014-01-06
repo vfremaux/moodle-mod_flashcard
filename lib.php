@@ -208,6 +208,19 @@ function flashcard_user_complete($course, $user, $mod, $flashcard) {
 }
 
 /**
+ * Checks if scale is being used by any instance of assignment
+ *
+ * This is used to find out if scale used anywhere
+ * @param $scaleid int
+ * @return boolean True if the scale is used by any assignment
+ */
+function flashcard_scale_used_anywhere($scaleid) {
+    global $DB;
+
+    return false;
+}
+
+/**
  * Given a course and a time, this module should find recent activity 
  * that has occurred in flashcard activities and print it out. 
  * Return true if there was output, or false is there was none.

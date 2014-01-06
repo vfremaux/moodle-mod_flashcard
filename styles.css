@@ -49,6 +49,16 @@
 	display: table-cell;
 }
 
+.flashcard-question-video{
+	border-style: dashed; 
+	padding: 10px 30px; 
+	width: 600px; 
+	height: 400px; 
+	background-position:50% 50%;
+	vertical-align:middle;
+	display: table-cell;
+}
+
 .flashcard-answer{
 	border-style: dashed; 
 	margin: 10px auto 10px auto; 
@@ -58,4 +68,29 @@
 	background-position:50% 50%;
 	vertical-align:middle;
 	display: table-cell;
+}
+
+.flashcard-answer-video{
+	border-style: dashed; 
+	margin: 10px auto 10px auto; 
+	padding: 10px 30px; 
+	width: 600px; 
+	height: 400px; 
+	background-position:50% 50%;
+	vertical-align:middle;
+	display: table-cell;
+}
+
+.flowplayer { width: 80%; background-color: #222; background-size: cover; margin-bottom:30px }
+.flowplayer .fp-controls { background-color: rgba(17, 17, 17, 1)}
+.flowplayer .fp-timeline { background-color: rgba(204, 204, 204, 1)}
+.flowplayer .fp-progress { background-color: rgba(0, 167, 200, 1)}
+.flowplayer .fp-buffer { background-color: rgba(249, 249, 249, 1)}
+
+.flashcard-flowplayer video{
+	max-width: 800px;
+}
+
+.flashcard-flowplayer-thumb{
+ 	max-width: 300px; 
 }

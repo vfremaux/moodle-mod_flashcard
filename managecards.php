@@ -13,8 +13,12 @@
     
     $page = optional_param('page', 0, PARAM_INT);
     $from = $page * $pagesize;
+    
+    $PAGE->requires->js('/mod/flashcard/players/flowplayer/flowplayer.js');
 
 	echo $out;
+	
+	echo '<link href="'.$CFG->wwwroot.'/mod/flashcard/players/flowplayer/skin/minimalist.css" rel="stylesheet" type="text/css" />';
 	
     $cards = $DB->get_records('flashcard_deckdata', array('flashcardid' => $flashcard->id), 'id', '*', $from, $pagesize);
     
@@ -42,7 +46,7 @@
 	            $back = flashcard_play_sound($flashcard, "questionsoundfile/{$card->id}", 'false', true, "bell_b$i");
 	        } elseif ($flashcard->questionsmediatype == FLASHCARD_MEDIA_VIDEO){
 	            // $back = flashcard_play_sound($flashcard, $card->questiontext, 'false', true, "bell_f$i");
-	            $back = flashcard_play_video($flashcard, "questionvideofile/{$card->id}", 'false', true, "bell_b$i");
+	            $back = flashcard_play_video($flashcard, "questionvideofile/{$card->id}", 'false', true, "bell_b$i", true);
 	        } elseif ($flashcard->questionsmediatype == FLASHCARD_MEDIA_IMAGE_AND_SOUND){                            
 	            // list($image, $sound) = split('@', $card->questiontext);
 	            // $back = flashcard_print_image($flashcard, $image, true);
@@ -62,7 +66,7 @@
 	            $front = flashcard_play_sound($flashcard, "answersoundfile/{$card->id}", 'false', true, "bell_f$i");
 	        } elseif ($flashcard->answersmediatype == FLASHCARD_MEDIA_VIDEO){
 	            // $front = flashcard_play_sound($flashcard, $card->answertext, 'false', true, "bell_f$i");
-	            $front = flashcard_play_video($flashcard, "answervideofile/{$card->id}", 'false', true, "bell_f$i");
+	            $front = flashcard_play_video($flashcard, "answervideofile/{$card->id}", 'false', true, "bell_f$i", true);
 	        } elseif ($flashcard->answersmediatype == FLASHCARD_MEDIA_IMAGE_AND_SOUND){                            
 	            // list($image, $sound) = split('@', $card->answertext);
 	            // $front = flashcard_print_image($flashcard, $image, true);

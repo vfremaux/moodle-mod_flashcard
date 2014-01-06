@@ -4,7 +4,8 @@ for(i = 0 ; i < maxitems ; i++){
 }
 
 function clicked(type, item){
-    document.getElementById(type + item).style.display = "none";
+    obj = document.getElementById(type + item);
+    obj.style.display = "none";
     if (type == 'f'){
 	    oldtype = 'b';
 	} 
@@ -17,19 +18,26 @@ function clicked(type, item){
             qtobj = document.getElementById('bell_b' + item+'_player');
             qtobj.SetControllerVisible(true);
         }
+        if (atype == 4){
+        	api = flowplayer(1);
+        	api.play();
+        }
     }
     if (type == 'b'){
-        if (qtype > 2){
+        if (qtype == 2 || atype == 3){
             qtobj = document.getElementById('bell_f' + item+'_player');
             qtobj.SetControllerVisible(true);
+        }
+        if (qtype == 4){
+        	api = flowplayer();
+        	api.play();
         }
     }
 }
 
 // Free play only
 
-function next_card()
-{
+function next_card(){
     document.getElementById('f' + currentitem).style.display = "none";
     document.getElementById('b' + currentitem).style.display = "none";
     do {
@@ -85,28 +93,52 @@ function togglecard(){
 	    
 	    // controls the quicktime player switching
 	    answerobj.style.display = "none";
-	    if (atype >= 2){
+	    if (atype == 2 || atype == 3){
     	    bellobj = document.getElementById('bell_a_player');
     	    bellobj.Stop();
     	    bellobj.SetControllerVisible(false);
     	}
-	    if (qtype >= 2){
+	    if (atype == 4){
+    	    var api = $('#bell_a_player').data('flowplayer');
+    	    api.stop();
+    	    api.unload();
+    	}
+	    if (qtype == 2 || atype == 3){
     	    bellobj = document.getElementById('bell_q_player');
     	    bellobj.SetControllerVisible(true);
+    	}
+	    if (qtype == 4){
+    	    var api = $('#bell_q_player').data('flowplayer');
+			api.bind("error", function(e, api) {
+ 				alert(e.code + ' '+e.message);
+			});    	    
+			api.play();
     	}
 	} else {
 	    questionobj.style.display = "none";
 	    answerobj.style.display = "table-cell";
 
 	    // controls the quicktime player switching
-	    if (atype >= 2){
+	    if (atype == 2 || atype == 3){
     	    bellobj = document.getElementById('bell_a_player');
     	    bellobj.SetControllerVisible(true);
     	}
-	    if (qtype >= 2){
+	    if (atype == 4){
+    	    var api = $('#bell_a_player').data('flowplayer');
+			api.bind("error", function(e, api) {
+ 				alert(e.code + ' '+e.message);
+			});    	    
+    	    api.play();
+    	}
+	    if (qtype == 2 || atype == 3){
     	    bellobj = document.getElementById('bell_q_player');
     	    bellobj.Stop();
     	    bellobj.SetControllerVisible(false);
+    	}
+	    if (qtype == 4){
+    	    var api = $('#bell_q_player').data('flowplayer');
+    	    api.stop();
+    	    api.unload();
     	}
 	}
 }

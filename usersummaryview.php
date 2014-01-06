@@ -5,7 +5,7 @@
     * 
     * @package mod-flashcard
     * @category mod
-    * @author Valery Fremaux, Gustav Delius
+    * @author Valery Fremaux, Gustav Delius, Tomasz Muras
     * @contributors
     * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
     * @version Moodle 2.0
