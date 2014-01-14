@@ -98,6 +98,7 @@ $string['mediumeffortcards'] = 'Middle effort set';
 $string['minaccess'] = 'Less viewed ticks ';
 $string['missingimage'] = '{missing image file}';
 $string['missingsound'] = '{missing sound file}';
+$string['missingvid'] = '{missing video file}';
 $string['modulename'] = 'Flash Card Set';
 $string['modulenameplural'] = 'Flash Cards';
 $string['next'] = 'Next card';
@@ -140,6 +141,7 @@ $string['trivialcards'] = 'Trivial cards';
 $string['undefinedquestionset'] = 'No matching question was elected in quizzes for this flashcard set';
 $string['userdecks'] = 'Users\' decks';
 $string['userdecksummary'] = 'Deck {$a->deckid}: {$a->count} cards ({$a->cardcount} hits in total on the deck)';
+$string['video'] = 'Video';
 $string['viewed'] = 'Viewes';
 
 /* Strings for the help section */

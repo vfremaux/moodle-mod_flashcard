@@ -375,14 +375,50 @@ function flashcard_play_sound(&$flashcard, $soundfileid, $autostart = 'false', $
     
     if (!preg_match('/\.mp3$/i', $filename)){
         $soundhtml = "<embed src=\"{$soundfileurl}\" autostart=\"{$autostart}\" hidden=\"false\" id=\"{$htmlname}_player\" height=\"20\" width=\"200\" />";
-        $soundhtml = "<a href=\"{$soundfileurl}\" autostart=\"{$autostart}\" hidden=\"false\" id=\"{$htmlname}\" height=\"20\" width=\"200\" />";
+        $soundhtml .= "<a href=\"{$soundfileurl}\" autostart=\"{$autostart}\" hidden=\"false\" id=\"{$htmlname}\" height=\"20\" width=\"200\" />";
     } else {
-		$soundhtml = flashcard_mp3_player($flashcard, $soundfileurl, $htmlname);
+		$soundhtml = flashcard_mp3_dewplayer($flashcard, $soundfileurl, $htmlname);
     }
 
     if (!$return) echo $soundhtml;
     return $soundhtml;
 }
+
+function flashcard_play_video(&$flashcard, $videofileid, $autostart = 'false', $return = false, $htmlname = '', $thumb = false){
+    global $CFG, $COURSE, $OUTPUT;
+
+    $strmissingvid = get_string('missingvid', 'flashcard');
+    
+    $fs = get_file_storage();
+    
+	// new way : probably no effective fieldids storage needed anymore
+	$cm = get_coursemodule_from_instance('flashcard', $flashcard->id);
+	$context = context_module::instance($cm->id);
+	$contextid = $context->id;
+	list($filearea, $itemid) = explode('/', $videofileid);
+	$videofiles = $fs->get_area_files($context->id, 'mod_flashcard', $filearea, $itemid);
+	if (empty($videofiles)){
+		$videofileurl = $OUTPUT->pix_url('notfound', 'flashcard');
+		$videohtml = "<img src=\"{$videofileurl}\" />";
+	    if (!$return) echo $videohtml;
+	    return $videohtml;
+	}
+	$videofile = array_pop($videofiles);
+    $filename = $videofile->get_filename();
+    $parts = pathinfo($filename);
+    $videotype = $parts['extension'];
+        
+    $magic = rand(0,100000);
+    if ($htmlname == '') $htmlname = "bell_{$magic}";
+    
+    $videofileurl = $CFG->wwwroot."/pluginfile.php/{$contextid}/mod_flashcard/{$filearea}/{$itemid}/{$filename}";
+    
+	$videohtml = flashcard_flowplayer($flashcard, $videofileurl, $videotype, $htmlname, $thumb);
+
+    if (!$return) echo $videohtml;
+    return $videohtml;
+}
+
 
 function flashcard_get_file_url($filerecid, $asobject = false){
 	global $CFG;
