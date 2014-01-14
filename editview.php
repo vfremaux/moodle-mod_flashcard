@@ -47,6 +47,8 @@
 		
 		    $qkeys = preg_grep('/^q/', $keys);   // filter out only the status
 		    $akeys = preg_grep('/^a/', $keys);   // filter out only the assigned updating
+
+			$deckusers = $DB->get_records('flashcard_card', array('flashcardid' => $flashcard->id), 'id', 'DISTINCT userid, userid');
 		    
 		    foreach($qkeys as $qkey){
 	    
@@ -75,6 +77,22 @@
 		    		$card->id = $DB->insert_record('flashcard_deckdata', $card); // pre save the card record
 
 					$validqkeys[$qkey] = $card; // validate the input param	and store card
+					
+					// Add card to all student decks and reset state of deck 1 for all
+					if ($deckusers){
+						foreach(array_keys($deckusers) as $duid){
+							$usercard = new StdClass();
+							$usercard->flashcardid = $flashcard->id;
+							$usercard->userid = $duid;
+							$usercard->deck = 1;
+							$usercard->entryid = $card->id;
+							$usercard->lastaccessed = 0;
+							$usercard->accesscount = 0;
+							$DB->insert_record('flashcard_card', $usercard);
+							
+							$DB->set_field('flashcard_userdeck_state', 'state', 0, array('flashcardid' => $flashcard->id, 'userid' => $duid));
+						}
+					}
 			    }
 			}
 		}

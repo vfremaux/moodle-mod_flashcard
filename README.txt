@@ -1,5 +1,6 @@
 Reviewed version for over 2.0.
 Valery Fremaux 2008
+With additions of Tomaz Murasz till 2013
 
 USING THE Flashcard Activity
 -----------------------------
@@ -80,10 +81,17 @@ quizzes.
 Adds-on to the new design : flashcard "by instance" customization
 ------------------------------------------------------------------
 
-The flashcard can now have customizable backgrounds and stylesheet, using
-a styles.php cloned file in the course files.
+Flashcard instance can have card backgrounds and faces customized by uploading
+some images in the settings of your instance. Additionaly you have provision 
+to add additional CSS rules to adjust the layout of the card presentation.
 
-Once the module is instanciated, copy the styles.php file within
-<MOODLEDATA>/<courseid>/moddata/flashcard/<instanceid>/flashcard.css and change this
-file to what you expect.
+This version maturity (2013101100)
+----------------------
 
+This version disontinues the previous way of handling media files and customisation
+images, with more strict use of the Moodle file system. We DO NOT plan at the moment to provide
+any cross upgrading script from the previous published version as a standard uprader, specially
+handling diverging work about using media files.
+
+In addition, this version now fully handles course completion requirements, and completes
+properly summary and course overviews.

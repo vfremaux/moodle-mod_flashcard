@@ -291,7 +291,7 @@ function flashcard_print_cardcounts(&$flashcard, $card, $return=false){
 
 /**
 * new media renderers cannot be used because not tunable in autoplay
-*
+* @TODO : remove as deprecated. Dewplayer more stable.
 */
 function flashcard_mp3_player(&$flashcard, $url, $htmlid) {
     global $CFG, $THEME;
@@ -310,11 +310,43 @@ function flashcard_mp3_player(&$flashcard, $url, $htmlid) {
     return '<span class="mediaplugin mediaplugin_mp3" id="'.$id.'_player">('.'mp3audio'.')</span>
 <script type="text/javascript">
 //<![CDATA[
-  var FO = { movie:"'.$CFG->wwwroot.'/mod/flashcard/players/mp3player.swf?src='.$url.'",
+  var FO = { movie:"'.$CFG->wwwroot.'/mod/flashcard/players/mp3player/mp3player.swf?src='.$url.'",
     width:"90", height:"15", majorversion:"6", build:"40", flashvars:"'.$c.'", quality: "high" };
   UFO.create(FO, "'.$id.'_player");
 //]]>
 </script>';
+}
+
+function flashcard_mp3_dewplayer(&$flashcard, $url, $htmlid){
+    global $CFG, $THEME;
+    
+    $audiostart = ($flashcard->audiostart) ? 1 : 0;
+
+	$playerflashurl = $CFG->wwwroot.'/mod/flashcard/players/dewplayer/dewplayer-mini.swf';
+	$return = '<object type="application/x-shockwave-flash" data="'.$playerflashurl.'" width="160" height="20" id="'.$htmlid.'" name="dewplayer">';
+	$return .= '<param name="wmode" value="transparent" />';
+	$return .= '<param name="movie" value="dewplayer-mini.swf" />';
+	$return .= '<param name="flashvars" value="mp3='.urlencode($url).'&amp;autostart='.$audiostart.'" />';
+	$return .= '</object>';
+	
+	return $return;
+}
+
+function flashcard_flowplayer($flashcard, $videofileurl, $videotype, $htmlname, $thumb){
+ 	global $CFG;
+ 	
+ 	$playerclass = ($thumb) ? 'flashcard-flowplayer-thumb' : 'flashcard-flowplayer' ;
+ 	
+ 	$str = '';
+ 	
+ 	$str .= '<div id="'.$htmlname.'_player" style="z-index:10000" data-swf="'.$CFG->wwwroot.'/mod/flashcard/players/flowplayer/flowplayer.swf" class="flowplayer '.$playerclass.' play-button" data-ratio="0.416">';
+	$str .= '<video preload="none">';
+	$str .= '<source type="video/'.$videotype.'" src="'.$videofileurl.'"/>';
+	$str .= '</video>';
+      
+	$str .= '</div>';
+	
+	return $str;
 }
 
 function flashcard_delete_attached_files(&$cm, &$flashcard, $card){

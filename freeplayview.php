@@ -43,9 +43,9 @@ remaining = maxitems;
 
 var qtype = "<?php echo $flashcard->questionsmediatype ?>";
 var atype = "<?php echo $flashcard->answersmediatype ?>";
-
 //]]>
 </script>
+<script src="<?php echo $CFG->wwwroot.'/mod/flashcard/js/module.js' ?>"></script>
 
 <p><?php print_string('freeplayinstructions', 'flashcard'); ?>.</p>
 

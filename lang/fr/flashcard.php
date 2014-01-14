@@ -91,6 +91,7 @@ $string['mediumeffortcards'] = 'Cartes moyennes';
 $string['minaccess'] = 'Accès à la carte la moins vue ';
 $string['missingimage'] = '{Image non disponible}';
 $string['missingsound'] = '{Fichier son non disponible}';
+$string['missingvid'] = '{Fichier video manquant}';
 $string['modulename'] = 'Jeu de cartes flash';
 $string['modulenameplural'] = 'Cartes flash';
 $string['next'] = 'Carte suivante';
@@ -133,6 +134,7 @@ $string['undefinedquestionset'] = 'Aucun jeu de questions n\'a été défini pou
 $string['userdecks'] = 'Paquets des utilisateurs';
 $string['userdecksummary'] = 'Jeu {$a->deckid}: {$a->count} cartes {$a->cardcount} hits en tout sur le jeu)';
 $string['viewed'] = 'Affichages';
+$string['video'] = 'Vidéo';
 
 $string['import_help'] = '
 <p>Vous pouvez désormais rapidement charger un flashcard avec un grand nombre de questions/réponses par la fonctionnalité d\'import en masse. (Seules des fiches texte/texte peuvent être massivement importées).
