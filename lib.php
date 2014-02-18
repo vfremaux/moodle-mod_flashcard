@@ -351,7 +351,16 @@ function flashcard_grades($flashcardid) {
 function flashcard_get_participants($flashcardid) {
     global $DB;
 
-    $userids = $DB->get_records_menu('flashcard_card', array('flashcardid' => $flashcardid), '', 'userid,id');
+	$sql = "
+		SELECT DISTINCT
+			userid, 
+			userid
+		FROM
+			{flashcard_card}
+		WHERE
+			flashcardid = ?
+	";
+    $userids = $DB->get_records_sql_menu($sql, array('flashcardid' => $flashcardid));
     if ($userids) {
         $users = $DB->get_records_list('user', 'id', array_keys($userids));
     }
