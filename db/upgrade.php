@@ -235,6 +235,65 @@ function xmldb_flashcard_upgrade($oldversion = 0) {
        upgrade_mod_savepoint(true, 2012040200, 'flashcard');
     }
 
+    $table = new xmldb_table('flashcard');
+    if (!$dbman->field_exists($table, 'audiostart') and $dbman->field_exists($table, 'flipdeck')) {
+
+        // Create remaining columns to bring table structure up to assumed version# 2014051200 from previous author's code.
+        $field = new xmldb_field('audiostart');
+        if (!$dbman->field_exists($table, $field)) {
+            $field->set_attributes(XMLDB_TYPE_INTEGER, '1', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, 0, 'answersmediatype');
+            $dbman->add_field($table, $field);
+        }
+
+        $field = new xmldb_field('custombackfileid');
+        if (!$dbman->field_exists($table, $field)) {
+            $field->set_attributes(XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, 0, 'flipdeck');
+            $dbman->add_field($table, $field);
+        }
+
+        $field = new xmldb_field('customfrontfileid');
+        if (!$dbman->field_exists($table, $field)) {
+            $field->set_attributes(XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, 0, 'custombackfileid');
+            $dbman->add_field($table, $field);
+        }
+
+        $field = new xmldb_field('customemptyfileid');
+        if (!$dbman->field_exists($table, $field)) {
+            $field->set_attributes(XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, 0, 'customfrontfileid');
+            $dbman->add_field($table, $field);
+        }
+
+        $field = new xmldb_field('customreviewfileid');
+        if (!$dbman->field_exists($table, $field)) {
+            $field->set_attributes(XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, 0, 'customemptyfileid');
+            $dbman->add_field($table, $field);
+        }
+
+        $field = new xmldb_field('customreviewedfileid');
+        if (!$dbman->field_exists($table, $field)) {
+            $field->set_attributes(XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, 0, 'customreviewfileid');
+            $dbman->add_field($table, $field);
+        }
+
+        $field = new xmldb_field('customreviewemptyfileid');
+        if (!$dbman->field_exists($table, $field)) {
+            $field->set_attributes(XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, 0, 'customreviewedfileid');
+            $dbman->add_field($table, $field);
+        }
+
+        $field = new xmldb_field('completionallviewed');
+        if (!$dbman->field_exists($table, $field)) {
+            $field->set_attributes(XMLDB_TYPE_INTEGER, '1', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, 0, 'customreviewemptyfileid');
+            $dbman->add_field($table, $field);
+        }
+
+        $field = new xmldb_field('completionallgood');
+        if (!$dbman->field_exists($table, $field)) {
+            $field->set_attributes(XMLDB_TYPE_INTEGER, '1', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, 0, 'completionallviewed');
+            $dbman->add_field($table, $field);
+        }
+    }
+
     if ($oldversion < 2012040201) {
        	$table = new xmldb_table('flashcard');
 		
@@ -343,6 +402,8 @@ function xmldb_flashcard_upgrade($oldversion = 0) {
        	upgrade_mod_savepoint(true, 2013101100, 'flashcard');
     }
     
+    upgrade_mod_savepoint(true, 2014051200, 'flashcard');
+
     return true;
 }
 
