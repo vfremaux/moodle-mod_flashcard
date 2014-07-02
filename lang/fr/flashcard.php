@@ -140,8 +140,8 @@ $string['import_help'] = '
 <p>Vous pouvez désormais rapidement charger un flashcard avec un grand nombre de questions/réponses par la fonctionnalité d\'import en masse. (Seules des fiches texte/texte peuvent être massivement importées).
 Il vous faut juste constituer un fichier texte contenant la liste formatée de vos paries de questions/réponses et coller ce texte dans la zone de texte d\'import. Vous pouvez décider de la forme de ce fichier, sur la base de séparaeurs les plus courants, sous Linux ou sous Windows. L\'un des formats les plus classiques est le format "une paire par ligne", utilisant un deux-points (\':\') ou une virgule comme séparateur entre les questions et les réponses.</p>
 <p>Les questions doivent toujours être placées en premier, et DOIVENT avoir une réponse exprimée. Les lignes blanches ou vides sont ignorées, ainsi que celles qui commencent par un # ou un /.</p>
-<p>La fonction d\import fera une vérification rapide de ce que vous voulez importer. Elle rejettera les cartes dont le tecte est mal formé et vous indique combien de paires se trouvent en erreur.</p>
-<p>L\import détruira toutes les données anciennes de cartes et toutes les réponses données par les étudiants. Une confirmation explicite vous est demandée dans le formulaire.</p>';
+<p>La fonction d\'import fera une vérification rapide de ce que vous voulez importer. Elle rejettera les cartes dont le tecte est mal formé et vous indique combien de paires se trouvent en erreur.</p>
+<p>L\'import détruira toutes les données anciennes de cartes et toutes les réponses données par les étudiants. Une confirmation explicite vous est demandée dans le formulaire.</p>';
 
 $string['freegame_help'] = '
 <p>En mode "usage libre", vous utilisez le jeu de cartes mémorielles librement à votre guise. Tout le jeu de cartes est chargé et tiré aléatoirement.</p>

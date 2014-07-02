@@ -1,4 +1,18 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
  * a controller for the play view
@@ -17,32 +31,36 @@
  */
 /* @var $OUTPUT core_renderer */
 
-if (!defined('MOODLE_INTERNAL')) die("Illegal direct access to this screen");
-
-/* * ****************************** Delete a set of records **************************** */
-if ($action == 'delete') {
-	
-	if (!isset($items))
-    	$items = required_param_array('items', PARAM_INT);
-	    
-    foreach($items as $item){
-    
-    	$card = $DB->get_record('flashcard_deckdata', array('id' => $item));
-
-    	flashcard_delete_attached_files($cm, $flashcard, $card);
-    	
-	    if (!$DB->delete_records('flashcard_deckdata', array('id' => $item))) {
-	        print_error('errordeletecard', 'flashcard');
-	    }
-
-	    if (!$DB->delete_records('flashcard_card', array('entryid' => $item))) {
-	        print_error('errordeletecard', 'flashcard');
-	    }
-	}
+if (!defined('MOODLE_INTERNAL')) {
+    die("Illegal direct access to this screen");
 }
-/* * ****************************** Prepare import **************************** */
+
+/* ******************************* Delete a set of records **************************** */
+
+if ($action == 'delete') {
+
+    if (!isset($items)) {
+        $items = required_param_array('items', PARAM_INT);
+    }
+
+    foreach ($items as $item) {
+        $card = $DB->get_record('flashcard_deckdata', array('id' => $item));
+        flashcard_delete_attached_files($cm, $flashcard, $card);
+
+        if (!$DB->delete_records('flashcard_deckdata', array('id' => $item))) {
+            print_error('errordeletecard', 'flashcard');
+        }
+
+        if (!$DB->delete_records('flashcard_card', array('entryid' => $item))) {
+            print_error('errordeletecard', 'flashcard');
+        }
+    }
+}
+
+/* ******************************* Prepare import **************************** */
+
 if ($action == 'import') {
-    include 'import_form.php';
+    include_once($CFG->dirroot.'/mod/flashcard/import_form.php');
     $mform = new flashcard_import_form();
     echo $out;
     echo $OUTPUT->heading(get_string('importingcards', 'flashcard') . $OUTPUT->help_icon('import', 'flashcard'));
@@ -55,9 +73,11 @@ if ($action == 'import') {
     echo $OUTPUT->footer($course);
     exit(0);
 }
-/* * ****************************** Perform import **************************** */
+
+/* ******************************* Perform import **************************** */
+
 if ($action == 'doimport') {
-    include 'import_form.php';
+    include_once($CFG->dirroot.'/mod/flashcard/import_form.php');
     $form = new flashcard_import_form();
 
     $FIELDSEPPATTERNS[0] = ',';
@@ -70,7 +90,7 @@ if ($action == 'doimport') {
 
             $fieldsep = $FIELDSEPPATTERNS[$data->fieldsep];
 
-            // filters comments and non significant lines
+            // Filters comments and non significant lines.
             $data->import = preg_replace("/^#.*\$/m", '', $data->import);
             $data->import = preg_replace("/^\\/.*\$/m", '', $data->import);
             $data->import = preg_replace('/^\\s+$/m', '', $data->import);
@@ -101,21 +121,21 @@ if ($action == 'doimport') {
                 }
 
                 if ($report->badcards == 0) {
-                    /// everything ok
-                    /// reset all data
+                    // Everything ok.
+                    // Reset all data.
                     $DB->delete_records('flashcard_card', array('flashcardid' => $flashcard->id));
                     $DB->delete_records('flashcard_deckdata', array('flashcardid' => $flashcard->id));
 
-                    // insert new cards
+                    // Insert new cards.
                     foreach ($inputs as $input) {
-                    	$deckcard = new StdClass;
+                        $deckcard = new StdClass;
                         $deckcard->flashcardid = $flashcard->id;
                         $deckcard->questiontext = $input->question;
                         $deckcard->answertext = $input->answer;
                         $DB->insert_record('flashcard_deckdata', $deckcard);
                     }
 
-                    // reset questionid in flashcard instance
+                    // Reset questionid in flashcard instance.
                     $DB->set_field('flashcard', 'questionid', 0, array('id' => $flashcard->id));
                 }
 

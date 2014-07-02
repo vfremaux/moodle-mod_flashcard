@@ -1,37 +1,54 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-    /** 
-    * This view allows free playing with a deck
-    * 
-    * @package mod-flashcard
-    * @category mod
-    * @author Gustav Delius
-    * @contributors Valery Fremaux
-    */
+/**
+ * This view allows free playing with a deck
+ *
+ * @package mod-flashcard
+ * @category mod
+ * @author Gustav Delius
+ * @author Valery Fremaux
+ *
+ * TODO : Transfer HTML generation to renderer functions
+ */
 
-    // Security
-    if (!defined('MOODLE_INTERNAL')){
-        die("Illegal direct access to this screen");
-    }
+// Security.
 
-    $subquestions = $DB->get_records('flashcard_deckdata', array('flashcardid' => $flashcard->id));
-    if (empty($subquestions)) {
-        echo $OUTPUT->notification(get_string('nosubquestions', 'flashcard'));
-        return;          
-    }
-    $subquestions = draw_rand_array($subquestions, count($subquestions));
+if (!defined('MOODLE_INTERNAL')) {
+    die("Illegal direct access to this screen");
+}
 
-/// print deferred header
+$subquestions = $DB->get_records('flashcard_deckdata', array('flashcardid' => $flashcard->id));
+if (empty($subquestions)) {
+    echo $OUTPUT->notification(get_string('nosubquestions', 'flashcard'));
+    return;
+}
+$subquestions = draw_rand_array($subquestions, count($subquestions));
 
-	echo $out;
+// print deferred header.
 
-/// print summary
+echo $out;
 
-    if (!empty($flashcard->summary)) {
-        echo $OUTPUT->box_start();
-        echo format_text($flashcard->summary, $flashcard->summaryformat, NULL, $course->id);
-        echo $OUTPUT->box_end();
-    }
+// print summary.
+
+if (!empty($flashcard->summary)) {
+    echo $OUTPUT->box_start();
+    echo format_text($flashcard->summary, $flashcard->summaryformat, NULL, $course->id);
+    echo $OUTPUT->box_end();
+}
 
 ?>
 
@@ -50,7 +67,7 @@ var atype = "<?php echo $flashcard->answersmediatype ?>";
 <p><?php print_string('freeplayinstructions', 'flashcard'); ?>.</p>
 
 <style>
-	<?php echo $flashcard->extracss ?>
+    <?php echo $flashcard->extracss ?>
 </style>
 
 <table class="flashcard_board" width="100%">
@@ -59,14 +76,14 @@ var atype = "<?php echo $flashcard->answersmediatype ?>";
 <?php
 $i = 0;
 
-if ($flashcard->flipdeck){
-    // flip media types once
+if ($flashcard->flipdeck) {
+    // Flip media types once.
     $tmp = $flashcard->answersmediatype;
     $flashcard->answersmediatype = $flashcard->questionsmediatype;
     $flashcard->questionsmediatype = $tmp;
 }
 
-foreach($subquestions as $subquestion){
+foreach($subquestions as $subquestion) {
     echo '<center>';
     $divid = "f$i";
     $divstyle = ($i > 0) ? 'display:none' : '' ;
@@ -77,7 +94,7 @@ foreach($subquestions as $subquestion){
     $back = 'question';
     $front = 'answer';
 
-    if ($flashcard->flipdeck){
+    if ($flashcard->flipdeck) {
         // flip card side values
         $tmp = $subquestion->answertext;
         $subquestion->answertext = $subquestion->questiontext;
@@ -90,7 +107,7 @@ foreach($subquestions as $subquestion){
         $flashcard->questionsmediatype = $tmp;
     }
     
-    if ($flashcard->flipdeck){
+    if ($flashcard->flipdeck) {
         // flip card side values
         $tmp = $subquestion->answertext;
         $subquestion->answertext = $subquestion->questiontext;
@@ -100,21 +117,7 @@ foreach($subquestions as $subquestion){
             <table width="100%" height="100%">
                 <tr>
                     <td align="center" valign="center">
-                        <?php
-                        if ($flashcard->questionsmediatype == FLASHCARD_MEDIA_IMAGE) {
-                            flashcard_print_image($flashcard, "{$back}imagefile/{$subquestion->id}");
-                        } elseif ($flashcard->questionsmediatype == FLASHCARD_MEDIA_SOUND){
-                            flashcard_play_sound($flashcard, "{$back}soundfile/{$subquestion->id}", 'false', false, "bell_b$i");
-			            } elseif ($flashcard->questionsmediatype == FLASHCARD_MEDIA_VIDEO){
-			                flashcard_play_video($flashcard, "{$back}videofile/{$subquestion->id}", $autoplay, false, "bell_b$i");
-                        } elseif ($flashcard->questionsmediatype == FLASHCARD_MEDIA_IMAGE_AND_SOUND){                            
-			            	flashcard_print_image($flashcard, "{$back}imagefile/{$subquestion->id}");
-			                echo "<br/>";
-			                flashcard_play_sound($flashcard, "{$back}soundfile/{$subquestion->id}", $autoplay, false, "bell_b$i");
-                        } else {
-                            echo format_text($subquestion->questiontext,FORMAT_HTML);
-                        }
-                        ?>
+                        <?php flashcard_render_card($flashcard, $subquestion, $back, 'b', $i); ?>
                     </td>
                 </tr>
             </table>
@@ -123,32 +126,18 @@ foreach($subquestions as $subquestion){
             <center>
 <?php
         echo "<div id=\"b{$i}\" ";
-    	echo 'class="flashcard-answer" style="display:none;background-repeat:no-repeat;background-image:url('.flashcard_print_custom_url($flashcard, 'customfront', 0).')" ';
+        echo 'class="flashcard-answer" style="display:none;background-repeat:no-repeat;background-image:url('.flashcard_print_custom_url($flashcard, 'customfront', 0).')" ';
         echo " onclick=\"javascript:clicked('b', '{$i}')\">";
 ?>
-    		<table width="100%" height="100%">
-    		    <tr>
-    		        <td align="center" valign="center" style="">
-    		            <?php 
-                        if ($flashcard->answersmediatype == FLASHCARD_MEDIA_IMAGE) {
-                            flashcard_print_image($flashcard, "{$front}imagefile/{$subquestion->id}");
-                        } elseif ($flashcard->answersmediatype == FLASHCARD_MEDIA_SOUND){                          
-                            flashcard_play_sound($flashcard, "{$front}soundfile/{$subquestion->id}", 'false', false, "bell_f$i");
-			            } elseif ($flashcard->answersmediatype == FLASHCARD_MEDIA_VIDEO){
-			                flashcard_play_video($flashcard, "{$front}videofile/{$subquestion->id}", $autoplay, false, "bell_f$i");
-                        } elseif ($flashcard->answersmediatype == FLASHCARD_MEDIA_IMAGE_AND_SOUND){                            
-			            	flashcard_print_image($flashcard, "{$front}imagefile/{$subquestion->id}");
-			                echo "<br/>";
-			                flashcard_play_sound($flashcard, "{$front}soundfile/{$subquestion->id}", $autoplay, false, "bell_f$i");
-                        } else {
-                            echo format_text($subquestion->answertext,FORMAT_HTML);
-                        }
-                        ?>
-    		        </td>
-    		    </tr>
-    		</table>
-    		</div>
-    		</center>
+            <table width="100%" height="100%">
+                <tr>
+                    <td align="center" valign="center" style="">
+                        <?php flashcard_render_card($flashcard, $subquestion, $front, 'f', $i); ?>
+                    </td>
+                </tr>
+            </table>
+            </div>
+            </center>
 <?php
     $i++;
 }

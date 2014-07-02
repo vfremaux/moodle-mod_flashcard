@@ -1,4 +1,18 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
  * File System Abstract Layer
@@ -10,9 +24,10 @@
  * @category third-party libs
  * @date 2007/11/04
  *
+ * TODO : Discard this library use
  */
 
-//avoids reloading the lib when keeped in third party plugin
+// Avoids reloading the lib when keeped in third party plugin.
 if (!function_exists('filesystem_create_dir')) {
 
 define('FS_RECURSIVE', true);
@@ -28,17 +43,16 @@ define('FS_ALL_ENTRIES', 0);
 define('FS_FULL_DELETE', true);
 define('FS_CLEAR_CONTENT', false);
 
-
 /**
-* creates a dir in file system optionally creating all pathes on the way
-* @param string $path the relative path from dataroot
-* @param boolean $recursive if true, creates recursively all path elements
-* @param string $pathbase the base path
-*/
-function filesystem_create_dir($path, $recursive = 0, $pathbase=null) {
+ * creates a dir in file system optionally creating all pathes on the way
+ * @param string $path the relative path from dataroot
+ * @param boolean $recursive if true, creates recursively all path elements
+ * @param string $pathbase the base path
+ */
+function filesystem_create_dir($path, $recursive = 0, $pathbase = null) {
     global $CFG;
-   
-    if (is_null($pathbase)){
+
+    if (is_null($pathbase)) {
         $pathbase = $CFG->dataroot . '/';
     } elseif ($pathbase === '') {
         $pathbase = '';
@@ -47,17 +61,20 @@ function filesystem_create_dir($path, $recursive = 0, $pathbase=null) {
     }
 
     $result = true;
-    if (!$recursive){
-       if (@$CFG->filedebug) mtrace("creating dir <i>{$path}</i><br/>");
-       $oldMask = umask(0);
-       if(!filesystem_is_dir($path, $pathbase)) $result = @mkdir($pathbase . $path, 0777);
-       umask($oldMask);
-       return $result;
-    }
-    else {
+    if (!$recursive) {
+        if (@$CFG->filedebug) {
+            mtrace("creating dir <i>{$path}</i><br/>");
+        }
+        $oldMask = umask(0);
+        if (!filesystem_is_dir($path, $pathbase)) {
+            $result = @mkdir($pathbase . $path, 0777);
+        }
+        umask($oldMask);
+        return $result;
+    } else {
        $parts = explode('/', $path);
        $pathTo = '';
-       for($i = 0; $i < count($parts) && $result; $i++){
+       for ($i = 0; $i < count($parts) && $result; $i++) {
           $pathTo .= '/' . $parts[$i];
           $result = filesystem_create_dir($pathTo, 0, $pathbase);
        }
@@ -66,14 +83,14 @@ function filesystem_create_dir($path, $recursive = 0, $pathbase=null) {
 }
 
 /**
-* tests if path is a dir. A simple wrapper to is_dir 
-* @param string $relativepath the path from dataroot
-* @param string $pathbase the base path
-*/
-function filesystem_is_dir($relativepath, $pathbase=null){
+ * tests if path is a dir. A simple wrapper to is_dir 
+ * @param string $relativepath the path from dataroot
+ * @param string $pathbase the base path
+ */
+function filesystem_is_dir($relativepath, $pathbase = null) {
     global $CFG;
 
-    if (is_null($pathbase)){
+    if (is_null($pathbase)) {
         $pathbase = $CFG->dataroot . '/';
     } elseif ($pathbase === '') {
         $pathbase = '';
@@ -81,19 +98,21 @@ function filesystem_is_dir($relativepath, $pathbase=null){
         $pathbase = $pathbase . '/'; 
     }
 
-    if (@$CFG->filedebug) mtrace("is dir <i>$pathbase$relativepath</i><br/>");
+    if (@$CFG->filedebug) {
+        mtrace("is dir <i>$pathbase$relativepath</i><br/>");
+    }
     return is_dir($pathbase . $relativepath);
 } 
 
 /**
-* checks if file (or dir) exists. A simple wrapper to file_exists
-* @param string $relativepath the path from dataroot
-* @param string $pathbase the base path
-*/
-function filesystem_file_exists($relativepath, $pathbase=null){
+ * checks if file (or dir) exists. A simple wrapper to file_exists
+ * @param string $relativepath the path from dataroot
+ * @param string $pathbase the base path
+ */
+function filesystem_file_exists($relativepath, $pathbase = null) {
     global $CFG;
 
-    if (is_null($pathbase)){
+    if (is_null($pathbase)) {
         $pathbase = $CFG->dataroot . '/';
     } elseif ($pathbase === '') {
         $pathbase = '';
@@ -106,13 +125,13 @@ function filesystem_file_exists($relativepath, $pathbase=null){
 } 
 
 /**
-* scans for entries within a directory
-* @param string $relativepath the path from dataroot
-* @param boolean $hiddens shows or hide hidden files
-* @param int $what selects only dirs, files or both
-* @param string $pathbase the base path
-* @return an array of entries wich are local names in path
-*/
+ * scans for entries within a directory
+ * @param string $relativepath the path from dataroot
+ * @param boolean $hiddens shows or hide hidden files
+ * @param int $what selects only dirs, files or both
+ * @param string $pathbase the base path
+ * @return an array of entries wich are local names in path
+ */
 function filesystem_scan_dir($relativepath, $hiddens = 0, $what = 0, $pathbase=null){
     global $CFG;
 

@@ -1,4 +1,18 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
  * @package mod-flashcard
@@ -7,11 +21,9 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$module->version  = 2013101100;  // The current module version (Date: YYYYMMDDXX)
-$module->requires = 2012062500;  // Requires this Moodle version (2.3 and above)
-$module->cron     = 1; // Period for cron to check this module (secs)
-$module->component = 'mod_flashcard'; // Full name of the plugin (used for diagnostics)
-$module->release = '2.4.0 (Build 2012040100)';
-$module->maturity = MATURITY_RC;
-
-
+$plugin->version  = 2014051200;  // The current module version (Date: YYYYMMDDXX)
+$plugin->requires = 2012062500;  // Requires this Moodle version (2.3 and above)
+$plugin->cron     = 1; // Period for cron to check this module (secs)
+$plugin->component = 'mod_flashcard'; // Full name of the plugin (used for diagnostics)
+$plugin->release = '2.6.0 (Build 2014051200)';
+$plugin->maturity = MATURITY_RC;

@@ -1,4 +1,4 @@
-<?PHP // $Id: flashcard.php,v 1.1 2008/12/28 16:03:29 diml Exp $ 
+<?PHP // $Id: flashcard.php,v 1.1 2012-11-18 12:24:16 vf Exp $ 
       // matching.php - created with Moodle 1.2 development (2003111400)
 
 $string['backside'] = 'Karta-jokoaren atzealdea';
