@@ -39,7 +39,7 @@ $view = optional_param('view', 'checkdecks', PARAM_ACTION);     // view
 $page = optional_param('page', '', PARAM_ACTION);     // page
 $action = optional_param('what', '', PARAM_ACTION);     // command
 
-$thisurl = $CFG->wwwroot.'/mod/flashcard/view.php';    
+$thisurl = $CFG->wwwroot.'/mod/flashcard/view.php';
 $url = new moodle_url('/mod/flashcard/view.php', array('id' => $id));
 
 $PAGE->set_url($url);
@@ -168,12 +168,18 @@ $out .= print_tabs($tabrows, $currenttab, null, $activated, true);
 
 // Print active view.
 
+// Trigger module viewed event.
+$eventparams = array(
+    'objectid' => $flashcard->id,
+    'context' => $context,
+);
+
 switch ($view){
     case 'summary' :
         if (!has_capability('mod/flashcard:manage', $context)) {
             redirect($thisurl."?view=checkdecks&amp;id={$cm->id}");
         }
-        add_to_log($course->id, 'flashcard', 'view summary', $thisurl."?id={$cm->id}", "{$flashcard->name}");
+        $event = \mod_flashcard\event\course_module_viewed_summary::create($eventparams);
         if ($page == 'bycards') {
             include $CFG->dirroot.'/mod/flashcard/cardsummaryview.php';
         } else {
@@ -184,28 +190,33 @@ switch ($view){
         if (!has_capability('mod/flashcard:manage', $context)) {
             redirect($thisurl."?view=checkdecks&amp;id={$cm->id}");
         }
-        add_to_log($course->id, 'flashcard', 'manage', $thisurl."?id={$cm->id}", "{$flashcard->name}");
+        $event = \mod_flashcard\event\course_module_managed::create($eventparams);
         include $CFG->dirroot.'/mod/flashcard/managecards.php';
         break;
     case 'edit' :
         if (!has_capability('mod/flashcard:manage', $context)) {
             redirect($thisurl."?view=checkdecks&amp;id={$cm->id}");
         }
-        add_to_log($course->id, 'flashcard', 'edit', $thisurl."?id={$cm->id}", "{$flashcard->name}");
+        $event = \mod_flashcard\event\course_module_edited::create($eventparams);
         include $CFG->dirroot.'/mod/flashcard/editview.php';
         break;
     case 'freeplay' :
-        add_to_log($course->id, 'flashcard', 'freeplay', $thisurl."?id={$cm->id}", "{$flashcard->name}");
+        $event = \mod_flashcard\event\course_module_freeplayed::create($eventparams);
         include $CFG->dirroot.'/mod/flashcard/freeplayview.php';
         break;
     case 'play' :
-        add_to_log($course->id, 'flashcard', 'play', $thisurl."?id={$cm->id}", "{$flashcard->name}");
+        $event = \mod_flashcard\event\course_module_played::create($eventparams);
         include $CFG->dirroot.'/mod/flashcard/playview.php';
         break;
     default :
-        add_to_log($course->id, 'flashcard', 'view', $thisurl."?id={$cm->id}", "{$flashcard->name}");
+        $event = \mod_flashcard\event\course_module_viewed::create($eventparams);
         include $CFG->dirroot.'/mod/flashcard/checkview.php';
 }
+
+$event->add_record_snapshot('course_modules', $cm);
+$event->add_record_snapshot('course', $course);
+$event->add_record_snapshot('flashcard', $flashcard);
+$event->trigger();
 
 // Finish the page.
 

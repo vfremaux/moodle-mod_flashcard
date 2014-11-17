@@ -40,7 +40,7 @@ echo $out;
 // Get available decks for user and calculate deck state.
 
 if (!$decks = flashcard_get_deck_status($flashcard)) {
-    // If deck status have bever been initialized initialized them.
+    // if deck status have bever been initialized initialized them
     if (flashcard_initialize($flashcard, $USER->id)) {
         $decks = flashcard_get_deck_status($flashcard);
     } else {
@@ -53,7 +53,6 @@ if (!$decks = flashcard_get_deck_status($flashcard)) {
                 $url = "{$CFG->wwwroot}/course/view.php?id={$course->id}";
             }
             echo $OUTPUT->notification(get_string('nocards', 'flashcard'), $url);
-            return;
         }
     }
 }

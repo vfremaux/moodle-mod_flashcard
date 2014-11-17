@@ -77,7 +77,7 @@ if ($action == 'import') {
 /* ******************************* Perform import **************************** */
 
 if ($action == 'doimport') {
-    include_once($CFG->dirroot.'/mod/flashcard/import_form.php');
+    include_once($CFG->dirroot.'/mod/flahcard/import_form.php');
     $form = new flashcard_import_form();
 
     $FIELDSEPPATTERNS[0] = ',';

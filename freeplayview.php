@@ -33,8 +33,10 @@ if (!defined('MOODLE_INTERNAL')) {
 
 $subquestions = $DB->get_records('flashcard_deckdata', array('flashcardid' => $flashcard->id));
 if (empty($subquestions)) {
+    echo $out;
     echo $OUTPUT->notification(get_string('nosubquestions', 'flashcard'));
-    return;
+    echo $OUTPUT->footer();
+    die;
 }
 $subquestions = draw_rand_array($subquestions, count($subquestions));
 

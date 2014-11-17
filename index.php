@@ -39,7 +39,10 @@ if (! $course = $DB->get_record('course', array('id' => $id))) {
 $context = context_course::instance($course->id);
 require_login($course->id);
 
-add_to_log($course->id, 'flashcard', 'view all', "index.php?id=$course->id", '');
+// Trigger instances list viewed event.
+$event = \mod_flashcard\event\course_module_instance_list_viewed::create(array('context' => $context));
+$event->add_record_snapshot('course', $course);
+$event->trigger();
 
 // Get all required strings.
 
@@ -48,7 +51,7 @@ $strflashcard  = get_string('modulename', 'flashcard');
 
 // Print the header.
 
-$PAGE->set_url($CFG->wwwroot.'/mod/flashcard/index.php?id='.$course->id);
+$PAGE->set_url(new moodle_url('/mod/flashcard/index.php', array('id' => $course->id)));
 $PAGE->set_context($context);
 $PAGE->set_pagelayout('incourse');
 $PAGE->navbar->add($strflashcards);

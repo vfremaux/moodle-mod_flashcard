@@ -218,8 +218,7 @@ function flashcard_get_card_status(&$flashcard) {
     // Get decks by card.
     $sql = "
         SELECT
-           CONCAT(dd.questiontext, '_', c.deck),
-           dd.questiontext as question,
+           dd.questiontext,
            COUNT(c.id) as amount,
            c.deck AS deck
         FROM
@@ -231,6 +230,7 @@ function flashcard_get_card_status(&$flashcard) {
         WHERE
             c.flashcardid = ?
         GROUP BY
+            c.entryid,
             c.deck
     ";
     $recs = $DB->get_records_sql($sql, array($flashcard->id));
@@ -254,20 +254,20 @@ function flashcard_get_card_status(&$flashcard) {
     $accesses = $DB->get_records_sql($sql, array($flashcard->id));
     
     $cards = array();
-    foreach ($recs as $questionid => $rec) {
+    foreach ($recs as $question => $rec) {
         if ($rec->deck == 1) {
-            $cards[$rec->question]->deck[0] = $rec->amount;
+            $cards[$question]->deck[0] = $rec->amount;
         }
         if ($rec->deck == 2) {
-            $cards[$rec->question]->deck[1] = $rec->amount;
+            $cards[$question]->deck[1] = $rec->amount;
         }
         if ($rec->deck == 3) {
-            $cards[$rec->question]->deck[2] = $rec->amount;
+            $cards[$question]->deck[2] = $rec->amount;
         }
         if ($rec->deck == 4) {
-            $cards[$rec->question]->deck[3] = $rec->amount;
+            $cards[$question]->deck[3] = $rec->amount;
         }
-        $cards[$rec->question]->accesscount = $accesses[$rec->question]->accessed;
+        $cards[$question]->accesscount = $accesses[$question]->accessed;
     }
     return $cards;
 }
