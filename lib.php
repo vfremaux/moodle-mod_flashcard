@@ -22,7 +22,6 @@
  * @contributors Valery Fremaux
  * @version Moodle 2.0
  */
-
 require_once($CFG->dirroot.'/lib/ddllib.php');
 require_once($CFG->dirroot.'/mod/flashcard/locallib.php');
 require_once($CFG->dirroot.'/mod/flashcard/mailtemplatelib.php');
@@ -206,7 +205,7 @@ function flashcard_user_complete($course, $user, $mod, $flashcard) {
     $deckaccesscount = array();
 
     if ($usercards = $DB->get_records('flashcard_card', array('userid' => $user->id, 'flashcardid' => $flashcard->id))) {
-        foreach($usercards as $uc) {
+        foreach ($usercards as $uc) {
             @$cardsdeck[$uc->deck]++;
             $deckaccesscount[$uc->deck] = 0 + @$deckaccesscount[$uc->deck] + $uc->accesscount;
         }
@@ -290,7 +289,7 @@ function flashcard_cron() {
                         $DB->set_field('flashcard_card', 'deck', 2, array('id' => $card->id));
                     }
                 }
-                // downgrades to deck 1 (difficult)
+                // Downgrades to deck 1 (difficult).
                 if ($card->deck == 2 && time() > $card->lastaccessed + ($flashcard->deck2_delay * HOURSECS + $flashcard->deck2_release * HOURSECS)) {
                     $DB->set_field('flashcard_card', 'deck', 1, array('id' => $card->id));
                 }
@@ -298,7 +297,8 @@ function flashcard_cron() {
         }
 
         if ($flashcard->remindusers) {
-            if ($users = flashcard_get_participants($flashcard->id)) { // restrict to real participants
+            if ($users = flashcard_get_participants($flashcard->id)) {
+                // Restrict to real participants.
 
                 $participants = count($users);
                 mtrace("Participants : $participants users ");
@@ -329,7 +329,7 @@ function flashcard_cron() {
                                 $state->deck = $deck->deckid;
                                 $DB->insert_record('flashcard_userdeck_state', $state);
                             }
-                            
+
                             $vars = array(
                                 'FULLNAME' => fullname($u),
                                 'COURSE' => format_string($coursename),
@@ -378,21 +378,23 @@ function flashcard_grades($flashcardid) {
 function flashcard_get_participants($flashcardid) {
     global $DB;
 
-	$sql = "
-		SELECT DISTINCT
-			userid, 
-			userid
-		FROM
-			{flashcard_card}
-		WHERE
-			flashcardid = ?
-	";
+    $sql = "
+        SELECT DISTINCT
+            userid, 
+            userid
+        FROM
+            {flashcard_card}
+        WHERE
+            flashcardid = ?
+    ";
     $userids = $DB->get_records_sql_menu($sql, array('flashcardid' => $flashcardid));
     if ($userids) {
         $users = $DB->get_records_list('user', 'id', array_keys($userids));
     }
 
-    if (!empty($users)) return $users;
+    if (!empty($users)) {
+        return $users;
+    }
 
     return false;
 }
@@ -406,12 +408,6 @@ function flashcard_get_participants($flashcardid) {
 function flashcard_scale_used($flashcardid, $scaleid) {
 
     $return = false;
-
-    //$rec = get_record("flashcard","id","$flashcardid","scale","-$scaleid");
-    //
-    //if (!empty($rec)  && !empty($scaleid)) {
-    //    $return = true;
-    //}
 
     return $return;
 }

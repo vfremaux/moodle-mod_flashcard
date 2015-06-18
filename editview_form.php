@@ -23,7 +23,7 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
  */
 
-include_once($CFG->libdir.'/formslib.php');
+require_once($CFG->libdir.'/formslib.php');
 
 class CardEdit_Form extends moodleform {
 
@@ -143,16 +143,20 @@ class CardEdit_Form extends moodleform {
             case FLASHCARD_MEDIA_IMAGE:
                 $filearea = $side.'imagefile';
                 break;
+
             case FLASHCARD_MEDIA_SOUND:
                 $filearea = $side.'soundfile';
                 break;
+
             case FLASHCARD_MEDIA_VIDEO:
                 $filearea = $side.'videofile';
                 break;
+
             case FLASHCARD_MEDIA_IMAGE_AND_SOUND:
                 $filearea = $side.'imagefile';
                 $filearea2 = $side.'soundfile';
                 break;
+
             default:
                 print_error('errorunsupportedformat', 'flashcard');
         }

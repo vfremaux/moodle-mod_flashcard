@@ -23,10 +23,6 @@
  * @version Moodle 2.0
  */
 
-/**
- * Includes and requires
- */
-
 define('FLASHCARD_MEDIA_TEXT', 0); 
 define('FLASHCARD_MEDIA_IMAGE', 1); 
 define('FLASHCARD_MEDIA_SOUND', 2); 
@@ -148,7 +144,7 @@ function flashcard_import(&$flashcard) {
  * @uses $USER
  * @uses $DB
  */
-function flashcard_get_deck_status(&$flashcard, $userid = 0){
+function flashcard_get_deck_status(&$flashcard, $userid = 0) {
     global $USER, $DB;
 
     if ($userid == 0) {
@@ -218,7 +214,8 @@ function flashcard_get_card_status(&$flashcard) {
     // Get decks by card.
     $sql = "
         SELECT
-           dd.questiontext,
+           CONCAT(dd.questiontext, '_', c.deck),
+           dd.questiontext as question,
            COUNT(c.id) as amount,
            c.deck AS deck
         FROM
@@ -230,7 +227,6 @@ function flashcard_get_card_status(&$flashcard) {
         WHERE
             c.flashcardid = ?
         GROUP BY
-            c.entryid,
             c.deck
     ";
     $recs = $DB->get_records_sql($sql, array($flashcard->id));
@@ -254,59 +250,29 @@ function flashcard_get_card_status(&$flashcard) {
     $accesses = $DB->get_records_sql($sql, array($flashcard->id));
     
     $cards = array();
-    foreach ($recs as $question => $rec) {
+    foreach ($recs as $questionid => $rec) {
         if ($rec->deck == 1) {
-            $cards[$question]->deck[0] = $rec->amount;
+            $cards[$rec->question]->deck[0] = $rec->amount;
         }
         if ($rec->deck == 2) {
-            $cards[$question]->deck[1] = $rec->amount;
+            $cards[$rec->question]->deck[1] = $rec->amount;
         }
         if ($rec->deck == 3) {
-            $cards[$question]->deck[2] = $rec->amount;
+            $cards[$rec->question]->deck[2] = $rec->amount;
         }
         if ($rec->deck == 4) {
-            $cards[$question]->deck[3] = $rec->amount;
+            $cards[$rec->question]->deck[3] = $rec->amount;
         }
-        $cards[$question]->accesscount = $accesses[$question]->accessed;
+        $cards[$rec->question]->accesscount = $accesses[$rec->question]->accessed;
     }
     return $cards;
 }
 
+
 /**
- * prints a graphical represnetation of decks, proportionnaly to card count
- * @param reference $flashcard
- * @param object $card
- * @param boolean $return
- * @uses $CFG
+ * new media renderers cannot be used because not tunable in autoplay
+ * @TODO : remove as deprecated. Dewplayer more stable.
  */
-function flashcard_print_cardcounts(&$flashcard, $card, $return = false) {
-    global $CFG, $OUTPUT;
-
-    $str = '';
-
-    $topenabledpixurl = $OUTPUT->pix_url('topenabled', 'flashcard');
-
-    $strs[] = "<td><img src=\"{$topenabledpixurl}\" /> (1) </td><td>".'<div class="bar" style="height: 10px; width: '.(1 + @$card->deck[0]).'px"></div></td>';
-    $strs[] = "<td><img src=\"{$topenabledpixurl}\" /> (2) </td><td>".'<div class="bar" style="height: 10px; width: '.(1 + @$card->deck[1]).'px"></div></td>';
-    if ($flashcard->decks >= 3) {
-        $strs[] = "<td><img src=\"{$topenabledpixurl}\" /> (3) </td><td>".'<div class="bar" style="height: 10px; width: '.(1 + @$card->deck[2]).'px"></div></td>';
-    }
-    if ($flashcard->decks >= 4) {
-        $strs[] = "<td><img src=\"{$topenabledpixurl}\" /> (4) </td><td>".'<div class="bar" style="height: 10px; width: '.(1 + @$card->deck[3]).'px"></div></td>';
-    }
-
-    $str = "<table cellspacing=\"2\"><tr valign\"middle\">".implode("</tr><tr valign=\"middle\">", $strs)."</tr></table>";
-
-    if ($return) {
-        return $str;
-    }
-    echo $str;
-}
-
-/**
-* new media renderers cannot be used because not tunable in autoplay
-* @TODO : remove as deprecated. Dewplayer more stable.
-*/
 function flashcard_mp3_player(&$flashcard, $url, $htmlid) {
     global $CFG, $THEME;
 
@@ -370,36 +336,36 @@ function flashcard_delete_attached_files(&$cm, &$flashcard, $card) {
     $context = context_module::instance($cm->id);
 
     switch ($flashcard->questionsmediatype) {
-        case FLASHCARD_MEDIA_TEXT :
+        case FLASHCARD_MEDIA_TEXT:
             break;
-        case FLASHCARD_MEDIA_SOUND :
+        case FLASHCARD_MEDIA_SOUND:
             $fs->delete_area_files($context->id, 'flashcard', 'questionsoundfile', $card->id);
             break;
-        case FLASHCARD_MEDIA_IMAGE :
+        case FLASHCARD_MEDIA_IMAGE:
             $fs->delete_area_files($context->id, 'flashcard', 'questionimagefile', $card->id);
             break;
-        case FLASHCARD_MEDIA_VIDEO :
+        case FLASHCARD_MEDIA_VIDEO:
             $fs->delete_area_files($context->id, 'flashcard', 'questionvideofile', $card->id);
             break;
-        case FLASHCARD_MEDIA_IMAGE_AND_SOUND :
+        case FLASHCARD_MEDIA_IMAGE_AND_SOUND:
             $fs->delete_area_files($context->id, 'flashcard', 'questionimagefile', $card->id);
             $fs->delete_area_files($context->id, 'flashcard', 'questionsoundfile', $card->id);
             break;
     }
 
     switch ($flashcard->answersmediatype) {
-        case FLASHCARD_MEDIA_TEXT :
+        case FLASHCARD_MEDIA_TEXT:
             break;
-        case FLASHCARD_MEDIA_SOUND :
+        case FLASHCARD_MEDIA_SOUND:
             $fs->delete_area_files($context->id, 'flashcard', 'answersoundfile', $card->id);
             break;
-        case FLASHCARD_MEDIA_IMAGE :
+        case FLASHCARD_MEDIA_IMAGE:
             $fs->delete_area_files($context->id, 'flashcard', 'answerimagefile', $card->id);
             break;
-        case FLASHCARD_MEDIA_VIDEO :
+        case FLASHCARD_MEDIA_VIDEO:
             $fs->delete_area_files($context->id, 'flashcard', 'answervideofile', $card->id);
             break;
-        case FLASHCARD_MEDIA_IMAGE_AND_SOUND :
+        case FLASHCARD_MEDIA_IMAGE_AND_SOUND:
             $fs->delete_area_files($context->id, 'flashcard', 'answersoundfile', $card->id);
             $fs->delete_area_files($context->id, 'flashcard', 'answerimagefile', $card->id);
             break;
@@ -428,4 +394,27 @@ function flashcard_save_draft_customimage(&$flashcard, $customimage) {
         $savedfile = array_pop($savedfiles);
         $flashcard->$customimage = $savedfile->get_id();
     }
+}
+
+function flashcard_get_file_url($filerecid, $asobject = false) {
+    global $CFG;
+
+    $fs = get_file_storage();
+
+    $file = $fs->get_file_by_id($filerecid);
+    $filename = $file->get_filename();
+    $contextid = $file->get_contextid();
+    $filearea = $file->get_filearea();
+    $itemid = $file->get_itemid();
+
+    $url = $CFG->wwwroot."/pluginfile.php/{$contextid}/mod_flashcard/{$filearea}/{$itemid}/{$filename}";
+
+    if ($asobject) {
+        $f->pathname = $file->get_pathname();
+        $f->filename = $filename;
+        $f->url = $url;
+        return $f;
+    }
+
+    return $url;
 }

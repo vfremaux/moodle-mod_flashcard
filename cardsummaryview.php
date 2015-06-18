@@ -16,7 +16,7 @@
 
 /**
  * This view provides a summary for the teacher
- * 
+ *
  * @package mod-flashcard
  * @category mod
  * @author Valery Fremaux, Gustav Delius
@@ -46,8 +46,9 @@ $table->size = array('30%', '35%', '35%');
 $table->width = "100%";
 
 foreach ($cards as $cardquestion => $acard) {
-    $cardcounters = flashcard_print_cardcounts($flashcard, $acard, true);
+    $cardcounters = $renderer->print_cardcounts($flashcard, $acard);
     $table->data[] = array(format_string($cardquestion), $cardcounters, $acard->accesscount);
 }
 
 echo html_writer::table($table);
+

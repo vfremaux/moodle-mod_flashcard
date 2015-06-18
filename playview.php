@@ -31,6 +31,8 @@ if (!defined('MOODLE_INTERNAL')) {
     die('Direct access to this script is forbidden.'); /// It must be included from a Moodle page.
 }
 
+$PAGE->requires->js('/mod/flashcard/players/flowplayer/flowplayer.js');
+
 // Invoke controller.
 
 // We need it in controller.
@@ -83,12 +85,7 @@ if ($cards = $DB->get_records_select('flashcard_card', $select, $params)) {
 
 // Print deferred header.
 
-// $PAGE->requires->js('/mod/flashcard/players/swfobject.js');
-$PAGE->requires->js('/mod/flashcard/players/flowplayer/flowplayer.js');
-
 echo $out;
-
-echo '<link href="'.$CFG->wwwroot.'/mod/flashcard/players/flowplayer/skin/minimalist.css" rel="stylesheet" type="text/css" />';
 
 // Randomize and get a question (obviously it is not a consumed question).
 
@@ -99,17 +96,16 @@ $back = 'question';
 $front = 'answer';
 
 if ($flashcard->flipdeck) {
-    // flip card side values
+    // Flip card side values.
     $tmp = $subquestion->answertext;
     $subquestion->answertext = $subquestion->questiontext;
     $subquestion->questiontext = $tmp;
     $back = 'answer';
     $front = 'question';
-    // flip media types
+    // Flip media types.
     $tmp = $flashcard->answersmediatype;
     $flashcard->answersmediatype = $flashcard->questionsmediatype;
     $flashcard->questionsmediatype = $tmp;
-
 }
 
 $acardvideoclass = ($flashcard->answersmediatype == FLASHCARD_MEDIA_VIDEO) ? '-video' : '' ;
@@ -117,60 +113,63 @@ $qcardvideoclass = ($flashcard->answersmediatype == FLASHCARD_MEDIA_VIDEO) ? '-v
 
 $autoplay = ($flashcard->audiostart) ? 'true' : 'false';
 ?>
-    <script type="text/javascript">
-    var qtype = "<?php echo $flashcard->questionsmediatype ?>";
-    var atype = "<?php echo $flashcard->answersmediatype ?>";
-    var maxitems = <?php echo count($cards) ?>;
-    </script>
-    <script src="<?php echo $CFG->wwwroot ?>/mod/flashcard/js/module.js">
-    </script>
-    <style>
-        <?php echo $flashcard->extracss ?>
-    </style>
 
-    <div id="flashcard_board">
-      <div id="flashcard_header">
-      <?php echo $OUTPUT->heading($flashcard->name);  ?>
-        <p> <?php print_string('instructions', 'flashcard'); ?></p>
+<script type="text/javascript">
+var qtype = "<?php echo $flashcard->questionsmediatype ?>";
+var atype = "<?php echo $flashcard->answersmediatype ?>";
+var maxitems = <?php echo count($cards) ?>;
+</script>
 
-      </div>
+<style>
+    <?php echo $flashcard->extracss ?>
+</style>
+
+<div id="flashcard_board">
+    <div id="flashcard_header">
+    <?php echo $OUTPUT->heading($flashcard->name);  ?>
+    <p> <?php print_string('instructions', 'flashcard'); ?></p>
+    </div>
+
     <center>
-    <div id="questiondiv" style=";background-repeat:no-repeat;background-image:url(<?php echo flashcard_print_custom_url($flashcard, 'customback', 0) ?>)" class="flashcard-question<?php echo $qcardvideoclass ?>" onclick="javascript:togglecard()">
+
+    <div id="questiondiv" style=";background-repeat:no-repeat;background-image:url(<?php echo $renderer->print_custom_url($flashcard, 'customback', 0) ?>)" class="flashcard-question<?php echo $qcardvideoclass ?>" onclick="javascript:togglecard()">
         <?php
         if ($flashcard->questionsmediatype == FLASHCARD_MEDIA_IMAGE) {
-            flashcard_print_image($flashcard, "{$back}imagefile/{$subquestion->id}");
-        } elseif ($flashcard->questionsmediatype == FLASHCARD_MEDIA_SOUND){
-            flashcard_play_sound($flashcard, "{$back}soundfile/{$subquestion->id}", $autoplay, false, 'bell_q');
-        } elseif ($flashcard->questionsmediatype == FLASHCARD_MEDIA_VIDEO){
-            flashcard_play_video($flashcard, "{$back}videofile/{$subquestion->id}", $autoplay, false, 'bell_q');
-        } elseif ($flashcard->questionsmediatype == FLASHCARD_MEDIA_IMAGE_AND_SOUND){
-            flashcard_print_image($flashcard, "{$back}imagefile/{$subquestion->id}");
+            echo $renderer->print_image($flashcard, "{$back}imagefile/{$subquestion->id}");
+        } elseif ($flashcard->questionsmediatype == FLASHCARD_MEDIA_SOUND) {
+            echo $renderer->play_sound($flashcard, "{$back}soundfile/{$subquestion->id}", $autoplay, 'bell_q');
+        } elseif ($flashcard->questionsmediatype == FLASHCARD_MEDIA_VIDEO) {
+            echo $renderer->play_video($flashcard, "{$back}videofile/{$subquestion->id}", $autoplay, 'bell_q');
+        } elseif ($flashcard->questionsmediatype == FLASHCARD_MEDIA_IMAGE_AND_SOUND) {
+            echo $renderer->print_image($flashcard, "{$back}imagefile/{$subquestion->id}");
             echo "<br/>";
-            flashcard_play_sound($flashcard, "{$back}soundfile/{$subquestion->id}", $autoplay, false, 'bell_q');
+            echo $renderer->play_sound($flashcard, "{$back}soundfile/{$subquestion->id}", $autoplay, 'bell_q');
         } else {
             echo format_text($subquestion->questiontext, FORMAT_HTML);
         }
         ?>
     </div>
-    <div id="answerdiv" style="display:none;background-repeat:no-repeat;background-image:url(<?php echo flashcard_print_custom_url($flashcard, 'customfront', 0) ?>)" class="flashcard-answer<?php echo $acardvideoclass ?>" onclick="javascript:togglecard()">
+
+    <div id="answerdiv" style="display:none;background-repeat:no-repeat;background-image:url(<?php echo $renderer->print_custom_url($flashcard, 'customfront', 0) ?>)" class="flashcard-answer<?php echo $acardvideoclass ?>" onclick="javascript:togglecard()">
         <?php
         if ($flashcard->answersmediatype == FLASHCARD_MEDIA_IMAGE) {
-            flashcard_print_image($flashcard, "{$front}imagefile/{$subquestion->id}");
-        } elseif ($flashcard->answersmediatype == FLASHCARD_MEDIA_SOUND){
-            flashcard_play_sound($flashcard, "{$front}soundfile/{$subquestion->id}", $autoplay, false, 'bell_a');
-        } elseif ($flashcard->answersmediatype == FLASHCARD_MEDIA_VIDEO){
-            flashcard_play_video($flashcard, "{$front}videofile/{$subquestion->id}", $autoplay, false, 'bell_a');
-        } elseif ($flashcard->answersmediatype == FLASHCARD_MEDIA_IMAGE_AND_SOUND){
-            flashcard_print_image($flashcard, "{$front}imagefile/{$subquestion->id}");
+            echo $renderer->print_image($flashcard, "{$front}imagefile/{$subquestion->id}");
+        } elseif ($flashcard->answersmediatype == FLASHCARD_MEDIA_SOUND) {
+            echo $renderer->play_sound($flashcard, "{$front}soundfile/{$subquestion->id}", $autoplay, 'bell_a');
+        } elseif ($flashcard->answersmediatype == FLASHCARD_MEDIA_VIDEO) {
+            echo $renderer->play_video($flashcard, "{$front}videofile/{$subquestion->id}", $autoplay, 'bell_a');
+        } elseif ($flashcard->answersmediatype == FLASHCARD_MEDIA_IMAGE_AND_SOUND) {
+            echo $renderer->print_image($flashcard, "{$front}imagefile/{$subquestion->id}");
             echo "<br/>";
-            flashcard_play_sound($flashcard, "{$front}soundfile/{$subquestion->id}", $autoplay, false, 'bell_a');
+            echo $renderer->play_sound($flashcard, "{$front}soundfile/{$subquestion->id}", $autoplay, 'bell_a');
         } else {
             echo format_text($subquestion->answertext,FORMAT_HTML);
         }
         ?>
     </div>
+
     <div id="flashcard_controls">
-      <p><?php print_string('cardsremaining', 'flashcard'); ?>: <span id="remain"><?php echo count($subquestions);?></span></p>
+        <p><?php print_string('cardsremaining', 'flashcard'); ?>: <span id="remain"><?php echo count($subquestions);?></span></p>
 
         <?php
         $options['id'] = $cm->id;

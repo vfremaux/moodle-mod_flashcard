@@ -23,15 +23,15 @@
  * @author Valery Fremaux
  * @author Tomasz Muras
  * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
- * @version Moodle 2.0
+ * @version Moodle 2.x
  */
 
-require_once('../../config.php');
+require('../../config.php');
 require_once($CFG->dirroot.'/mod/flashcard/lib.php');
 require_once($CFG->dirroot.'/mod/flashcard/locallib.php');
-require_once($CFG->dirroot.'/mod/flashcard/renderers.php');
 
 $PAGE->requires->js('/mod/flashcard/js/ufo.js', true);
+$PAGE->requires->js('/mod/flashcard/js/module.js', false);
 
 $id = optional_param('id', '', PARAM_INT);    // Course Module ID, or
 $f = optional_param('f', '', PARAM_INT);     // flashcard ID
@@ -39,7 +39,7 @@ $view = optional_param('view', 'checkdecks', PARAM_ACTION);     // view
 $page = optional_param('page', '', PARAM_ACTION);     // page
 $action = optional_param('what', '', PARAM_ACTION);     // command
 
-$thisurl = $CFG->wwwroot.'/mod/flashcard/view.php';
+$thisurl = new moodle_url('/mod/flashcard/view.php');
 $url = new moodle_url('/mod/flashcard/view.php', array('id' => $id));
 
 $PAGE->set_url($url);
@@ -74,11 +74,14 @@ $strflashcards = get_string('modulenameplural', 'flashcard');
 $strflashcard  = get_string('modulename', 'flashcard');
 $PAGE->set_title("$course->shortname: $flashcard->name");
 $PAGE->set_heading("$course->fullname");
-$PAGE->navbar->add($strflashcards, $CFG->wwwroot."/mod/flashcard/index.php?id=".$course->id);
+$PAGE->navbar->add($strflashcards, new moodle_url('/mod/flashcard/index.php', array('id' => $course->id)));
 $PAGE->navbar->add($flashcard->name);
 $PAGE->set_focuscontrol('');
 $PAGE->set_cacheable(true);
 $PAGE->set_button($OUTPUT->update_module_button($cm->id, 'flashcard'));
+$PAGE->requires->css('/mod/flashcard/players/flowplayer/skin/minimalist.css');
+
+$renderer = $PAGE->get_renderer('mod_flashcard');
 
 $out = $OUTPUT->header();
 
@@ -101,6 +104,22 @@ if (!has_capability('mod/flashcard:manage', $context)) {
         echo $OUTPUT->footer();
         die;
     }
+}
+
+// loads "per instance" customisation styles.
+
+$localstyle = "{$course->id}/moddata/flashcard/{$flashcard->id}/flashcard.css";
+if (file_exists("{$CFG->dataroot}/{$localstyle}")) {
+    if ($CFG->slasharguments) {
+        $localstyleurl = $CFG->wwwroot.'/file.php/'.$localstyle;
+    } else {
+        if ($CFG->slasharguments){
+            $localstyleurl = $CFG->wwwroot.'/file.php?file='.$localstyle;
+        } else {
+            $localstyleurl = $CFG->wwwroot.'/file.php'.$localstyle;
+        }
+    }
+    $out .= "<link rel=\"stylesheet\" type=\"text/css\" href=\"{$localstyleurl}\" />";
 }
 
 // Determine the current tab.
@@ -132,7 +151,7 @@ if (has_capability('mod/flashcard:manage', $context)) {
     $row[] = new tabobject('summary', $thisurl."?view=summary&amp;id={$cm->id}&amp;page=byusers", $tabname);
     $tabname = get_string('edit', 'flashcard');
     $row[] = new tabobject('manage', $thisurl."?view=manage&amp;id={$cm->id}", $tabname);
-    
+
     if ($flashcard->questionsmediatype == FLASHCARD_MEDIA_TEXT && $flashcard->answersmediatype == FLASHCARD_MEDIA_TEXT) {
         $tabname = get_string('import', 'flashcard');
         $row[] = new tabobject('import', $thisurl."?what=import&amp;view=manage&amp;id={$cm->id}", $tabname);
@@ -148,11 +167,12 @@ if ($view == 'edit') {
     $currenttab = 'manage';
 } elseif ($view == 'summary') {
     switch ($page) {
-        case 'bycards' :
+        case 'bycards':
             $currenttab = 'bycards';
             $activated[] = 'summary'; 
             break;
-        default :
+        
+        default:
             $currenttab = 'byusers';
             $activated[] = 'summary';
     }
@@ -186,21 +206,24 @@ switch ($view){
             include $CFG->dirroot.'/mod/flashcard/usersummaryview.php';
         }
         break;
-    case 'manage' :
+
+    case 'manage':
         if (!has_capability('mod/flashcard:manage', $context)) {
             redirect($thisurl."?view=checkdecks&amp;id={$cm->id}");
         }
         $event = \mod_flashcard\event\course_module_managed::create($eventparams);
         include $CFG->dirroot.'/mod/flashcard/managecards.php';
         break;
-    case 'edit' :
+
+    case 'edit':
         if (!has_capability('mod/flashcard:manage', $context)) {
             redirect($thisurl."?view=checkdecks&amp;id={$cm->id}");
         }
         $event = \mod_flashcard\event\course_module_edited::create($eventparams);
         include $CFG->dirroot.'/mod/flashcard/editview.php';
         break;
-    case 'freeplay' :
+
+    case 'freeplay':
         $event = \mod_flashcard\event\course_module_freeplayed::create($eventparams);
         include $CFG->dirroot.'/mod/flashcard/freeplayview.php';
         break;

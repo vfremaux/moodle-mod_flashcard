@@ -25,12 +25,12 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
  */
 
-require_once("../../config.php");
+require('../../config.php');
 require_once($CFG->dirroot.'/mod/flashcard/lib.php');
 
 $id = required_param('id', PARAM_INT);   // Course id
 
-if (! $course = $DB->get_record('course', array('id' => $id))) {
+if (!$course = $DB->get_record('course', array('id' => $id))) {
     print_error('coursemisconf');
 }
 
@@ -62,43 +62,44 @@ echo $OUTPUT->header();
 // Get all the appropriate data.
 
 if (! $flashcards = get_all_instances_in_course('flashcard', $course)) {
-    $OUTPUT->notification(get_string('noflashcards', 'flashcard'), "../../course/view.php?id=$course->id");
+    $OUTPUT->notification(get_string('noflashcards', 'flashcard'), new moodle_url('/course/view.php', array('id' => $course->id));
     die;
 }
 
 // Print the list of instances (your module will probably extend this).
 
 $timenow = time();
-$strname  = get_string('name');
-$strweek  = get_string('week');
-$strtopic  = get_string('topic');
+$strname = get_string('name');
+$strweek = get_string('week');
+$strtopic = get_string('topic');
 
 $table = new html_table();
 
 if ($course->format == 'weeks') {
-    $table->head  = array ($strweek, $strname);
-    $table->align = array ('center', 'left');
+    $table->head  = array($strweek, $strname);
+    $table->align = array('center', 'left');
 } else if ($course->format == 'topics') {
-    $table->head  = array ($strtopic, $strname);
-    $table->align = array ('center', 'left', 'left', 'left');
+    $table->head  = array($strtopic, $strname);
+    $table->align = array('center', 'left', 'left', 'left');
 } else {
-    $table->head  = array ($strname);
-    $table->align = array ('left', 'left', 'left');
+    $table->head  = array($strname);
+    $table->align = array('left', 'left', 'left');
 }
 
 foreach ($flashcards as $flashcard) {
+    $instanceurl = new moodle_url('/mod/flashcard/view.php', array('id' => $flashcard->coursemodule));
     if (!$flashcard->visible) {
         //Show dimmed if the mod is hidden
-        $link = "<a class=\"dimmed\" href=\"view.php?id={$flashcard->coursemodule}\">{$flashcard->name}</a>";
+        $link = '<a class="dimmed" href="'.$instanceuel.'">'.$flashcard->name.'</a>';
     } else {
         //Show normal if the mod is visible
-        $link = "<a href=\"view.php?id={$flashcard->coursemodule}\">{$flashcard->name}</a>";
+        $link = '<a href="'.$instanceurl.'">'.$flashcard->name.'</a>';
     }
 
     if ($course->format == 'weeks' or $course->format == 'topics') {
-        $table->data[] = array ($flashcard->section, $link);
+        $table->data[] = array($flashcard->section, $link);
     } else {
-        $table->data[] = array ($link);
+        $table->data[] = array($link);
     }
 }
 

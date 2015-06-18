@@ -523,4 +523,3 @@ function process_flashcard_file($filename, $filearea, $card, $flashcard, $contex
     }
     return $filerec;
 }
-?>

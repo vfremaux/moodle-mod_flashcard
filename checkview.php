@@ -23,8 +23,6 @@
  * @contributors Valery Fremaux
  * @version Moodle 2.0
  * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
- *
- * TODO : transfer HTML build into renderer
  */
 
 // Security.
@@ -40,20 +38,16 @@ echo $out;
 // Get available decks for user and calculate deck state.
 
 if (!$decks = flashcard_get_deck_status($flashcard)) {
-    // if deck status have bever been initialized initialized them
+    // If deck status have bever been initialized initialized them.
     if (flashcard_initialize($flashcard, $USER->id)) {
         $decks = flashcard_get_deck_status($flashcard);
     } else {
         if (has_capability('mod/flashcard:manage', $context)) {
-            $url = "view.php?id={$cm->id}&amp;view=edit";
+            $url = new moodle_url('/mod/flashcard/view.php', array('id' => $cm->id, 'view' => 'edit'));
         } else {
-            if (has_capability('mod/flashcard:manage', $context)){
-                $url = "view.php?id={$cm->id}&amp;view=edit";
-            } else {
-                $url = "{$CFG->wwwroot}/course/view.php?id={$course->id}";
-            }
-            echo $OUTPUT->notification(get_string('nocards', 'flashcard'), $url);
+            $url = new moodle_url('/course/view.php', array('id' => $course->id));
         }
+        echo $OUTPUT->notification(get_string('nocards', 'flashcard'), $url);
     }
 }
 ?>
@@ -92,12 +86,12 @@ if ($flashcard->decks >= 4) {
                 print_string('cardsindeck', 'flashcard', 0 + @$decks->decks[0]->count);
                 echo "<br/>";
                 if (@$decks->decks[0]->count == 0) {
-                     flashcard_print_deck($flashcard, $cm, 0);
+                     echo $renderer->print_deck($flashcard, $cm, 0);
                 } else {
                     if ($decks->decks[0]->reactivate) {
-                        flashcard_print_deck($flashcard, $cm, 1);
+                        echo $renderer->print_deck($flashcard, $cm, 1);
                     } else {
-                        flashcard_print_deck($flashcard, $cm, -1);
+                        echo $renderer->print_deck($flashcard, $cm, -1);
                     }
                 }
             ?>
@@ -107,12 +101,12 @@ if ($flashcard->decks >= 4) {
                 print_string('cardsindeck', 'flashcard', 0 + @$decks->decks[1]->count);
                 echo "<br/>";
                 if (@$decks->decks[1]->count == 0) {
-                     flashcard_print_deck($flashcard, $cm, 0);
+                     echo $renderer->print_deck($flashcard, $cm, 0);
                 } else {
                     if ($decks->decks[1]->reactivate) {
-                        flashcard_print_deck($flashcard, $cm, 2);
+                        echo $renderer->print_deck($flashcard, $cm, 2);
                     } else {
-                        flashcard_print_deck($flashcard, $cm, -2);
+                        echo $renderer->print_deck($flashcard, $cm, -2);
                     }
                 }
             ?>
@@ -125,12 +119,12 @@ if ($flashcard->decks >= 3) {
                 print_string('cardsindeck', 'flashcard', 0 + @$decks->decks[2]->count);
                 echo "<br/>";
                 if (@$decks->decks[2]->count == 0) {
-                     flashcard_print_deck($flashcard, $cm, 0);
+                     echo $renderer->print_deck($flashcard, $cm, 0);
                 } else {
                     if ($decks->decks[2]->reactivate) {
-                        flashcard_print_deck($flashcard, $cm, 3);
+                        echo $renderer->print_deck($flashcard, $cm, 3);
                     } else {
-                        flashcard_print_deck($flashcard, $cm, -3);
+                        echo $renderer->print_deck($flashcard, $cm, -3);
                     }
                 }
             ?>
@@ -144,12 +138,12 @@ if ($flashcard->decks >= 4) {
                 print_string('cardsindeck', 'flashcard', 0 + @$decks->decks[3]->count);
                 echo "<br/>";
                 if (@$decks->decks[3]->count == 0){
-                     flashcard_print_deck($flashcard, $cm, 0);
+                     echo $renderer->print_deck($flashcard, $cm, 0);
                 } else {
                     if ($decks->decks[3]->reactivate){
-                        flashcard_print_deck($flashcard, $cm, 4);
+                        echo $renderer->print_deck($flashcard, $cm, 4);
                     } else {
-                        flashcard_print_deck($flashcard, $cm, -4);
+                        echo $renderer->print_deck($flashcard, $cm, -4);
                     }
                 }
             ?>

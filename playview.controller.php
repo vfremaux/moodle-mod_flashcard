@@ -55,7 +55,7 @@ if ($action == 'reset'){
 /* ********************************* a card was declared right ************************ */
 
 if ($action == 'igotit') {
-    $card = new StdClass;
+    $card = new StdClass();
     $card->id = required_param('cardid', PARAM_INT);
     $card = $DB->get_record('flashcard_card', array('id' => $card->id));
     $olddeck = $card->deck;
@@ -91,7 +91,7 @@ if ($action == 'igotit') {
                 $conditions = array('userid' => $USER->id, 'flashcardid' => $flashcard->id, 'deck' => $flashcard->decks);
                 $lastdeckcards = $DB->count_records('flashcard_card', $conditions);
                 $allcards = count($subquestions); // @see playview.php
-                
+
                 if ($lastdeckcards == $allcards) {
                     // Whatever the status of the last deck, we have brought all the cards there.
                     // Update completion state.
@@ -99,8 +99,8 @@ if ($action == 'igotit') {
                 }
             }
         } elseif ($flashcard->completionallviewed) {
-             // Allgood superseedes allviewed.
-             // Deck does not matter here, all viewed cards in all decks... usually the first one.
+            // Allgood superseedes allviewed.
+            // Deck does not matter here, all viewed cards in all decks... usually the first one.
             $allseencards = $DB->count_records('flashcard_card', array('userid' => $USER->id, 'flashcardid' => $flashcard->id));
             $allcards = count($subquestions); // @see playview.php
             if ($seencards >= min($allcards, $flashcard->completionallviewed)) {

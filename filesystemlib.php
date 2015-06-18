@@ -24,7 +24,6 @@
  * @category third-party libs
  * @date 2007/11/04
  *
- * TODO : Discard this library use
  */
 
 // Avoids reloading the lib when keeped in third party plugin.

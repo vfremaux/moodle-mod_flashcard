@@ -44,7 +44,9 @@ if ($action == 'delete') {
     }
 
     foreach ($items as $item) {
+
         $card = $DB->get_record('flashcard_deckdata', array('id' => $item));
+
         flashcard_delete_attached_files($cm, $flashcard, $card);
 
         if (!$DB->delete_records('flashcard_deckdata', array('id' => $item))) {
@@ -77,7 +79,7 @@ if ($action == 'import') {
 /* ******************************* Perform import **************************** */
 
 if ($action == 'doimport') {
-    include_once($CFG->dirroot.'/mod/flahcard/import_form.php');
+    include_once($CFG->dirroot.'/mod/flashcard/import_form.php');
     $form = new flashcard_import_form();
 
     $FIELDSEPPATTERNS[0] = ',';

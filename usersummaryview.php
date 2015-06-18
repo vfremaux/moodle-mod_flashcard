@@ -39,7 +39,7 @@ if ($action == 'reset') {
     $DB->delete_records('flashcard_card', array('flashcardid' => $flashcard->id, 'userid' => $userid));
 
     $completion = new completion_info($course);
-     if (($flashcard->completionallgood || $flashcard->completionallviewed) && $completion->is_enabled($cm)) {
+    if (($flashcard->completionallgood || $flashcard->completionallviewed) && $completion->is_enabled($cm)) {
         // Unmark completion state.
         $completion->update_state($cm, COMPLETION_INCOMPLETE, $userid);
     }
@@ -75,8 +75,8 @@ if (!empty($courseusers)) {
         $userbox .= fullname($auser);
         if ($status) {
             $flashcard->cm = &$cm;
-            $deckbox = flashcard_print_deck_status($flashcard, $auser->id, $status, true);
-            $countbox = flashcard_print_deckcounts($flashcard, true, $auser->id);
+            $deckbox = $renderer->print_deck_status($flashcard, $auser->id, $status, true);
+            $countbox = $renderer->print_deckcounts($flashcard, true, $auser->id);
         } else {
             $deckbox = get_string('notinitialized', 'flashcard');
             $countbox = '';

@@ -39,7 +39,7 @@ class mod_flashcard_mod_form extends moodleform_mod {
     public function definition() {
         global $CFG, $COURSE, $DB;
 
-        $mform    =& $this->_form;
+        $mform =& $this->_form;
 
         $mform->addElement('header', 'general', get_string('general', 'form'));
 
@@ -64,9 +64,9 @@ class mod_flashcard_mod_form extends moodleform_mod {
             $questions = array();
         } else {
             // Prepared for 1.9 questionbanck compatibility.
-            if (function_exists('question_has_capability_on')){
+            if (function_exists('question_has_capability_on')) {
 
-                function drop_questions($a){
+                function drop_questions($a) {
                     return question_has_capability_on($a->id, 'use');
                 }
 
@@ -194,7 +194,7 @@ class mod_flashcard_mod_form extends moodleform_mod {
         $this->add_action_buttons();
     }
 
-      public function add_completion_rules() {
+    public function add_completion_rules() {
         $mform =& $this->_form;
 
         $group = array();
@@ -236,22 +236,22 @@ class mod_flashcard_mod_form extends moodleform_mod {
 
             $draftitemid = file_get_submitted_draft_itemid('customfront');
             $maxbytes = 100000;
-            file_prepare_draft_area($draftitemid, $context->id, 'mod_flashcard', 'customfront', 0, array('subdirs' => 0, 'maxbytes' => $maxbytes, 'maxfiles' => 1));         
+            file_prepare_draft_area($draftitemid, $context->id, 'mod_flashcard', 'customfront', 0, array('subdirs' => 0, 'maxbytes' => $maxbytes, 'maxfiles' => 1));
             $data->customfrontfileid = $draftitemid;
 
             $draftitemid = file_get_submitted_draft_itemid('customback');
             $maxbytes = 100000;
-            file_prepare_draft_area($draftitemid, $context->id, 'mod_flashcard', 'customback', 0, array('subdirs' => 0, 'maxbytes' => $maxbytes, 'maxfiles' => 1));         
+            file_prepare_draft_area($draftitemid, $context->id, 'mod_flashcard', 'customback', 0, array('subdirs' => 0, 'maxbytes' => $maxbytes, 'maxfiles' => 1));
             $data->custombackfileid = $draftitemid;
 
             $draftitemid = file_get_submitted_draft_itemid('customempty');
             $maxbytes = 100000;
-            file_prepare_draft_area($draftitemid, $context->id, 'mod_flashcard', 'customempty', 0, array('subdirs' => 0, 'maxbytes' => $maxbytes, 'maxfiles' => 1));         
+            file_prepare_draft_area($draftitemid, $context->id, 'mod_flashcard', 'customempty', 0, array('subdirs' => 0, 'maxbytes' => $maxbytes, 'maxfiles' => 1));
             $data->customemptyfileid = $draftitemid;
 
             $draftitemid = file_get_submitted_draft_itemid('customreview');
             $maxbytes = 100000;
-            file_prepare_draft_area($draftitemid, $context->id, 'mod_flashcard', 'customreview', 0, array('subdirs' => 0, 'maxbytes' => $maxbytes, 'maxfiles' => 1));         
+            file_prepare_draft_area($draftitemid, $context->id, 'mod_flashcard', 'customreview', 0, array('subdirs' => 0, 'maxbytes' => $maxbytes, 'maxfiles' => 1));
             $data->customreviewfileid = $draftitemid;
 
             $draftitemid = file_get_submitted_draft_itemid('customreview');
@@ -315,7 +315,7 @@ class mod_flashcard_mod_form extends moodleform_mod {
         if ($data['starttime'] > $data['endtime']) {
             $errors['endfrom'] = get_string('mustbehigherthanstart', 'flashcard');
         }
-        
+
         if ($data['decks'] >= 2) {
             if ($data['deck1_delay'] > $data['deck2_delay']) {
                 $errors['deck2_delay'] = get_string('mustbegreaterthanabove');

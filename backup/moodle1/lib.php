@@ -118,7 +118,7 @@ class moodle1_mod_flashcard_handler extends moodle1_mod_handler {
     public function process_flashcard_deckdata($data) {
         $this->write_xml('deck', $data, array('/deck/id'));
 
-        $contextid      = $this->converter->get_contextid(CONTEXT_MODULE, $this->moduleid);
+        $contextid = $this->converter->get_contextid(CONTEXT_MODULE, $this->moduleid);
 
         // get a fresh new file manager for this instance
         $this->fileman = $this->converter->get_file_manager($contextid, 'mod_flashcard');

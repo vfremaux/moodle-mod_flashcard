@@ -1,5 +1,4 @@
-<?PHP // $Id: flashcard.php,v 1.1 2012-11-18 12:24:16 vf Exp $ 
-      // matching.php - created with Moodle 1.2 development (2003111400)
+<?php
 
 $string['backside'] = 'Karta-jokoaren atzealdea';
 $string['backtocourse'] = 'Ikastarora itzuli';
@@ -24,4 +23,3 @@ $string['stylesheet'] = 'Estilo-orria gora kargatu';
 $string['summary'] = 'Karta-jokoaren deskribapena';
 $string['undefinedquestionset'] = 'Karta-joko honetarako ez da galderarik zehaztu';
 
-?>

@@ -18,7 +18,7 @@
 if (!defined('MOODLE_INTERNAL')) die ('You cannot use this script this way');
 
 if ($action) {
-    include('manageview.controller.php');
+    include($CFG->dirroot.'/mod/flashcard/manageview.controller.php');
 }
 
 $pagesize = 20;
