@@ -67,6 +67,14 @@ class mod_flashcard_mod_form extends moodleform_mod {
             if (function_exists('question_has_capability_on')) {
 
                 function drop_questions($a) {
+                    global $DB;
+
+                    // First sanity check the existance of the context. there may be deleted contexts and some question wreck inside.
+                    $contextid = $DB->get_field('question_categories', 'contextid', array('id' => $a->category));
+                    if (!$DB->record_exists('context', array('id' => $contextid))) {
+                        return false;
+                    }
+
                     return question_has_capability_on($a->id, 'use');
                 }
 

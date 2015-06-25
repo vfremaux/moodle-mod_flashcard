@@ -268,7 +268,6 @@ function flashcard_get_card_status(&$flashcard) {
     return $cards;
 }
 
-
 /**
  * new media renderers cannot be used because not tunable in autoplay
  * @TODO : remove as deprecated. Dewplayer more stable.
