@@ -41,7 +41,7 @@ $frontstr = get_string('frontside', 'flashcard');
 $table = new html_table();
 $table->head = array('', "<b>$backstr</b>", "<b>$frontstr</b>", '');
 $table->size = array('10%', '40%', '40%', '10%');
-$table->width = '100%';    
+$table->width = '100%';
 $table->align = array('center', 'center', 'center', 'center');
 
 $editurl = $CFG->wwwroot.'/mod/flashcard/view.php?id='.$id.'&view=edit';

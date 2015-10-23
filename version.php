@@ -21,9 +21,9 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$plugin->version  = 2014071100;  // The current module version (Date: YYYYMMDDXX)
-$plugin->requires = 2014041100;  // Requires this Moodle version (2.3 and above)
+$plugin->version  = 2015061200;  // The current module version (Date: YYYYMMDDXX)
+$plugin->requires = 2015050500;  // Requires this Moodle version (2.3 and above)
 $plugin->cron     = 1; // Period for cron to check this module (secs)
 $plugin->component = 'mod_flashcard'; // Full name of the plugin (used for diagnostics)
-$plugin->release = '2.7.0 (Build 2014071100)';
+$plugin->release = '2.9.0 (Build 2014071100)';
 $plugin->maturity = MATURITY_RC;

@@ -48,7 +48,7 @@ class mod_flashcard_mod_form extends moodleform_mod {
         $mform->addRule('name', null, 'required', null, 'client');
 
         // Introduction.
-        $this->add_intro_editor(false, get_string('summary', 'flashcard'));
+        $this->standard_intro_elements(get_string('summary', 'flashcard'));
 
         $startdatearray[] = &$mform->createElement('date_time_selector', 'starttime', '');
         $startdatearray[] = &$mform->createElement('checkbox', 'starttimeenable', '');
@@ -111,6 +111,7 @@ class mod_flashcard_mod_form extends moodleform_mod {
         $mform->setType('audiostart', PARAM_BOOL);
 
         $mform->addElement('selectyesno', 'flipdeck', get_string('flipdeck', 'flashcard'));
+        $mform->setAdvanced('flipdeck');
         $mform->setType('flipdeck', PARAM_BOOL);
         $mform->addHelpButton('flipdeck', 'flipdeck', 'flashcard');
 

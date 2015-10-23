@@ -48,8 +48,8 @@ class CardEdit_Form extends moodleform {
 
         // Card id
         if (!empty($this->_customdata['cardid'])) {
-            $mform->addElement('hidden', 'cardid'); 
-            $mform->setType('cardid', PARAM_INT); 
+            $mform->addElement('hidden', 'cardid');
+            $mform->setType('cardid', PARAM_INT);
         }
 
         for ($i = 0; $i < $num ; $i++) {
