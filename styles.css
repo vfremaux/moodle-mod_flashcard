@@ -30,55 +30,55 @@
 }
 
 .flashcard-question-container{
-	display:block;
-	margin: 10px auto 10px auto; 
+    display:block;
+    margin: 10px auto 10px auto; 
 }
 
 .flashcard-answer-container{
-	display:block;
-	margin: 10px auto 10px auto; 
+    display:block;
+    margin: 10px auto 10px auto; 
 }
 
 .flashcard-question{
-	border-style: dashed; 
-	padding: 10px 30px; 
-	width: 300px; 
-	height: 200px; 
-	background-position:50% 50%;
-	vertical-align:middle;
-	display: table-cell;
+    border-style: dashed; 
+    padding: 10px 30px; 
+    width: 300px; 
+    height: 200px; 
+    background-position:50% 50%;
+    vertical-align:middle;
+    display: table-cell;
 }
 
 .flashcard-question-video{
-	border-style: dashed; 
-	padding: 10px 30px; 
-	width: 600px; 
-	height: 400px; 
-	background-position:50% 50%;
-	vertical-align:middle;
-	display: table-cell;
+    border-style: dashed; 
+    padding: 10px 30px; 
+    width: 600px; 
+    height: 400px; 
+    background-position:50% 50%;
+    vertical-align:middle;
+    display: table-cell;
 }
 
 .flashcard-answer{
-	border-style: dashed; 
-	margin: 10px auto 10px auto; 
-	padding: 10px 30px; 
-	width: 300px; 
-	height: 200px; 
-	background-position:50% 50%;
-	vertical-align:middle;
-	display: table-cell;
+    border-style: dashed; 
+    margin: 10px auto 10px auto; 
+    padding: 10px 30px; 
+    width: 300px; 
+    height: 200px; 
+    background-position:50% 50%;
+    vertical-align:middle;
+    display: table-cell;
 }
 
 .flashcard-answer-video{
-	border-style: dashed; 
-	margin: 10px auto 10px auto; 
-	padding: 10px 30px; 
-	width: 600px; 
-	height: 400px; 
-	background-position:50% 50%;
-	vertical-align:middle;
-	display: table-cell;
+    border-style: dashed; 
+    margin: 10px auto 10px auto; 
+    padding: 10px 30px; 
+    width: 600px; 
+    height: 400px; 
+    background-position:50% 50%;
+    vertical-align:middle;
+    display: table-cell;
 }
 
 .flowplayer { width: 80%; background-color: #222; background-size: cover; margin-bottom:30px }
@@ -88,9 +88,17 @@
 .flowplayer .fp-buffer { background-color: rgba(249, 249, 249, 1)}
 
 .flashcard-flowplayer video{
-	max-width: 800px;
+    max-width: 800px;
 }
 
 .flashcard-flowplayer-thumb{
- 	max-width: 300px; 
+     max-width: 300px; 
+}
+
+#flashcard-card-form .fitemtitle {
+    display:none;
+}
+
+#flashcard-card-form .ftextarea {
+    margin-left:50px !important;
 }
