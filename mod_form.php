@@ -111,6 +111,7 @@ class mod_flashcard_mod_form extends moodleform_mod {
         $mform->setType('audiostart', PARAM_BOOL);
 
         $mform->addElement('selectyesno', 'flipdeck', get_string('flipdeck', 'flashcard'));
+        $mform->setAdvanced('flipdeck');
         $mform->setType('flipdeck', PARAM_BOOL);
         $mform->addHelpButton('flipdeck', 'flipdeck', 'flashcard');
 

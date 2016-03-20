@@ -244,5 +244,7 @@ if ($cardid) {
     $data->id = $cm->id;
     $mform->set_data($data);
 }
+echo '<div id="flashcard-card-form">';
 $mform->display();
+echo '</div>';
 

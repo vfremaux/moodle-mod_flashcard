@@ -506,9 +506,9 @@ function process_flashcard_file($filename, $filearea, $card, $flashcard, $contex
         $filerec->filename = basename($filename);
         // files should be in legacy files
         $coursecontext = context_course::instance($flashcard->course);
-        if (!empty($filerec->filename)){
+        if (!empty($filerec->filename)) {
             $file = $fs->get_file($coursecontext->id, 'course', 'legacy', 0, $filerec->filepath, $filerec->filename);
-            if ($file){
+            if ($file) {
                 // quick fix on non compatible names
                 $filerec->filename = str_replace('?', '', $filerec->filename);
                 $filerec->filename = str_replace('!', '', $filerec->filename);
