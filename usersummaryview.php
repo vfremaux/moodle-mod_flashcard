@@ -76,7 +76,7 @@ if (!empty($courseusers)) {
         if ($status) {
             $flashcard->cm = &$cm;
             $deckbox = $renderer->print_deck_status($flashcard, $auser->id, $status, true);
-            $countbox = $renderer->print_deckcounts($flashcard, true, $auser->id);
+            $countbox = $renderer->print_deckcounts($flashcard, $auser->id);
         } else {
             $deckbox = get_string('notinitialized', 'flashcard');
             $countbox = '';
