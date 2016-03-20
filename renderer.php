@@ -136,7 +136,6 @@ class mod_flashcard_renderer extends plugin_renderer_base {
      * @param reference $flashcard the flashcard object
      * @param int $userid the user for which printing status
      * @param object $status a status object to be filled by the function
-     * @param boolean $return if true, returns the produced HTML, elsewhere prints it.
      * @uses $CFG
      */
     function print_deck_status(&$flashcard, $userid, &$status) {
@@ -276,13 +275,12 @@ class mod_flashcard_renderer extends plugin_renderer_base {
     /**
      * prints some statistic counters about decks
      * @param reference $flashcard
-     * @param boolean $return
      * @param int $userid
      * @uses $USER
      * @uses $CFG
      * @uses $DB
      */
-    function print_deckcounts($flashcard, $return, $userid = 0) {
+    function print_deckcounts($flashcard, $userid = 0) {
         global $USER, $CFG, $DB;
 
         if ($userid == 0) {
@@ -318,9 +316,6 @@ class mod_flashcard_renderer extends plugin_renderer_base {
         $str .= "<tr valign=\"top\"><td class=\"smalltext\"><b>$strsumaccess</b>:</td>";
         $str .= "<td class=\"smalltext\">{$rec->sumaccess}</td></tr></table>";
 
-        if ($return) {
-            return $str;
-        }
         echo $str;
     }
 
@@ -349,9 +344,6 @@ class mod_flashcard_renderer extends plugin_renderer_base {
         if (empty($imagefiles)) {
             $imagefileurl = $OUTPUT->pix_url('notfound', 'flashcard');
             $imagehtml = '<img src="'.$imagefileurl.'" width="100%" height="100%" />';
-            if (!$return) {
-                echo $imagehtml;
-            }
             return $imagehtml;
         }
 
@@ -375,7 +367,6 @@ class mod_flashcard_renderer extends plugin_renderer_base {
      * @param reference $flashcard
      * @param string $soundname the local name of the sound file. Should be wav or any playable sound format.
      * @param string $autostart if 'true' the sound starts playing immediately
-     * @param boolean $return if true returns the html string
      * @uses $CFG
      * @uses $COURSE
      */
@@ -396,9 +387,6 @@ class mod_flashcard_renderer extends plugin_renderer_base {
         if (empty($soundfiles)) {
             $soundfileurl = $OUTPUT->pix_url('notfound', 'flashcard');
             $soundhtml = "<img src=\"{$soundfileurl}\" />";
-            if (!$return) {
-                echo $soundhtml;
-            }
             return $soundhtml;
         }
 
@@ -439,9 +427,6 @@ class mod_flashcard_renderer extends plugin_renderer_base {
         if (empty($videofiles)) {
             $videofileurl = $OUTPUT->pix_url('notfound', 'flashcard');
             $videohtml = "<img src=\"{$videofileurl}\" />";
-            if (!$return) {
-                echo $videohtml;
-            }
             return $videohtml;
         }
     
@@ -488,7 +473,6 @@ class mod_flashcard_renderer extends plugin_renderer_base {
      * prints a graphical represnetation of decks, proportionnaly to card count
      * @param reference $flashcard
      * @param object $card
-     * @param boolean $return
      * @uses $CFG
      */ 
     function print_cardcounts(&$flashcard, $card) {

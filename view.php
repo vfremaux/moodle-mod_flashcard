@@ -17,13 +17,12 @@
 /**
  * This page prints a particular instance of a flashcard
  *
- * @package mod-flashcard
+ * @package mod_flashcard
  * @category mod
  * @author Gustav Delius
  * @author Valery Fremaux
  * @author Tomasz Muras
  * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
- * @version Moodle 2.x
  */
 
 require('../../config.php');
@@ -234,6 +233,17 @@ switch ($view){
     default :
         $event = \mod_flashcard\event\course_module_viewed::create($eventparams);
         include $CFG->dirroot.'/mod/flashcard/checkview.php';
+}
+
+if ($course->format == 'page') {
+    include_once($CFG->dirroot.'/course/format/page/xlib.php');
+    page_print_page_format_navigation($cm, $backtocourse = false);
+} else {
+    if ($COURSE->format != 'singleactivity') {
+        echo '<div style="text-align:center;margin:8px">';
+        echo $OUTPUT->single_button(new moodle_url('/course/view.php', array('id' => $course->id)), get_string('backtocourse', 'flashcard'), 'post', array('class' => 'backtocourse'));
+        echo '</div>';
+    }
 }
 
 $event->add_record_snapshot('course_modules', $cm);

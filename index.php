@@ -62,7 +62,7 @@ echo $OUTPUT->header();
 // Get all the appropriate data.
 
 if (! $flashcards = get_all_instances_in_course('flashcard', $course)) {
-    $OUTPUT->notification(get_string('noflashcards', 'flashcard'), new moodle_url('/course/view.php', array('id' => $course->id));
+    $OUTPUT->notification(get_string('noflashcards', 'flashcard'), new moodle_url('/course/view.php', array('id' => $course->id)));
     die;
 }
 

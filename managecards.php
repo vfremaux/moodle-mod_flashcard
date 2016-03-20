@@ -14,8 +14,12 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+defined('MOODLE_INTERNAL') || die ();
 
-if (!defined('MOODLE_INTERNAL')) die ('You cannot use this script this way');
+/**
+ * @package   mod_flashbard
+ * @category  mod
+ */
 
 if ($action) {
     include($CFG->dirroot.'/mod/flashcard/manageview.controller.php');
@@ -52,29 +56,29 @@ if ($cards) {
         $check = "<input type=\"checkbox\" name=\"items[]\" value=\"{$card->id}\" />";
 
         if ($flashcard->questionsmediatype == FLASHCARD_MEDIA_IMAGE) {
-            $back = flashcard_print_image($flashcard, "questionimagefile/{$card->id}", true);
+            $back = $renderer->print_image($flashcard, "questionimagefile/{$card->id}", true);
         } elseif ($flashcard->questionsmediatype == FLASHCARD_MEDIA_SOUND) {
-            $back = flashcard_play_sound($flashcard, "questionsoundfile/{$card->id}", 'false', true, "bell_b$i");
+            $back = $renderer->play_sound($flashcard, "questionsoundfile/{$card->id}", 'false', true, "bell_b$i");
         } elseif ($flashcard->questionsmediatype == FLASHCARD_MEDIA_VIDEO) {
-            $back = flashcard_play_video($flashcard, "questionvideofile/{$card->id}", 'false', true, "bell_b$i", true);
+            $back = $renderer->play_video($flashcard, "questionvideofile/{$card->id}", 'false', true, "bell_b$i", true);
         } elseif ($flashcard->questionsmediatype == FLASHCARD_MEDIA_IMAGE_AND_SOUND) {
-            $back = flashcard_print_image($flashcard, "questionimagefile/{$card->id}", true);
+            $back = $renderer->print_image($flashcard, "questionimagefile/{$card->id}", true);
             $back .= "<br/>";
-            $back = flashcard_play_sound($flashcard, "questionsoundfile/{$card->id}", 'false', true, "bell_b$i");
+            $back = $renderer->play_sound($flashcard, "questionsoundfile/{$card->id}", 'false', true, "bell_b$i");
         } else {
             $back = format_text($card->questiontext, FORMAT_MOODLE);
         }
 
         if ($flashcard->answersmediatype == FLASHCARD_MEDIA_IMAGE) {
-            $front = flashcard_print_image($flashcard, "answerimagefile/{$card->id}", true);
+            $front = $renderer->print_image($flashcard, "answerimagefile/{$card->id}", true);
         } elseif ($flashcard->answersmediatype == FLASHCARD_MEDIA_SOUND) {
-            $front = flashcard_play_sound($flashcard, "answersoundfile/{$card->id}", 'false', true, "bell_f$i");
+            $front = $renderer->play_sound($flashcard, "answersoundfile/{$card->id}", 'false', true, "bell_f$i");
         } elseif ($flashcard->answersmediatype == FLASHCARD_MEDIA_VIDEO) {
-            $front = flashcard_play_video($flashcard, "answervideofile/{$card->id}", 'false', true, "bell_f$i", true);
+            $front = $renderer->play_video($flashcard, "answervideofile/{$card->id}", 'false', true, "bell_f$i", true);
         } elseif ($flashcard->answersmediatype == FLASHCARD_MEDIA_IMAGE_AND_SOUND) {
-            $front = flashcard_print_image($flashcard, "answerimagefile/{$card->id}", true);
+            $front = $renderer->print_image($flashcard, "answerimagefile/{$card->id}", true);
             $front .= "<br/>";
-            $front = flashcard_play_sound($flashcard, "answersoundfile/{$card->id}", 'false', true, "bell_f$i");
+            $front = $renderer->play_sound($flashcard, "answersoundfile/{$card->id}", 'false', true, "bell_f$i");
         } else {
             $front = format_text($card->answertext, FORMAT_MOODLE);
         }
