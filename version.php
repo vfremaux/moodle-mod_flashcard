@@ -14,8 +14,10 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+defined('MOODLE_INTERNAL') || die();
+
 /**
- * @package mod-flashcard
+ * @package mod_flashcard
  * @copyright Valery Fremaux
  * @copyright 2011 onwards Tomasz Muras
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later

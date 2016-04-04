@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+defined('MOODLE_INTERNAL') || die();
+
 /**
  * This view allows free playing with a deck
  *
@@ -22,12 +24,6 @@
  * @author Gustav Delius
  * @author Valery Fremaux
  */
-
-// Security.
-
-if (!defined('MOODLE_INTERNAL')) {
-    die("Illegal direct access to this screen");
-}
 
 $subquestions = $DB->get_records('flashcard_deckdata', array('flashcardid' => $flashcard->id));
 if (empty($subquestions)) {

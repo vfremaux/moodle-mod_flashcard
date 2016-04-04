@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+defined('MOODLE_INTERNAL') || die();
+
 /**
  * This library is a third-party proposal for standardizing mail
  * message constitution for third party modules. It is actually used
@@ -49,7 +51,8 @@ function flashcard_compile_mail_template($template, $infomap, $lang = '') {
     return $notification;
 }
 
-/*
+/**
+ * @TODO : revert templates into lang strings
  * resolves and get the content of a Mail template, acoording to the user's current language.
  * @param virtual the virtual mail template name
  * @param module the current module

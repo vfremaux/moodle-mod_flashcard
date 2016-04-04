@@ -14,10 +14,12 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+defined('MOODLE_INTERNAL') || die();
+
 /** 
  * a controller for the play view
  *
- * @package mod-flashcard
+ * @package mod_flashcard
  * @category mod
  * @author Valery Fremaux
  * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
@@ -28,11 +30,6 @@
  * @usecase igotit
  * @usecase ifailed
  */
-
-// security
-if (!defined('MOODLE_INTERNAL')) {
-    die('Direct access to this script is forbidden.'); /// It must be included from a Moodle page.
-}
 
 /* ********************************** initialize a deck *************************************** */
 

@@ -64,6 +64,7 @@ if ($id) {
     }
 }
 
+// Security.
 require_course_login($course->id, true, $cm);
 $context = context_module::instance($cm->id);
 
