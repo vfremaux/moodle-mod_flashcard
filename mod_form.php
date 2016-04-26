@@ -14,10 +14,12 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+defined('MOODLE_INTERNAL') || die();
+
 /**
  * This view allows checking deck states
  *
- * @package mod-flashcard
+ * @package mod_flashcard
  * @category mod
  * @author Gustav Delius
  * @author Valery Fremaux for Moodle 2
@@ -44,11 +46,15 @@ class mod_flashcard_mod_form extends moodleform_mod {
         $mform->addElement('header', 'general', get_string('general', 'form'));
 
         $mform->addElement('text', 'name', get_string('name'), array('size'=>'64'));
-        $mform->setType('name', PARAM_TEXT);
+        if (!empty($CFG->formatstringstriptags)) {
+            $mform->setType('name', PARAM_TEXT);
+        } else {
+            $mform->setType('name', PARAM_CLEANHTML);
+        }
         $mform->addRule('name', null, 'required', null, 'client');
+        $mform->addRule('name', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
 
-        // Introduction.
-        $this->standard_intro_elements(get_string('summary', 'flashcard'));
+        $this->standard_intro_elements();
 
         $startdatearray[] = &$mform->createElement('date_time_selector', 'starttime', '');
         $startdatearray[] = &$mform->createElement('checkbox', 'starttimeenable', '');

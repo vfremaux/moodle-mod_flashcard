@@ -14,13 +14,14 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+defined('MOODLE_INTERNAL') || die();
+
 /**
  * internal library of functions and constants for module flashcard
- * @package mod-flashcard
+ * @package mod_flashcard
  * @category mod
  * @author Gustav Delius
  * @author Valery Fremaux
- * @version Moodle 2.0
  */
 
 define('FLASHCARD_MEDIA_TEXT', 0); 
@@ -400,19 +401,23 @@ function flashcard_get_file_url($filerecid, $asobject = false) {
 
     $fs = get_file_storage();
 
+    $url = '';
     $file = $fs->get_file_by_id($filerecid);
-    $filename = $file->get_filename();
-    $contextid = $file->get_contextid();
-    $filearea = $file->get_filearea();
-    $itemid = $file->get_itemid();
-
-    $url = $CFG->wwwroot."/pluginfile.php/{$contextid}/mod_flashcard/{$filearea}/{$itemid}/{$filename}";
-
-    if ($asobject) {
-        $f->pathname = $file->get_pathname();
-        $f->filename = $filename;
-        $f->url = $url;
-        return $f;
+    if ($file) {
+        $filename = $file->get_filename();
+        $contextid = $file->get_contextid();
+        $filearea = $file->get_filearea();
+        $itemid = $file->get_itemid();
+    
+        $url = $CFG->wwwroot."/pluginfile.php/{$contextid}/mod_flashcard/{$filearea}/{$itemid}/{$filename}";
+    
+        if ($asobject) {
+            $f = new StdClass();
+            $f->pathname = $file->get_pathname();
+            $f->filename = $filename;
+            $f->url = $url;
+            return $f;
+        }
     }
 
     return $url;

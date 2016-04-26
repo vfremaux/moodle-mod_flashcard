@@ -24,7 +24,6 @@
  * @author Tomasz Muras
  * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
  */
-
 require('../../config.php');
 require_once($CFG->dirroot.'/mod/flashcard/lib.php');
 require_once($CFG->dirroot.'/mod/flashcard/locallib.php');
@@ -64,6 +63,7 @@ if ($id) {
     }
 }
 
+// Security.
 require_course_login($course->id, true, $cm);
 $context = context_module::instance($cm->id);
 

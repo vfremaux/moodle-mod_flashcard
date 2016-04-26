@@ -14,22 +14,18 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+defined('MOODLE_INTERNAL') || die();
+
 /**
  * This view allows checking deck states
  * 
- * @package mod-flashcard
+ * @package mod_flashcard
  * @category mod
  * @author Gustav Delius
  * @contributors Valery Fremaux
  * @version Moodle 2.0
  * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
  */
-
-// Security.
-
-if (!defined('MOODLE_INTERNAL')) {
-    die('Direct access to this script is forbidden.'); /// It must be included from a Moodle page.
-}
 
 // Print deferred header.
 

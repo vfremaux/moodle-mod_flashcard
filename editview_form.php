@@ -14,10 +14,12 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+defined('MOODLE_INTERNAL') || die();
+
 /**
  * A form to edit one card or adding one or three cards
  *
- * @package mod-flashcard
+ * @package mod_flashcard
  * @category mod
  * @author Valery Fremaux (valery.fremaux@gmail.com) http://www.mylearningfactory.com
  * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
