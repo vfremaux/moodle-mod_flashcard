@@ -19,7 +19,7 @@ defined('MOODLE_INTERNAL') || die();
 /**
  * This view allows free playing with a deck
  *
- * @package mod-flashcard
+ * @package mod_flashcard
  * @category mod
  * @author Gustav Delius
  * @author Valery Fremaux

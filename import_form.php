@@ -19,7 +19,7 @@ defined('MOODLE_INTERNAL') || die();
 /**
  * A form to import textual cards from a csv file
  *
- * @package mod-flashcard
+ * @package mod_flashcard
  * @category mod
  * @author Valery Fremaux (valery.fremaux@gmail.com) http://www.mylearningfactory.com
  * @license http://www.gnu.org/copyleft/gpl.html GNU Public License

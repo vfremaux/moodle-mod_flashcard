@@ -52,24 +52,13 @@ function flashcard_compile_mail_template($template, $infomap, $lang = '') {
 }
 
 /**
- * @TODO : revert templates into lang strings
  * resolves and get the content of a Mail template, acoording to the user's current language.
  * @param virtual the virtual mail template name
- * @param module the current module
  * @param lang if default language must be overriden
  * @return string the template's content or false if no template file is available
  */
 function flashcard_get_mail_template($virtual, $lang = '') {
-    global $CFG;
 
-    if ($lang == '') {
-        $lang = $CFG->lang;
-    }
-    $templateName = "{$CFG->dirroot}/mod/flashcard/mails/{$lang}/{$virtual}.tpl";
-    if (file_exists($templateName)) {
-        return file($templateName);
-    }
+    return new lang_string($virtual.'_tpl', 'flashcard', '', $lang);
 
-    debugging("template $templateName not found");
-    return array();
 }

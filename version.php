@@ -14,14 +14,15 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * @package mod_flashcard
+ * @category mod
  * @copyright Valery Fremaux
  * @copyright 2011 onwards Tomasz Muras
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
+defined('MOODLE_INTERNAL') || die();
 
 $plugin->version  = 2014071100;  // The current module version (Date: YYYYMMDDXX)
 $plugin->requires = 2014041100;  // Requires this Moodle version (2.3 and above)

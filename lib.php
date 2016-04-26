@@ -22,7 +22,6 @@ defined('MOODLE_INTERNAL') || die();
  * @category mod
  * @author Gustav Delius
  * @contributors Valery Fremaux
- * @version Moodle 2.0
  */
 require_once($CFG->dirroot.'/lib/ddllib.php');
 require_once($CFG->dirroot.'/mod/flashcard/locallib.php');
