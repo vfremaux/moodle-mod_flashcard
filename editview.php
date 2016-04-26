@@ -14,10 +14,12 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+defined('MOODLE_INTERNAL') || die();
+
 /**
  * This view provides a way for editing questions
  *
- * @package mod-flashcard
+ * @package mod_flashcard
  * @category mod
  * @author Gustav Delius
  * @contributors Valery Fremaux
@@ -29,8 +31,6 @@ require_once($CFG->dirroot.'/mod/flashcard/editview_form.php');
 $usercontext = context_user::instance($USER->id);
 
 /* @var $OUTPUT core_renderer */
-
-if (!defined('MOODLE_INTERNAL')) die("Illegal direct access to this screen");
 
 if ($cardid = optional_param('cardid', 0, PARAM_INT)) {
     $card = $DB->get_record('flashcard_deckdata', array('id' => $cardid));

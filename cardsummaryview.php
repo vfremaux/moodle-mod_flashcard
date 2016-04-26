@@ -14,21 +14,18 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+defined('MOODLE_INTERNAL') || die();
+
 /**
  * This view provides a summary for the teacher
  *
- * @package mod-flashcard
+ * @package mod_flashcard
  * @category mod
  * @author Valery Fremaux, Gustav Delius
  * @contributors
  * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
  * @version Moodle 2.0
  */
-
-// Security.
-if (!defined('MOODLE_INTERNAL')) {
-    die('Direct access to this script is forbidden.'); /// It must be included from a Moodle page.
-}
 
 // Deffered header().
 echo $out; 

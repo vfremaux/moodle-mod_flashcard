@@ -14,13 +14,14 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+defined('MOODLE_INTERNAL') || die();
+
 /**
  * Library of functions and constants for module flashcard
- * @package mod-flashcard
+ * @package mod_flashcard
  * @category mod
  * @author Gustav Delius
  * @contributors Valery Fremaux
- * @version Moodle 2.0
  */
 require_once($CFG->dirroot.'/lib/ddllib.php');
 require_once($CFG->dirroot.'/mod/flashcard/locallib.php');

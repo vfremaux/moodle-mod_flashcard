@@ -14,8 +14,12 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+defined('MOODLE_INTERNAL') || die ();
 
-if (!defined('MOODLE_INTERNAL')) die ('You cannot use this script this way');
+/**
+ * @package   mod_flashbard
+ * @category  mod
+ */
 
 if ($action) {
     include($CFG->dirroot.'/mod/flashcard/manageview.controller.php');

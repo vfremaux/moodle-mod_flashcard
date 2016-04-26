@@ -14,10 +14,12 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+defined('MOODLE_INTERNAL') || die();
+
 /**
  * a controller for the play view
  * 
- * @package mod-flashcard
+ * @package mod_flashcard
  * @category mod
  * @author Valery Fremaux
  * @author Tomasz Muras
@@ -30,10 +32,6 @@
  * @usecase doimport
  */
 /* @var $OUTPUT core_renderer */
-
-if (!defined('MOODLE_INTERNAL')) {
-    die("Illegal direct access to this screen");
-}
 
 /* ******************************* Delete a set of records **************************** */
 

@@ -57,18 +57,18 @@ class backup_flashcard_activity_structure_step extends backup_activity_structure
 
         // Define file annotations
         $flashcard->annotate_files('mod_flashcard', 'intro', null); // This file areas haven't itemid
-		$deck->annotate_files('mod_flashcard', 'questionsoundfile', 'id');
-		$deck->annotate_files('mod_flashcard', 'questionimagefile', 'id');
-		$deck->annotate_files('mod_flashcard', 'questionvideofile', 'id');
-		$deck->annotate_files('mod_flashcard', 'answersoundfile', 'id');
-		$deck->annotate_files('mod_flashcard', 'answerimagefile', 'id');
-		$deck->annotate_files('mod_flashcard', 'answervideofile', 'id');
-		$flashcard->annotate_files('mod_flashcard', 'customfront', null);
-		$flashcard->annotate_files('mod_flashcard', 'customempty', null);
-		$flashcard->annotate_files('mod_flashcard', 'customback', null);
-		$flashcard->annotate_files('mod_flashcard', 'customreview', null);
-		$flashcard->annotate_files('mod_flashcard', 'customreviewed', null);
-		$flashcard->annotate_files('mod_flashcard', 'customreviewempty', null);
+        $deck->annotate_files('mod_flashcard', 'questionsoundfile', 'id');
+        $deck->annotate_files('mod_flashcard', 'questionimagefile', 'id');
+        $deck->annotate_files('mod_flashcard', 'questionvideofile', 'id');
+        $deck->annotate_files('mod_flashcard', 'answersoundfile', 'id');
+        $deck->annotate_files('mod_flashcard', 'answerimagefile', 'id');
+        $deck->annotate_files('mod_flashcard', 'answervideofile', 'id');
+        $flashcard->annotate_files('mod_flashcard', 'customfront', null);
+        $flashcard->annotate_files('mod_flashcard', 'customempty', null);
+        $flashcard->annotate_files('mod_flashcard', 'customback', null);
+        $flashcard->annotate_files('mod_flashcard', 'customreview', null);
+        $flashcard->annotate_files('mod_flashcard', 'customreviewed', null);
+        $flashcard->annotate_files('mod_flashcard', 'customreviewempty', null);
 
         return $this->prepare_activity_structure($flashcard);
     }

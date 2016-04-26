@@ -17,14 +17,13 @@
 /** 
  * This page prints a particular instance of a flashcard
  *
- * @package mod-flashcard
+ * @package mod_flashcard
  * @category mod
  * @author Gustav Delius
  * @author Valery Fremaux
  * @author Tomasz Muras
  * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
  */
-
 require('../../config.php');
 require_once($CFG->dirroot.'/mod/flashcard/lib.php');
 
@@ -62,7 +61,7 @@ echo $OUTPUT->header();
 // Get all the appropriate data.
 
 if (! $flashcards = get_all_instances_in_course('flashcard', $course)) {
-    $OUTPUT->notification(get_string('noflashcards', 'flashcard'), new moodle_url('/course/view.php', array('id' => $course->id));
+    $OUTPUT->notification(get_string('noflashcards', 'flashcard'), new moodle_url('/course/view.php', array('id' => $course->id)));
     die;
 }
 

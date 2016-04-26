@@ -196,3 +196,19 @@ $string['deck_release_help'] = '
 <p>Le temps est exprimé en "heures".
 ';
 
+$string['notify_review_tpl'] = '
+Bonjour <%%FULLNAME%%>
+
+Un flashcard nécessite votre attention. Vous avez des cartes à réviser
+dans le cours <%%COURSE%%> : 
+
+<%%URL%%>';
+
+$string['notify_review_html_tpl'] = '
+<p>Bonjour <%%FULLNAME%%></p>
+
+<p>Un flashcard nécessite votre attention. Vous avez des cartes à réviser
+dans le cours <b><%%COURSE%%></b> : </p>
+
+<a href="<%%URL%%>"><%%URL%%></a>';
+

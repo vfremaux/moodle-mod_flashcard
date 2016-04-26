@@ -14,6 +14,19 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+defined('MOODLE_INTERNAL') || die();
+
+/**
+ * @package mod_flashcard
+ * @category mod
+ * @author Gustav Delius
+ * @author Valery Fremaux
+ * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
+ * @version Moodle 2.0
+ *
+ * Master renderer
+ */
+
 require_once($CFG->dirroot.'/repository/lib.php');
 
 class mod_flashcard_renderer extends plugin_renderer_base {
@@ -36,9 +49,9 @@ class mod_flashcard_renderer extends plugin_renderer_base {
         }
     
         if ($COURSE->id == SITEID) {
-            $context = get_context_instance(CONTEXT_SYSTEM);
+            $context = context_system::instance();
         } else {
-            $context = get_context_instance(CONTEXT_COURSE, $COURSE->id);
+            $context = context_course::instance($COURSE->id);
         }
 
         $client_id = uniqid();
@@ -307,14 +320,14 @@ class mod_flashcard_renderer extends plugin_renderer_base {
         $stravgaccess = get_string('avgaccess', 'flashcard');
         $strsumaccess = get_string('sumaccess', 'flashcard');
 
-        $str = "<table><tr valign=\"top\"><td class=\"smalltext\"><b>$strminaccess</b>:</td>";
-        $str .= "<td class=\"smalltext\">{$rec->minaccess}</td></tr>";
-        $str .= "<tr valign=\"top\"><td class=\"smalltext\"><b>$strmaxaccess</b>:</td>";
-        $str .= "<td class=\"smalltext\">{$rec->maxaccess}</td></tr>";
-        $str .= "<tr valign=\"top\"><td class=\"smalltext\"><b>$stravgaccess</b>:</td>";
-        $str .= "<td class=\"smalltext\">{$rec->avgaccess}</td></tr>";
-        $str .= "<tr valign=\"top\"><td class=\"smalltext\"><b>$strsumaccess</b>:</td>";
-        $str .= "<td class=\"smalltext\">{$rec->sumaccess}</td></tr></table>";
+        $str = '<table><tr valign="top"><td class="smalltext"><b>'.$strminaccess.'</b>:</td>';
+        $str .= '<td class="smalltext">'.$rec->minaccess.'</td></tr>';
+        $str .= '<tr valign="top"><td class="smalltext"><b>'.$strmaxaccess.'</b>:</td>';
+        $str .= '<td class="smalltext">'.$rec->maxaccess.'</td></tr>';
+        $str .= '<tr valign="top"><td class="smalltext"><b>'.$stravgaccess.'</b>:</td>';
+        $str .= '<td class="smalltext">'.$rec->avgaccess.'</td></tr>';
+        $str .= '<tr valign="top"><td class="smalltext"><b>'.$strsumaccess.'</b>:</td>';
+        $str .= '<td class="smalltext">'.$rec->sumaccess.'</td></tr></table>';
 
         echo $str;
     }

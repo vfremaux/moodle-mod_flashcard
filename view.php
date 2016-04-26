@@ -17,15 +17,13 @@
 /**
  * This page prints a particular instance of a flashcard
  *
- * @package mod-flashcard
+ * @package mod_flashcard
  * @category mod
  * @author Gustav Delius
  * @author Valery Fremaux
  * @author Tomasz Muras
  * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
- * @version Moodle 2.x
  */
-
 require('../../config.php');
 require_once($CFG->dirroot.'/mod/flashcard/lib.php');
 require_once($CFG->dirroot.'/mod/flashcard/locallib.php');
@@ -65,6 +63,7 @@ if ($id) {
     }
 }
 
+// Security.
 require_course_login($course->id, true, $cm);
 $context = context_module::instance($cm->id);
 
