@@ -607,3 +607,25 @@ function flashcard_reset_course_form_definition(&$mform) {
 function flashcard_reset_course_form_defaults($course) {
     return array('reset_flashcard_all' => 1);
 }
+
+
+/**
+ * This function allows the tool_dbcleaner to register integrity checks
+ */
+function flashcard_dbcleaner_add_keys() {
+    global $DB;
+
+    $flashcardmoduleid = $DB->get_field('modules', 'id', array('name' => 'flashcard'));
+
+    $keys = array(
+        array('flashcard', 'course', 'course', 'id', ''),
+        array('flashcard', 'id', 'course_modules', 'instance', ' module = '.$flashcardmoduleid.' '),
+        array('flashcard_card', 'flashcardid', 'flashcard', 'id', ''),
+        array('flashcard_card', 'userid', 'user', 'id', ''),
+        array('flashcard_deckdata', 'flashcardid', 'flashcard', 'id', ''),
+        array('flashcard_userdeck_state', 'flashcardid', 'flashcard', 'id', ''),
+        array('flashcard_userdeck_state', 'userid', 'user', 'id', ''),
+    );
+
+    return $keys;
+}
