@@ -215,7 +215,7 @@ function flashcard_get_card_status(&$flashcard) {
     // Get decks by card.
     $sql = "
         SELECT
-           CONCAT(dd.questiontext, '_', c.deck),
+           CONCAT(CONCAT(dd.questiontext, '_'), c.deck),
            dd.questiontext as question,
            COUNT(c.id) as amount,
            c.deck AS deck
