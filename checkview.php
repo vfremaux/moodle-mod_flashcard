@@ -27,12 +27,7 @@
         if (flashcard_initialize($flashcard, $USER->id)){
             $decks = flashcard_get_deck_status($flashcard);
         } else {
-            if (has_capability('mod/flashcard:manage', $context)){
-                $url = "view.php?id={$cm->id}&amp;view=edit";
-            } else {
-                $url = "{$CFG->wwwroot}/course/view.php?id={$course->id}";
-            }
-            echo $OUTPUT->notification(get_string('nocards', 'flashcard'), $url);
+            echo $OUTPUT->notification(get_string('nocards', 'flashcard'));
         }
     }
 ?>
