@@ -15,18 +15,25 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * Version details.
+ *
  * @package mod_flashcard
  * @category mod
- * @copyright Valery Fremaux
+ * @author     Tomasz Muras
+ * @author     Valery Fremaux (valery.fremaux@gmail.com)
  * @copyright 2011 onwards Tomasz Muras
+ * @copyright 2013 onwards Valery Fremaux (valery.fremaux@gmail.com)
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version  = 2014071100;  // The current module version (Date: YYYYMMDDXX)
-$plugin->requires = 2014041100;  // Requires this Moodle version (2.3 and above)
+$plugin->version  = 2015061200;  // The current module version (Date: YYYYMMDDXX)
+$plugin->requires = 2016052300;  // Requires this Moodle version (2.3 and above)
 $plugin->cron     = 1; // Period for cron to check this module (secs)
 $plugin->component = 'mod_flashcard'; // Full name of the plugin (used for diagnostics)
-$plugin->release = '2.7.0 (Build 2014071100)';
-$plugin->maturity = MATURITY_RC;
+$plugin->release = '3.1.0 (Build 2015061200)';
+$plugin->maturity = MATURITY_STABLE;
+
+// Non Moodle attributes.
+$plugin->codeincrement = '3.1.0000';
