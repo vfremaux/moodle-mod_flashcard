@@ -15,6 +15,8 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * Version details.
+ *
  * @package mod_flashcard
  * @category mod
  * @copyright Valery Fremaux
@@ -30,3 +32,6 @@ $plugin->cron     = 1; // Period for cron to check this module (secs)
 $plugin->component = 'mod_flashcard'; // Full name of the plugin (used for diagnostics)
 $plugin->release = '2.9.0 (Build 2014071100)';
 $plugin->maturity = MATURITY_RC;
+
+// Non moodle attributes.
+$plugin->codeincrement = '2.9.0000';
