@@ -30,3 +30,6 @@ $plugin->cron     = 1; // Period for cron to check this module (secs)
 $plugin->component = 'mod_flashcard'; // Full name of the plugin (used for diagnostics)
 $plugin->release = '3.0.0 (Build 2015061200)';
 $plugin->maturity = MATURITY_STABLE;
+
+// Non Moodle attributes.
+$plugin->codeincrement = '3.0.0000';
