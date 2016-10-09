@@ -61,7 +61,7 @@ if ($data = $mform->get_data()) {
         $qkeys = preg_grep('/^q/', $keys);   // Filter out only the status.
         $akeys = preg_grep('/^a/', $keys);   // Filter out only the assigned updating.
 
-        $deckusers = $DB->get_records('flashcard_card', array('flashcardid' => $flashcard->id), 'id', 'DISTINCT userid, userid');
+        $deckusers = $DB->get_records('flashcard_card', array('flashcardid' => $flashcard->id), 'id', 'DISTINCT userid, id');
 
         foreach ($qkeys as $qkey) {
 
