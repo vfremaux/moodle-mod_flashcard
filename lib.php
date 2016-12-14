@@ -441,18 +441,18 @@ function flashcard_pluginfile($course, $cm, $context, $filearea, $args, $forcedo
         return false;
     }
 
-    $allfileareas = array('intro', 
-                          'questionsoundfile', 
-                          'questionimagefile', 
-                          'questionvideofile', 
-                          'answersoundfile', 
-                          'answerimagefile', 
-                          'answervideofile', 
-                          'customfront', 
-                          'customempty', 
-                          'customback', 
-                          'customreview', 
-                          'customreviewed', 
+    $allfileareas = array('intro',
+                          'questionsoundfile',
+                          'questionimagefile',
+                          'questionvideofile',
+                          'answersoundfile',
+                          'answerimagefile',
+                          'answervideofile',
+                          'customfront',
+                          'customempty',
+                          'customback',
+                          'customreview',
+                          'customreviewed',
                           'customreviewempty');
 
     if (!in_array($filearea, $allfileareas)) {

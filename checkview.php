@@ -43,7 +43,8 @@ if (!$decks = flashcard_get_deck_status($flashcard)) {
         } else {
             $url = new moodle_url('/course/view.php', array('id' => $course->id));
         }
-        echo $OUTPUT->notification(get_string('nocards', 'flashcard'), $url);
+        echo $OUTPUT->notification(get_string('nocards', 'flashcard'));
+        echo $OUTPU->continue_button($url);
     }
 }
 ?>
