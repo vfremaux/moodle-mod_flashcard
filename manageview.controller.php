@@ -14,8 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * a controller for the play view
  * 
@@ -31,7 +29,7 @@ defined('MOODLE_INTERNAL') || die();
  * @usecase import
  * @usecase doimport
  */
-/* @var $OUTPUT core_renderer */
+defined('MOODLE_INTERNAL') || die();
 
 /* ******************************* Delete a set of records **************************** */
 
@@ -139,16 +137,16 @@ if ($action == 'doimport') {
                     $DB->set_field('flashcard', 'questionid', 0, array('id' => $flashcard->id));
                 }
 
-                $reportstr = get_string('importreport', 'flashcard') . '<br/>';
-                $reportstr = get_string('cardsread', 'flashcard') . $report->cards . '<br/>';
+                $reportstr = get_string('importreport', 'flashcard').'<br/>';
+                $reportstr = get_string('cardsread', 'flashcard').$report->cards.'<br/>';
                 if ($report->badcards) {
-                    $reportstr .= get_string('goodcards', 'flashcard') . $report->goodcards . '<br/>';
-                    $reportstr .= get_string('badcards', 'flashcard') . $report->badcards . '<br/>';
+                    $reportstr .= get_string('goodcards', 'flashcard').$report->goodcards.'<br/>';
+                    $reportstr .= get_string('badcards', 'flashcard').$report->badcards.'<br/>';
                 }
 
-                echo "<center>";
+                echo '<center>';
                 echo $OUTPUT->box($reportstr, 'reportbox');
-                echo "</center>";
+                echo '</center>';
             }
         }
     }

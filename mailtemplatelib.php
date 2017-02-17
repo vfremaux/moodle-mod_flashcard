@@ -14,13 +14,11 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * This library is a third-party proposal for standardizing mail
  * message constitution for third party modules. It is actually used
  * by all ethnoinformatique.fr module. It relies on mail and message content
- * templates that should reside in a mail/{$lang} directory within the 
+ * templates that should reside in a mail/{$lang} directory within the
  * module space.
  *
  * @package extralibs
@@ -29,6 +27,7 @@ defined('MOODLE_INTERNAL') || die();
  * @date 2008/03/03
  * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
  */
+defined('MOODLE_INTERNAL') || die();
 
 /**
  * useful templating functions from an older project of mine, hacked for Moodle

@@ -14,8 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * internal library of functions and constants for module flashcard
  * @package mod_flashcard
@@ -23,12 +21,13 @@ defined('MOODLE_INTERNAL') || die();
  * @author Gustav Delius
  * @author Valery Fremaux
  */
+defined('MOODLE_INTERNAL') || die();
 
-define('FLASHCARD_MEDIA_TEXT', 0); 
-define('FLASHCARD_MEDIA_IMAGE', 1); 
-define('FLASHCARD_MEDIA_SOUND', 2); 
-define('FLASHCARD_MEDIA_IMAGE_AND_SOUND', 3); 
-define('FLASHCARD_MEDIA_VIDEO', 4); 
+define('FLASHCARD_MEDIA_TEXT', 0);
+define('FLASHCARD_MEDIA_IMAGE', 1);
+define('FLASHCARD_MEDIA_SOUND', 2);
+define('FLASHCARD_MEDIA_IMAGE_AND_SOUND', 3);
+define('FLASHCARD_MEDIA_VIDEO', 4);
 
 /**
  * computes the last accessed date for a deck as the oldest card being in the deck
@@ -46,7 +45,7 @@ function flashcard_get_lastaccessed(&$flashcard, $deck, $userid = 0) {
     }
 
     $sql = "
-        SELECT 
+        SELECT
             MIN(lastaccessed) as lastaccessed
         FROM
             {flashcard_card}
@@ -60,7 +59,7 @@ function flashcard_get_lastaccessed(&$flashcard, $deck, $userid = 0) {
 }
 
 /**
- * initialize decks for a given user. The initialization is soft as it will 
+ * initialize decks for a given user. The initialization is soft as it will
  * be able to add new subquestions
  * @param reference $flashcard
  * @param int $userid
@@ -70,7 +69,8 @@ function flashcard_initialize(&$flashcard, $userid) {
     global $DB;
 
     // Get all cards (all decks).
-    $cards = $DB->get_records_select('flashcard_card', 'flashcardid = ? AND userid = ?', array($flashcard->id, $userid));
+    $select = 'flashcardid = ? AND userid = ?';
+    $cards = $DB->get_records_select('flashcard_card', $select, array($flashcard->id, $userid));
     $registered = array();
     if (!empty($cards)) {
         foreach ($cards as $card) {
@@ -79,7 +79,8 @@ function flashcard_initialize(&$flashcard, $userid) {
     }
 
     // Get all subquestions.
-    if ($subquestions = $DB->get_records('flashcard_deckdata', array('flashcardid' => $flashcard->id), '', 'id,id')) {
+    $params = array('flashcardid' => $flashcard->id);
+    if ($subquestions = $DB->get_records('flashcard_deckdata', $params, '', 'id,id')) {
         foreach ($subquestions as $subquestion) {
             if (in_array($subquestion->id, $registered)) {
                 continue;
@@ -120,7 +121,8 @@ function flashcard_import(&$flashcard) {
 
     $options = $DB->get_record('question_match', array('question' => $question->id));
     list($usql, $params) = $DB->get_in_or_equal(explode(",",$options->subquestions));
-    if ($subquestions = $DB->get_records_select('question_match_sub', "id $usql AND answertext != '' AND questiontext != ''", $params)) {
+    $select = "id $usql AND answertext != '' AND questiontext != ''";
+    if ($subquestions = $DB->get_records_select('question_match_sub', $select, $params)) {
 
         // Cleanup the flashcard.
         $DB->delete_records('flashcard_card', array('flashcardid' => $flashcard->id));
@@ -132,7 +134,7 @@ function flashcard_import(&$flashcard) {
             $deckdata->questiontext = $subquestion->questiontext;
             $deckdata->answertext = $subquestion->answertext;
             $deckdata->lastaccessed = 0;
-            $DB->insert_record('flashcard_deckdata', $deckdata); 
+            $DB->insert_record('flashcard_deckdata', $deckdata);
         }
     }
     return true;
@@ -177,7 +179,7 @@ function flashcard_get_deck_status(&$flashcard, $userid = 0) {
         $status->decks[3]->count = $dk4;
         $status->decks[3]->deckid = 4;
     }
-    
+
     // Not initialized for this user.
     if ($dk1 + $dk2 + $dk3 + $dk4 == 0) {
         return null;
@@ -199,18 +201,17 @@ function flashcard_get_deck_status(&$flashcard, $userid = 0) {
         $status->decks[3]->lastaccess = flashcard_get_lastaccessed($flashcard, 4, $userid);
         $status->decks[3]->reactivate = (time() > ($status->decks[3]->lastaccess + $flashcard->deck4_delay));
     }
-       
+
     return $status;
 }
 
 /**
  * get card status structure
  * @param reference $flashcard
- * @uses $CFG
  * @uses $DB
  */
 function flashcard_get_card_status(&$flashcard) {
-    global $CFG, $DB;
+    global $DB;
 
     // Get decks by card.
     $sql = "
@@ -223,7 +224,7 @@ function flashcard_get_card_status(&$flashcard) {
             {flashcard_deckdata} dd
         LEFT JOIN
             {flashcard_card} c
-        ON 
+        ON
             c.entryid = dd.id
         WHERE
             c.flashcardid = ?
@@ -241,7 +242,7 @@ function flashcard_get_card_status(&$flashcard) {
             {flashcard_deckdata} dd
         LEFT JOIN
             {flashcard_card} c
-        ON 
+        ON
             c.entryid = dd.id
         WHERE
             c.flashcardid = ?
@@ -249,7 +250,7 @@ function flashcard_get_card_status(&$flashcard) {
             c.entryid
     ";
     $accesses = $DB->get_records_sql($sql, array($flashcard->id));
-    
+
     $cards = array();
     foreach ($recs as $questionid => $rec) {
         if ($rec->deck == 1) {
@@ -283,7 +284,8 @@ function flashcard_mp3_player(&$flashcard, $url, $htmlid) {
 
     static $count = 0;
     $count++;
-    $id = ($htmlid) ? $htmlid : 'flashcard_filter_mp3_'.time().$count ; //we need something unique because it might be stored in text cache
+    // We need something unique because it might be stored in text cache.
+    $id = ($htmlid) ? $htmlid : 'flashcard_filter_mp3_'.time().$count ;
 
     $url = addslashes_js($url);
 

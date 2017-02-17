@@ -14,8 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * This view allows playing with a deck
  *
@@ -26,6 +24,7 @@ defined('MOODLE_INTERNAL') || die();
  * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
  * @version Moodle 2.0
  */
+defined('MOODLE_INTERNAL') || die();
 
 $PAGE->requires->js('/mod/flashcard/players/flowplayer/flowplayer.js');
 
@@ -40,8 +39,9 @@ if ($action != '') {
     include($CFG->dirroot.'/mod/flashcard/playview.controller.php');
 }
 
-// unmark state for this deck
-$DB->delete_records('flashcard_userdeck_state', array('userid' => $USER->id, 'flashcardid' => $flashcard->id, 'deck' => $deck)); 
+// Unmark state for this deck.
+$params = array('userid' => $USER->id, 'flashcardid' => $flashcard->id, 'deck' => $deck);
+$DB->delete_records('flashcard_userdeck_state', $params); 
 
 if (empty($subquestions)) {
     echo $out;
@@ -54,12 +54,12 @@ if (empty($subquestions)) {
 
 $consumed = explode(',', @$_SESSION['flashcard_consumed']);
 $subquestions = array();
-list($usql, $params) = $DB->get_in_or_equal($consumed, SQL_PARAMS_QM, 'param0000', false); // negative IN
+list($usql, $params) = $DB->get_in_or_equal($consumed, SQL_PARAMS_QM, 'param0000', false); // Negative IN.
 
 $select = "
-    flashcardid = {$flashcard->id} AND 
-    userid = {$USER->id} AND 
-    deck = {$deck} AND 
+    flashcardid = {$flashcard->id} AND
+    userid = {$USER->id} AND
+    deck = {$deck} AND
     id $usql
 ";
 
@@ -76,7 +76,6 @@ if ($cards = $DB->get_records_select('flashcard_card', $select, $params)) {
     echo $OUTPUT->continue_button($thisurl."?view=checkdecks&amp;id={$cm->id}");
     echo $OUTPUT->footer($course);
     die;
-    // redirect($thisurl."?view=checkdecks&amp;id={$cm->id}");
 }
 
 // Print deferred header.
@@ -104,99 +103,9 @@ if ($flashcard->flipdeck) {
     $flashcard->questionsmediatype = $tmp;
 }
 
-$acardvideoclass = ($flashcard->answersmediatype == FLASHCARD_MEDIA_VIDEO) ? '-video' : '' ;
-$qcardvideoclass = ($flashcard->answersmediatype == FLASHCARD_MEDIA_VIDEO) ? '-video' : '' ;
+$acardvideoclass = ($flashcard->answersmediatype == FLASHCARD_MEDIA_VIDEO) ? '-video' : '';
+$qcardvideoclass = ($flashcard->answersmediatype == FLASHCARD_MEDIA_VIDEO) ? '-video' : '';
 
 $autoplay = ($flashcard->audiostart) ? 'true' : 'false';
-?>
 
-<script type="text/javascript">
-var qtype = "<?php echo $flashcard->questionsmediatype ?>";
-var atype = "<?php echo $flashcard->answersmediatype ?>";
-var maxitems = <?php echo count($cards) ?>;
-</script>
-
-<style>
-    <?php echo $flashcard->extracss ?>
-</style>
-
-<div id="flashcard_board">
-    <div id="flashcard_header">
-    <?php echo $OUTPUT->heading($flashcard->name);  ?>
-    <p> <?php print_string('instructions', 'flashcard'); ?></p>
-    </div>
-
-    <center>
-
-    <div id="questiondiv" style=";background-repeat:no-repeat;background-image:url(<?php echo $renderer->print_custom_url($flashcard, 'customback', 0) ?>)" class="flashcard-question<?php echo $qcardvideoclass ?>" onclick="javascript:togglecard()">
-        <?php
-        if ($flashcard->questionsmediatype == FLASHCARD_MEDIA_IMAGE) {
-            echo $renderer->print_image($flashcard, "{$back}imagefile/{$subquestion->id}");
-        } elseif ($flashcard->questionsmediatype == FLASHCARD_MEDIA_SOUND) {
-            echo $renderer->play_sound($flashcard, "{$back}soundfile/{$subquestion->id}", $autoplay, 'bell_q');
-        } elseif ($flashcard->questionsmediatype == FLASHCARD_MEDIA_VIDEO) {
-            echo $renderer->play_video($flashcard, "{$back}videofile/{$subquestion->id}", $autoplay, 'bell_q');
-        } elseif ($flashcard->questionsmediatype == FLASHCARD_MEDIA_IMAGE_AND_SOUND) {
-            echo $renderer->print_image($flashcard, "{$back}imagefile/{$subquestion->id}");
-            echo "<br/>";
-            echo $renderer->play_sound($flashcard, "{$back}soundfile/{$subquestion->id}", $autoplay, 'bell_q');
-        } else {
-            echo format_text($subquestion->questiontext, FORMAT_HTML);
-        }
-        ?>
-    </div>
-
-    <div id="answerdiv" style="display:none;background-repeat:no-repeat;background-image:url(<?php echo $renderer->print_custom_url($flashcard, 'customfront', 0) ?>)" class="flashcard-answer<?php echo $acardvideoclass ?>" onclick="javascript:togglecard()">
-        <?php
-        if ($flashcard->answersmediatype == FLASHCARD_MEDIA_IMAGE) {
-            echo $renderer->print_image($flashcard, "{$front}imagefile/{$subquestion->id}");
-        } elseif ($flashcard->answersmediatype == FLASHCARD_MEDIA_SOUND) {
-            echo $renderer->play_sound($flashcard, "{$front}soundfile/{$subquestion->id}", $autoplay, 'bell_a');
-        } elseif ($flashcard->answersmediatype == FLASHCARD_MEDIA_VIDEO) {
-            echo $renderer->play_video($flashcard, "{$front}videofile/{$subquestion->id}", $autoplay, 'bell_a');
-        } elseif ($flashcard->answersmediatype == FLASHCARD_MEDIA_IMAGE_AND_SOUND) {
-            echo $renderer->print_image($flashcard, "{$front}imagefile/{$subquestion->id}");
-            echo "<br/>";
-            echo $renderer->play_sound($flashcard, "{$front}soundfile/{$subquestion->id}", $autoplay, 'bell_a');
-        } else {
-            echo format_text($subquestion->answertext,FORMAT_HTML);
-        }
-        ?>
-    </div>
-
-    <div id="flashcard_controls">
-        <p><?php print_string('cardsremaining', 'flashcard'); ?>: <span id="remain"><?php echo count($subquestions);?></span></p>
-
-        <?php
-        $options['id'] = $cm->id;
-        $options['what'] = 'igotit';
-        $options['view'] = 'play';
-        $options['deck'] = $deck;
-        $options['cardid'] = $subquestions[$random]->cardid;
-        echo $OUTPUT->single_button(new moodle_url('view.php',$options), get_string('igotit', 'flashcard'), 'post', array('class'=>'flashcard_playbutton'));
-        ?>
-
-        <?php
-        $options['id'] = $cm->id;
-        $options['what'] = 'ifailed';
-        $options['view'] = 'play';
-        $options['deck'] = $deck;
-        $options['cardid'] = $subquestions[$random]->cardid;
-        echo $OUTPUT->single_button(new moodle_url('view.php', $options), get_string('ifailed', 'flashcard'), 'post', array('class'=>'flashcard_playbutton'));
-        ?>
-        <br />
-        <?php
-        /*
-        $options['id'] = $cm->id;
-        $options['what'] = 'reset';
-        $options['view'] = 'play';
-        $options['deck'] = $deck;
-        echo $OUTPUT->single_button(new moodle_url('view.php', $options), get_string('reset', 'flashcard'), 'post');
-        */
-        ?>
-        <br/>
-        <a href="<?php echo $thisurl ?>?id=<?php echo $cm->id ?>&amp;view=checkdecks"><?php print_string('backtodecks', 'flashcard') ?></a>
-        - <a href="<?php echo $CFG->wwwroot ?>/course/view.php?id=<?php echo $course->id ?>"><?php print_string('backtocourse', 'flashcard') ?></a>
-    </div>
-</center>
-</div>
+echo $renderer->playview();

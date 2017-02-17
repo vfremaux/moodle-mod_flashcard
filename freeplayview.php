@@ -14,8 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * This view allows free playing with a deck
  *
@@ -24,6 +22,7 @@ defined('MOODLE_INTERNAL') || die();
  * @author Gustav Delius
  * @author Valery Fremaux
  */
+defined('MOODLE_INTERNAL') || die();
 
 $subquestions = $DB->get_records('flashcard_deckdata', array('flashcardid' => $flashcard->id));
 if (empty($subquestions)) {
@@ -61,10 +60,6 @@ var atype = "<?php echo $flashcard->answersmediatype ?>";
 <script src="<?php echo $CFG->wwwroot.'/mod/flashcard/js/module.js' ?>"></script>
 
 <p><?php print_string('freeplayinstructions', 'flashcard'); ?>.</p>
-
-<style>
-    <?php echo $flashcard->extracss ?>
-</style>
 
 <table class="flashcard_board" width="100%">
     <tr>
@@ -116,11 +111,11 @@ foreach ($subquestions as $subquestion) {
                         <?php
                         if ($flashcard->questionsmediatype == FLASHCARD_MEDIA_IMAGE) {
                             echo $renderer->print_image($flashcard, "{$back}imagefile/{$subquestion->id}");
-                        } elseif ($flashcard->questionsmediatype == FLASHCARD_MEDIA_SOUND) {
+                        } else if ($flashcard->questionsmediatype == FLASHCARD_MEDIA_SOUND) {
                             echo $renderer->play_sound($flashcard, "{$back}soundfile/{$subquestion->id}", 'false', false, "bell_b$i");
-                        } elseif ($flashcard->questionsmediatype == FLASHCARD_MEDIA_VIDEO) {
+                        } else if ($flashcard->questionsmediatype == FLASHCARD_MEDIA_VIDEO) {
                             echo $renderer->play_video($flashcard, "{$back}videofile/{$subquestion->id}", $autoplay, false, "bell_b$i");
-                        } elseif ($flashcard->questionsmediatype == FLASHCARD_MEDIA_IMAGE_AND_SOUND) {
+                        } else if ($flashcard->questionsmediatype == FLASHCARD_MEDIA_IMAGE_AND_SOUND) {
                             echo $renderer->print_image($flashcard, "{$back}imagefile/{$subquestion->id}");
                             echo "<br/>";
                             echo $renderer->play_sound($flashcard, "{$back}soundfile/{$subquestion->id}", $autoplay, false, "bell_b$i");
