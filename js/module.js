@@ -55,8 +55,8 @@ function next_card() {
     } while (cards[currentitem] !== true);
 
     document.getElementById('f' + currentitem).style.display = "table-cell";
-    qtobj = document.getElementById('bell_f' + currentitem + '_player';
-    if (qtobj)) {
+    qtobj = document.getElementById('bell_f' + currentitem + '_player');
+    if (qtobj) {
         qtobj.SetControllerVisible(true);
     }
 }
@@ -98,6 +98,7 @@ function remove_card() {
 function togglecard() {
     var questionobj = document.getElementById("questiondiv");
     var answerobj = document.getElementById("answerdiv");
+    var api;
     if (questionobj.style.display === "none") {
         questionobj.style.display = "table-cell";
 
@@ -109,7 +110,7 @@ function togglecard() {
             bellobj.SetControllerVisible(false);
         }
         if (atype === 4) {
-            var api = $('#bell_a_player').data('flowplayer');
+            api = $('#bell_a_player').data('flowplayer');
             api.stop();
             api.unload();
         }
@@ -118,7 +119,7 @@ function togglecard() {
             bellobj.SetControllerVisible(true);
         }
         if (qtype === 4) {
-            var api = $('#bell_q_player').data('flowplayer');
+            api = $('#bell_q_player').data('flowplayer');
             api.bind("error", function(e, api) {
                  alert(e.code + ' ' + e.message);
             });
@@ -134,7 +135,7 @@ function togglecard() {
             bellobj.SetControllerVisible(true);
         }
         if (atype === 4) {
-            var api = $('#bell_a_player').data('flowplayer');
+            api = $('#bell_a_player').data('flowplayer');
             api.bind("error", function(e, api) {
                  alert(e.code + ' ' + e.message);
             });
@@ -146,7 +147,7 @@ function togglecard() {
             bellobj.SetControllerVisible(false);
         }
         if (qtype === 4) {
-            var api = $('#bell_q_player').data('flowplayer');
+            api = $('#bell_q_player').data('flowplayer');
             api.stop();
             api.unload();
         }
