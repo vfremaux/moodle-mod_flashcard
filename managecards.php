@@ -33,7 +33,7 @@ $allcards = $DB->count_records('flashcard_deckdata', array('flashcardid' => $fla
 $page = optional_param('page', 0, PARAM_INT);
 $from = $page * $pagesize;
 
-// deferred header output.
+// Deferred header output.
 
 echo $out;
 

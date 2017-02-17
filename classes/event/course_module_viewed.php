@@ -53,15 +53,5 @@ class course_module_viewed extends \core\event\course_module_viewed {
         }
     }
 
-    /**
-     * Custom validations.
-     *
-     * @throws \coding_exception in case of any problems.
-     */
-    protected function validate_data() {
-
-        // Call parent validations.
-        parent::validate_data();
-    }
 }
 

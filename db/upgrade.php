@@ -29,7 +29,7 @@ function xmldb_flashcard_upgrade($oldversion = 0) {
     $result = true;
 
     $table = new xmldb_table('question_match');
-    if ($dbman->table_exists($table)){
+    if ($dbman->table_exists($table)) {
         $field = new xmldb_field('numquestions');
         $field->set_attributes (XMLDB_TYPE_INTEGER, '10', 'true', 'true', null, null, null, '0');
         if (!$dbman->field_exists($table, $field)) {
@@ -75,7 +75,7 @@ function xmldb_flashcard_upgrade($oldversion = 0) {
         // Launch add field deck2_delay.
         $field = new xmldb_field('deck2_delay');
         $field->set_attributes(XMLDB_TYPE_INTEGER, '11', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, 96, 'deck1_delay');
-        $result = $result && $dbman->add_field($table, $field);    
+        $result = $result && $dbman->add_field($table, $field);
 
         // Launch add field deck3_delay.
         $field = new xmldb_field('deck3_delay');
@@ -133,7 +133,7 @@ function xmldb_flashcard_upgrade($oldversion = 0) {
         // Launch add field decks.
         $field = new xmldb_field('decks');
         $field->set_attributes(XMLDB_TYPE_INTEGER, '3', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, '3', 'autodowngrade');
-        $result = $result && $dbman->add_field($table, $field);    
+        $result = $result && $dbman->add_field($table, $field);
     }
 
     if ($oldversion < 2008050800) {
@@ -189,7 +189,7 @@ function xmldb_flashcard_upgrade($oldversion = 0) {
         $field->set_attributes(XMLDB_TYPE_INTEGER, '1', XMLDB_UNSIGNED, null, null, null, null, '0', 'answersmediatype');
         $result = $result && $dbman->add_field($table, $field);
 
-       upgrade_mod_savepoint(true, 2008051100, 'flashcard');
+        upgrade_mod_savepoint(true, 2008051100, 'flashcard');
     }
 
     // First of all we need reencode all files stored in all cards and bring back files in our fileareas.
@@ -216,7 +216,7 @@ function xmldb_flashcard_upgrade($oldversion = 0) {
                 $cards = $DB->get_records('flashcard_deckdata', array('flashcardid' => $f->id));
                 if ($cards) {
                     foreach ($cards as $c) {
-                        if ($f->questionsmediatype != FLASHCARD_MEDIA_TEXT){
+                        if ($f->questionsmediatype != FLASHCARD_MEDIA_TEXT) {
                             convert_flashcard_file('question', $c, $f, $context->id, $fs);
                         }
                     }
@@ -232,10 +232,10 @@ function xmldb_flashcard_upgrade($oldversion = 0) {
         $table = new xmldb_table('flashcard');
 
         $field = new xmldb_field('summary');
-        if ($dbman->field_exists($table, $field)){
+        if ($dbman->field_exists($table, $field)) {
             $field->set_attributes(XMLDB_TYPE_TEXT, 'small', null, null, null, null, 'name');
             $dbman->rename_field($table, $field, 'intro');
-    
+
             $field = new xmldb_field('summaryformat');
             $field->set_attributes( XMLDB_TYPE_INTEGER, '4', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, '0', 'intro');
             $dbman->rename_field($table, $field, 'introformat');
@@ -252,7 +252,7 @@ function xmldb_flashcard_upgrade($oldversion = 0) {
 
     if ($oldversion < 2012040201) {
         $table = new xmldb_table('flashcard');
-        
+
         $field = new xmldb_field('audiostart');
 
         if (!$dbman->field_exists($table, $field)) {
@@ -265,7 +265,7 @@ function xmldb_flashcard_upgrade($oldversion = 0) {
 
     if ($oldversion < 2012040202) {
         $table = new xmldb_table('flashcard');
-        
+
         $field = new xmldb_field('custombackfileid');
 
         if (!$dbman->field_exists($table, $field)) {
@@ -447,10 +447,10 @@ function convert_flashcard_file($side, $card, $flashcard, $contextid, $fs) {
         }
 
         if ($filerec = process_flashcard_file($card->$infokey, $filearea, $card, $flashcard, $contextid, $fs)) {
-            $stored_file = $fs->get_file($filerec->contextid, $filerec->component, $filerec->filearea, $filerec->itemid,
+            $storedfile = $fs->get_file($filerec->contextid, $filerec->component, $filerec->filearea, $filerec->itemid,
                                          $filerec->filepath, $filerec->filename);
-            if ($stored_file) {
-                $card->$infokey = $stored_file->get_id();
+            if ($storedfile) {
+                $card->$infokey = $storedfile->get_id();
             }
         }
     } else {
@@ -459,23 +459,23 @@ function convert_flashcard_file($side, $card, $flashcard, $contextid, $fs) {
         list($image, $sound) = explode('@', $card->$infokey);
         if (!empty($image)) {
             if ($filerec = process_flashcard_file($image, $side.'imagefile', $card, $flashcard, $contextid, $fs)) {
-                $stored_file = $fs->get_file($filerec->contextid, $filerec->component, $filerec->filearea,
+                $storedfile = $fs->get_file($filerec->contextid, $filerec->component, $filerec->filearea,
                                              $filerec->itemid, '/', $filerec->filename);
-                $imageid = $stored_file->get_id();
+                $imageid = $storedfile->get_id();
             }
         }
         if (!empty($sound)) {
             if ($filerec = process_flashcard_file($sound, $side.'soundfile', $card, $flashcard, $contextid, $fs)) {
-                $stored_file = $fs->get_file($filerec->contextid, $filerec->component, $filerec->filearea,
+                $storedfile = $fs->get_file($filerec->contextid, $filerec->component, $filerec->filearea,
                                              $filerec->itemid, '/', $filerec->filename);
-                $soundid = $stored_file->get_id();
+                $soundid = $storedfile->get_id();
             }
         }
         $card->$infokey = "$imageid@$soundid";
     }
 
     $DB->update_record('flashcard_deckdata', $card);
-} 
+}
 
 function process_flashcard_file($filename, $filearea, $card, $flashcard, $contextid, $fs) {
     global $CFG;
@@ -489,7 +489,8 @@ function process_flashcard_file($filename, $filearea, $card, $flashcard, $contex
 
     if (preg_match('#^https?://#', $filename)) {
         // We do not know yet what to do but probably create a new file from an URL.
-    } else if (preg_match('#moddata/flashcard/(\d+)/(.*)$#', $filename, $matches)){
+        assert(1);
+    } else if (preg_match('#moddata/flashcard/(\d+)/(.*)$#', $filename, $matches)) {
         $dirname = dirname($matches[2]);
         // Force to root in the filearea.
         $filerec->filepath = '/';

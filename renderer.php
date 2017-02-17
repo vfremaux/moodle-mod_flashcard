@@ -31,7 +31,7 @@ require_once($CFG->dirroot.'/repository/lib.php');
 class mod_flashcard_renderer extends plugin_renderer_base {
 
     public function filepicker($elname, $value, $contextid, $filearea, $cardid, $maxbytes, $accepted_types = '*') {
-        global $COURSE, $PAGE, $OUTPUT, $USER;
+        global $COURSE, $PAGE, $USER;
 
         $str = '';
 
@@ -69,7 +69,7 @@ class mod_flashcard_renderer extends plugin_renderer_base {
         $fp = new file_picker($args);
         $options = $fp->options;
         $options->context = $PAGE->context;
-        $str .= $OUTPUT->render($fp);
+        $str .= $this->output->render($fp);
         $str .= '<input type="hidden" name="'.$elname.'" id="'.$id.'" value="'.$draftitemid.'" class="filepickerhidden"/>';
 
         $module = array(
@@ -108,24 +108,22 @@ class mod_flashcard_renderer extends plugin_renderer_base {
      * prints a deck depending on deck status
      * @param reference $cm the coursemodule
      * @param int $deck the deck number
-     * @uses $CFG
      */
     public function print_deck(&$flashcard, &$cm, $deck) {
-        global $CFG, $OUTPUT;
 
         $str = '';
 
-        $emptydeckurl = $OUTPUT->pix_url('emptydeck', 'flashcard');
+        $emptydeckurl = $this->output->pix_url('emptydeck', 'flashcard');
         if (!empty($flashcard->customreviewemptyfileid)) {
             $emptydeckurl = flashcard_get_file_url($flashcard->customreviewemptyfileid);
         }
 
-        $decktoreviewurl = $OUTPUT->pix_url('enableddeck', 'flashcard');
+        $decktoreviewurl = $this->output->pix_url('enableddeck', 'flashcard');
         if (!empty($flashcard->customreviewfileid)) {
             $decktoreviewurl = flashcard_get_file_url($flashcard->customreviewfileid);
         }
 
-        $deckreviewedurl = $OUTPUT->pix_url('disableddeck', 'flashcard');
+        $deckreviewedurl = $this->output->pix_url('disableddeck', 'flashcard');
         if (!empty($flashcard->customreviewedfileid)) {
             $deckreviewedurl = flashcard_get_file_url($flashcard->customreviewedfileid);
         }
@@ -157,10 +155,8 @@ class mod_flashcard_renderer extends plugin_renderer_base {
      * @param reference $flashcard the flashcard object
      * @param int $userid the user for which printing status
      * @param object $status a status object to be filled by the function
-     * @uses $CFG
      */
     public function print_deck_status(&$flashcard, $userid, &$status) {
-        global $CFG;
 
         $str = '';
 
@@ -175,7 +171,7 @@ class mod_flashcard_renderer extends plugin_renderer_base {
             $str .= '<table>';
             $str .= '<tr><td>';
             $str .= '<div style="padding-bottom: '.$height.'px" class="graphdeck" align="top">';
-            $pixurl = $OUTPUT->pix_url($image, 'flashcard');
+            $pixurl = $this->output->pix_url($image, 'flashcard');
             $title = get_string('cardsindeck', 'flashcard', $status->decks[0]->count);
             $str .= '<img src="'.$pixurl.'" title="'.$title.'"/>';
             $str .= '</div>';
@@ -191,13 +187,13 @@ class mod_flashcard_renderer extends plugin_renderer_base {
                 $str .= '<img src="'.$pixurl.'" valign="bottom" title="'.$strtimetoreview.'" />';
             }
             if ($dayslateness < $flashcard->deck1_delay / 24) {
-                for (; $i < $flashcard->deck1_delay / 24 ; $i++) {
+                for (; $i < $flashcard->deck1_delay / 24; $i++) {
                     $pixurl = $this->output->pix_url('shadowclock', 'flashcard');
                     $str .= '<img src="'.$pixurl.'" valign="bottom" title="'.$strtimetoreview.'" />';
                 }
-            } elseif ($dayslateness > $flashcard->deck1_delay / 24) {
+            } else if ($dayslateness > $flashcard->deck1_delay / 24) {
                 // Deck 1 has no release limit as cards can stay here as long as not viewed.
-                for ($i = 0; $i < min($dayslateness - floor($flashcard->deck1_delay / 24), 4) ; $i++) {
+                for ($i = 0; $i < min($dayslateness - floor($flashcard->deck1_delay / 24), 4); $i++) {
                     $pixurl = $this->output->pix_url('overtime', 'flashcard');
                     $str .= '<img src="'.$pixurl.'" valign="bottom" title="'.$strtimetoreview.'" />';
                 }
@@ -224,7 +220,7 @@ class mod_flashcard_renderer extends plugin_renderer_base {
             $str .= '<tr>';
             $str .= '<td>';
             $str .= '<div style="padding-bottom: '.$height.'px" class="graphdeck" align="top">';
-            $pixurl = $this->ouptut->pix_url($image, 'flashcard');
+            $pixurl = $this->output->pix_url($image, 'flashcard');
             $title = get_string('cardsindeck', 'flashcard', $status->decks[1]->count);
             $str .= '<img src="'.$pixurl.'" title="'.$title.'"/>';
             $str .= '</div>';
@@ -335,7 +331,7 @@ class mod_flashcard_renderer extends plugin_renderer_base {
                     $str .= '<img src="'.$pixurl.'" valign="bottom" />';
                 }
                 if ($dayslateness < $flashcard->deck4_delay / 24) {
-                    $pixurl = $this->ouptut->pix_url('shadowclock', 'flashcard');
+                    $pixurl = $this->output->pix_url('shadowclock', 'flashcard');
                     for (; $i < $flashcard->deck4_delay / 24; $i++) {
                         $str .= '<img src="'.$pixurl.'" valign="bottom" />';
                     }
@@ -373,11 +369,10 @@ class mod_flashcard_renderer extends plugin_renderer_base {
      * @param reference $flashcard
      * @param int $userid
      * @uses $USER
-     * @uses $CFG
      * @uses $DB
      */
     public function print_deckcounts($flashcard, $userid = 0) {
-        global $USER, $CFG, $DB;
+        global $USER, $DB;
 
         if ($userid == 0) {
             $userid = $USER->id;
@@ -412,7 +407,7 @@ class mod_flashcard_renderer extends plugin_renderer_base {
         $str .= '<tr valign="top"><td class="smalltext"><b>'.$strsumaccess.'</b>:</td>';
         $str .= '<td class="smalltext">'.$rec->sumaccess.'</td></tr></table>';
 
-        echo $str;
+        return $str;
     }
 
     /**
@@ -423,8 +418,8 @@ class mod_flashcard_renderer extends plugin_renderer_base {
      * @uses $CFG
      * @uses $COURSE
      */
-    function print_image(&$flashcard, $imagefileid) {
-        global $CFG, $COURSE, $OUTPUT;
+    public function print_image(&$flashcard, $imagefileid) {
+        global $CFG;
 
         $strmissingimage = get_string('missingimage', 'flashcard');
 
@@ -438,7 +433,7 @@ class mod_flashcard_renderer extends plugin_renderer_base {
         $imagefiles = $fs->get_area_files($context->id, 'mod_flashcard', $filearea, $itemid);
 
         if (empty($imagefiles)) {
-            $imagefileurl = $OUTPUT->pix_url('notfound', 'flashcard');
+            $imagefileurl = $this->output->pix_url('notfound', 'flashcard');
             $imagehtml = '<img src="'.$imagefileurl.'" width="100%" height="100%" />';
             return $imagehtml;
         }
@@ -463,11 +458,9 @@ class mod_flashcard_renderer extends plugin_renderer_base {
      * @param reference $flashcard
      * @param string $soundname the local name of the sound file. Should be wav or any playable sound format.
      * @param string $autostart if 'true' the sound starts playing immediately
-     * @uses $CFG
-     * @uses $COURSE
      */
-    function play_sound(&$flashcard, $soundfileid, $autostart = 'false', $htmlname = '') {
-        global $CFG, $COURSE, $OUTPUT;
+    public function play_sound(&$flashcard, $soundfileid, $autostart = 'false', $htmlname = '') {
+        global $CFG;
 
         $strmissingsound = get_string('missingsound', 'flashcard');
 
@@ -481,8 +474,8 @@ class mod_flashcard_renderer extends plugin_renderer_base {
         $soundfiles = $fs->get_area_files($context->id, 'mod_flashcard', $filearea, $itemid);
 
         if (empty($soundfiles)) {
-            $soundfileurl = $OUTPUT->pix_url('notfound', 'flashcard');
-            $soundhtml = "<img src=\"{$soundfileurl}\" />";
+            $soundfileurl = $this->output->pix_url('notfound', 'flashcard');
+            $soundhtml = '<img src="'.$soundfileurl.'" />';
             return $soundhtml;
         }
 
@@ -497,8 +490,18 @@ class mod_flashcard_renderer extends plugin_renderer_base {
         $soundfileurl = $CFG->wwwroot."/pluginfile.php/{$contextid}/mod_flashcard/{$filearea}/{$itemid}/{$filename}";
 
         if (!preg_match('/\.mp3$/i', $filename)) {
-            $soundhtml = "<embed src=\"{$soundfileurl}\" autostart=\"{$autostart}\" hidden=\"false\" id=\"{$htmlname}_player\" height=\"20\" width=\"200\" />";
-            $soundhtml .= "<a href=\"{$soundfileurl}\" autostart=\"{$autostart}\" hidden=\"false\" id=\"{$htmlname}\" height=\"20\" width=\"200\" />";
+            $soundhtml = "<embed src=\"{$soundfileurl}\"
+                                 autostart=\"{$autostart}\"
+                                 hidden=\"false\"
+                                 id=\"{$htmlname}_player\"
+                                 height=\"20\"
+                                 width=\"200\" />";
+            $soundhtml .= "<a href=\"{$soundfileurl}\"
+                              autostart=\"{$autostart}\"
+                              hidden=\"false\"
+                              id=\"{$htmlname}\"
+                              height=\"20\"
+                              width=\"200\" />";
         } else {
             $soundhtml = flashcard_mp3_dewplayer($flashcard, $soundfileurl, $htmlname);
         }
@@ -506,8 +509,8 @@ class mod_flashcard_renderer extends plugin_renderer_base {
         return $soundhtml;
     }
 
-    function play_video(&$flashcard, $videofileid, $autostart = 'false', $htmlname = '', $thumb = false) {
-        global $CFG, $COURSE, $OUTPUT;
+    public function play_video(&$flashcard, $videofileid, $autostart = 'false', $htmlname = '', $thumb = false) {
+        global $CFG;
 
         $strmissingvid = get_string('missingvid', 'flashcard');
 
@@ -521,7 +524,7 @@ class mod_flashcard_renderer extends plugin_renderer_base {
         $videofiles = $fs->get_area_files($context->id, 'mod_flashcard', $filearea, $itemid);
 
         if (empty($videofiles)) {
-            $videofileurl = $OUTPUT->pix_url('notfound', 'flashcard');
+            $videofileurl = $this->output->pix_url('notfound', 'flashcard');
             $videohtml = "<img src=\"{$videofileurl}\" />";
             return $videohtml;
         }
@@ -544,7 +547,7 @@ class mod_flashcard_renderer extends plugin_renderer_base {
         return $videohtml;
     }
 
-    function print_custom_url(&$flashcard, $filearea, $itemid) {
+    public function print_custom_url(&$flashcard, $filearea, $itemid) {
         global $CFG;
 
         // New way : probably no effective fieldids storage needed anymore.
@@ -569,25 +572,36 @@ class mod_flashcard_renderer extends plugin_renderer_base {
      * prints a graphical represnetation of decks, proportionnaly to card count
      * @param reference $flashcard
      * @param object $card
-     * @uses $CFG
      */ 
-    function print_cardcounts(&$flashcard, $card) {
-        global $CFG, $OUTPUT;
-
+    public function print_cardcounts(&$flashcard, $card) {
         $str = '';
 
-        $topenabledpixurl = $OUTPUT->pix_url('topenabled', 'flashcard');
+        $topenabledpixurl = $this->output->pix_url('topenabled', 'flashcard');
 
-        $strs[] = "<td><img src=\"{$topenabledpixurl}\" /> (1) </td><td>".'<div class="bar" style="height: 10px; width: '.(1 + @$card->deck[0]).'px"></div></td>';
-        $strs[] = "<td><img src=\"{$topenabledpixurl}\" /> (2) </td><td>".'<div class="bar" style="height: 10px; width: '.(1 + @$card->deck[1]).'px"></div></td>';
+        $row = '<td>';
+        $row .= '<img src="'.$topenabledpixurl.'" /> (1) </td>';
+        $row .= '<td><div class="bar" style="height: 10px; width: '.(1 + @$card->deck[0]).'px"></div></td>';
+        $strs[] = $row;
+
+        $row = '<td>';
+        $row .= '<img src="'.$topenabledpixurl.'" /> (2) </td>';
+        $row .= '<td><div class="bar" style="height: 10px; width: '.(1 + @$card->deck[1]).'px"></div></td>';
+        $strs[] = $row;
+
         if ($flashcard->decks >= 3) {
-            $strs[] = "<td><img src=\"{$topenabledpixurl}\" /> (3) </td><td>".'<div class="bar" style="height: 10px; width: '.(1 + @$card->deck[2]).'px"></div></td>';
+            $row = '<td><img src="'.$topenabledpixurl.'" /> (3) </td>';
+            $row .= '<td><div class="bar" style="height: 10px; width: '.(1 + @$card->deck[2]).'px"></div></td>';
+            $strs[] = $row;
         }
         if ($flashcard->decks >= 4) {
-            $strs[] = "<td><img src=\"{$topenabledpixurl}\" /> (4) </td><td>".'<div class="bar" style="height: 10px; width: '.(1 + @$card->deck[3]).'px"></div></td>';
+            $row = '<td><img src="'.$topenabledpixurl.'" /> (4) </td>';
+            $row .= '<td><div class="bar" style="height: 10px; width: '.(1 + @$card->deck[3]).'px"></div></td>';
+            $strs[] = $row;
         }
 
-        $str = "<table cellspacing=\"2\"><tr valign\"middle\">".implode("</tr><tr valign=\"middle\">", $strs)."</tr></table>";
+        $str = '<table>';
+        $str .= '<tr valign="middle">'.implode('</tr><tr valign="middle">', $strs).'</tr>';
+        $str .= '</table>';
 
         return $str;
     }
@@ -630,7 +644,11 @@ class mod_flashcard_renderer extends plugin_renderer_base {
         }
         $str .= '</div>';
 
-        $str .= '<div id="answerdiv" style="display:none;background-repeat:no-repeat;background-image:url('.$this->print_custom_url($flashcard, 'customfront', 0).')" class="flashcard-answer'.$acardvideoclass.'" onclick="javascript:togglecard()">';
+        $customurl = $this->print_custom_url($flashcard, 'customfront', 0);
+        $str .= '<div id="answerdiv"
+                      style="display:none;background-repeat:no-repeat;background-image:url('.$customurl.')"
+                      class="flashcard-answer'.$acardvideoclass.'"
+                      onclick="javascript:togglecard()">';
         if ($flashcard->answersmediatype == FLASHCARD_MEDIA_IMAGE) {
             $str .= $this->print_image($flashcard, "{$front}imagefile/{$subquestion->id}");
         } else if ($flashcard->answersmediatype == FLASHCARD_MEDIA_SOUND) {
@@ -666,6 +684,61 @@ class mod_flashcard_renderer extends plugin_renderer_base {
         $str .= '</div>';
         $str .= '</center>';
         $str .= '</div>';
+
+        return $str;
+    }
+
+    public function finishtable() {
+
+        $str = '<div id="finished" style="display: none;" class="finished">';
+        $str .= '<table width="100%" height="100%">';
+        $str .= '<tr>';
+        $str .= '<td align="center" valign="middle" class="emptyset">';
+        $str .= get_string('emptyset', 'flashcard');
+        $str .= '</td>';
+        $str .= '</tr>';
+        $str .= '</table>';
+        $str .= '</div>';
+
+        return $str;
+    }
+
+    public function freebuttons(&$subquestions) {
+        global $COURSE;
+
+        $str = '';
+
+        $str .= '<tr>';
+        $str .= '<td width="200px">';
+        $str .= '<p>'.get_string('cardsremaining', 'flashcard').': <span id="remain">'.count($subquestions).'</span></p>';
+        $str .= '</td>';
+        $str .= '</tr>';
+        $str .= '<tr>';
+        $str .= '<td width="200px">';
+        $str .= '<input id="next" type="button" value="'.get_string('next', 'flashcard').'" onclick="javascript:next_card()" />';
+        $str .= '</td>';
+        $str .= '</tr>';
+        $str .= '<tr>';
+        $str .= '<td width="200px">';
+        $str .= '<input id="previous" type="button" value="'.get_string('previous', 'flashcard').'" onclick="javascript:previous_card()" />';
+        $str .= '</td>';
+        $str .= '</tr>';
+        $str .= '<tr>';
+        $str .= '<td width="200px">';
+        $str .= '<input id="remove" type="button" value="'.get_string('removecard', 'flashcard').'" onclick="javascript:remove_card()" />';
+        $str .= '</td>';
+        $str .= '</tr>';
+        $str .= '<tr>';
+        $str .= '<td width="200px">';
+        $str .= '<input type="button" value="'.get_string('reset', 'flashcard').'" onclick="javascript:location.reload()" />';
+        $str .= '</td>';
+        $str .= '</tr>';
+        $str .= '<tr>';
+        $str .= '<td width="200px" align="center" colspan="2">';
+        $courseurl = new moodle_url('/course/view.php', array('id' => $COURSE->id));
+        $str .= '<br/><a href="'.$courseurl.'">'.get_string('backtocourse', 'flashcard').'</a>';
+        $str .= '</td>';
+        $str .= '</tr>';
 
         return $str;
     }

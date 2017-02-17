@@ -87,7 +87,7 @@ if ($data = $mform->get_data()) {
                 $card->answertext = ''; // Empty field values will be filled later.
                 $card->id = $DB->insert_record('flashcard_deckdata', $card); // Pre save the card record.
 
-                $validqkeys[$qkey] = $card; // validate the input param and store card
+                $validqkeys[$qkey] = $card; // Validate the input param and store card.
 
                 // Add card to all student decks and reset state of deck 1 for all.
                 if ($deckusers) {
@@ -173,7 +173,9 @@ if ($data = $mform->get_data()) {
         if ($flashcard->answersmediatype == FLASHCARD_MEDIA_TEXT) {
             $card->answertext = required_param($akey, PARAM_CLEANHTML);
         } else {
-            if (empty($fs)) $fs = get_file_storage();
+            if (empty($fs)) {
+                $fs = get_file_storage();
+            }
 
             if ($flashcard->answersmediatype == FLASHCARD_MEDIA_IMAGE) {
 
@@ -195,7 +197,7 @@ if ($data = $mform->get_data()) {
                 // Combine image and sound in one single field.
                 $imagesavedid = '';
                 $filepickeritemid = required_param($akey, PARAM_CLEANHTML);
-                if (!$fs->is_area_empty($usercontext->id, 'user', 'draft', $filepickeritemid, true)){
+                if (!$fs->is_area_empty($usercontext->id, 'user', 'draft', $filepickeritemid, true)) {
                     file_save_draft_area_files($filepickeritemid, $context->id, 'mod_flashcard', 'answerimagefile', $card->id);
                 }
 

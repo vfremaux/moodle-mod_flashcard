@@ -109,7 +109,7 @@ class mod_flashcard_mod_form extends moodleform_mod {
         $mediaoptions[FLASHCARD_MEDIA_VIDEO] = get_string('video', 'flashcard').' (Experimental)';
         $mform->addElement('select', 'questionsmediatype', get_string('questionsmediatype', 'flashcard'), $mediaoptions);
         $mform->addHelpButton('questionsmediatype', 'mediatypes', 'flashcard');
-        
+
         $mform->addElement('select', 'answersmediatype', get_string('answersmediatype', 'flashcard'), $mediaoptions);
         $mform->addHelpButton('answersmediatype', 'mediatypes', 'flashcard');
 
@@ -141,7 +141,7 @@ class mod_flashcard_mod_form extends moodleform_mod {
         $mform->setDefault('deck2_release', 96);
         $mform->addRule('deck2_release', get_string('numericrequired', 'flashcard'), 'numeric', null, 'client');
         $mform->setAdvanced('deck2_release');
- 
+
         $mform->addElement('text', 'deck3_release', get_string('deck3_release', 'flashcard'), array('size' => '5'));
         $mform->setType('deck3_release', PARAM_INT);
         $mform->setDefault('deck3_release', 96);
@@ -238,7 +238,7 @@ class mod_flashcard_mod_form extends moodleform_mod {
         $label = get_string('completionallgoodgroup', 'flashcard');
         $mform->addGroup($group, 'completionallgoodgroup', $label, array(' '), false);
 
-        return array('completionallviewedgroup','completionallgoodgroup');
+        return array('completionallviewedgroup', 'completionallgoodgroup');
     }
 
     public function completion_rule_enabled($data) {
@@ -246,19 +246,19 @@ class mod_flashcard_mod_form extends moodleform_mod {
             (!empty($data['completionallgood']));
     }
 
-    public function data_preprocessing(&$default_values) {
-        parent::data_preprocessing($default_values);
+    public function data_preprocessing(&$defaultvalues) {
+        parent::data_preprocessing($defaultvalues);
 
         /*
          * Set up the completion checkboxes which aren't part of standard data.
          * We also make the default value (if you turn on the checkbox) for those
          * numbers to be 1, this will not apply unless checkbox is ticked.
          */
-        $default_values['completionallviewedenabled'] = !empty($default_values['completionallviewed']) ? 1 : 0;
-        if (empty($default_values['completionallviewed'])) {
-            $default_values['completionallviewed'] = 999;
+        $defaultvalues['completionallviewedenabled'] = !empty($defaultvalues['completionallviewed']) ? 1 : 0;
+        if (empty($defaultvalues['completionallviewed'])) {
+            $defaultvalues['completionallviewed'] = 999;
         }
-        $default_values['completionallgoodenabled'] = !empty($default_values['completionallgood']) ? 1 : 0;
+        $defaultvalues['completionallgoodenabled'] = !empty($defaultvalues['completionallgood']) ? 1 : 0;
     }
 
     public function set_data($data) {

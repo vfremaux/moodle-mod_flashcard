@@ -283,7 +283,7 @@ function flashcard_scale_used_anywhere($scaleid) {
 function flashcard_print_recent_activity($course, $isteacher, $timestart) {
     global $CFG;
 
-    return false;  //  True if anything was printed, otherwise false.
+    return false; // True if anything was printed, otherwise false.
 }
 
 /**
@@ -338,7 +338,7 @@ function flashcard_cron() {
 
                 $participants = count($users);
                 mtrace("Participants : $participants users ");
-    
+
                 $voiduser = new StdClass();
                 $voiduser->email = $CFG->noreplyaddress;
                 $voiduser->firstname = '';
@@ -348,14 +348,14 @@ function flashcard_cron() {
                 $coursename = $DB->get_field('course', 'fullname', array('id' => $flashcard->course));
 
                 $notified = 0;
-    
+
                 foreach ($users as $u) {
                     $decks = flashcard_get_deck_status($flashcard, $u->id);
                     foreach ($decks->decks as $deck) {
                         $sendnotif = 0;
                         if (@$deck->reactivate) {
                             $params = array('userid' => $u->id, 'flashcardid' => $flashcard->id, 'deck' => $deck->deckid);
-                            if ($state = $DB->get_record('flashcard_userdeck_state', $params)){
+                            if ($state = $DB->get_record('flashcard_userdeck_state', $params)) {
                                 if ($state->state) {
                                     continue;
                                 }
@@ -373,13 +373,13 @@ function flashcard_cron() {
                                 'URL' => $CFG->wwwroot.'/mod/flashcard/view.php?f='.$flashcard->id
                             );
                             $notification = flashcard_compile_mail_template('notifyreview', $vars, $u->lang);
-                            $notification_html = flashcard_compile_mail_template('notifyreview_html', $vars, $u->lang);
+                            $notificationhtml = flashcard_compile_mail_template('notifyreview_html', $vars, $u->lang);
                             if ($CFG->debugsmtp) {
-                                mtrace("Sending Review Notification Mail Notification to " . fullname($u) . '<br/>'.$notification_html);
+                                mtrace("Sending Review Notification Mail Notification to ".fullname($u).'<br/>'.$notificationhtml);
                             }
                             $label = $SITE->shortname.':'.format_string($flashcard->name);
                             $subject = get_string('flashcardneedsreview', 'flashcard', $label);
-                            email_to_user($u, $voiduser, $subject, $notification, $notification_html);
+                            email_to_user($u, $voiduser, $subject, $notification, $notificationhtml);
 
                             // Mark it has been sent.
                             $params = array('userid' => $u->id, 'flashcardid' => $flashcard->id, 'deck' => $deck->deckid);
@@ -406,7 +406,7 @@ function flashcard_cron() {
  *    return $return;
  */
 function flashcard_grades($flashcardid) {
-    return NULL;
+    return null;
 }
 
 /**
@@ -569,7 +569,7 @@ function flashcard_get_completion_state($course, $cm, $userid, $type) {
                 COUNT(DISTINCT c.entryid)
             FROM
                 {flashcard_card} c
-            WHERE 
+            WHERE
                 c.userid = ? AND
                 c.flashcardid = ?
         ";
@@ -620,7 +620,7 @@ function flashcard_reset_userdata($data) {
         $DB->delete_records_select('flashcard_card', " flashcardid IN ($allflashcardsql) ", $params);
         $DB->delete_records_select('flashcard_userdeck_state', " flashcardid IN ($allflashcardsql) ", $params);
         $status[] = array('component' => $componentstr,
-                          'item' => get_string('resetflashcardstates','flashcard'),
+                          'item' => get_string('resetflashcardstates', 'flashcard'),
                           'error' => false);
     }
 
@@ -634,7 +634,7 @@ function flashcard_reset_userdata($data) {
  */
 function flashcard_reset_course_form_definition(&$mform) {
     $mform->addElement('header', 'flashcardheader', get_string('modulenameplural', 'flashcard'));
-    $mform->addElement('checkbox', 'reset_flashcard_all', get_string('resetflashcardstates','flashcard'));
+    $mform->addElement('checkbox', 'reset_flashcard_all', get_string('resetflashcardstates', 'flashcard'));
 }
 
 /**

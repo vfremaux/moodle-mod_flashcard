@@ -67,7 +67,7 @@ if ($action == 'igotit') {
         }
     }
     $card->lastaccessed = time();
-    $card->accesscount++ ;
+    $card->accesscount++;
     if (!$DB->update_record('flashcard_card', $card)) {
         print_error('dbcouldnotupdate', 'flashcard', '', get_string('cardinfo', 'flashcard'));
     }
@@ -87,7 +87,7 @@ if ($action == 'igotit') {
 
                 $conditions = array('userid' => $USER->id, 'flashcardid' => $flashcard->id, 'deck' => $flashcard->decks);
                 $lastdeckcards = $DB->count_records('flashcard_card', $conditions);
-                $allcards = count($subquestions); // @see playview.php.
+                $allcards = count($subquestions); // See playview.php.
 
                 if ($lastdeckcards == $allcards) {
                     // Whatever the status of the last deck, we have brought all the cards there.
@@ -99,7 +99,7 @@ if ($action == 'igotit') {
             // Allgood superseedes allviewed.
             // Deck does not matter here, all viewed cards in all decks... usually the first one.
             $allseencards = $DB->count_records('flashcard_card', array('userid' => $USER->id, 'flashcardid' => $flashcard->id));
-            $allcards = count($subquestions); // @see playview.php.
+            $allcards = count($subquestions); // See playview.php.
             if ($seencards >= min($allcards, $flashcard->completionallviewed)) {
                 // Update completion state.
                 $completion = new completion_info($course);
@@ -116,7 +116,7 @@ if ($action == 'ifailed') {
     $card->id = required_param('cardid', PARAM_INT);
     $card = $DB->get_record('flashcard_card', array('id' => $card->id));
     $card->lastaccessed = time();
-    $card->accesscount++ ;
+    $card->accesscount++;
 
     if (!$DB->update_record('flashcard_card', $card)) {
         print_error('dbcouldnotupdate', 'flashcard', '', get_string('cardinfo', 'flashcard'));
@@ -134,7 +134,7 @@ if ($action == 'ifailed') {
             // Deck does not matter here, all viewed cards in all decks... usually the first one.
             $params = array('userid' => $USER->id, 'flashcardid' => $flashcard->id);
             $allseencards = $DB->count_records('flashcard_card', $params);
-            $allcards = count($subquestions); // @see playview.php
+            $allcards = count($subquestions); // See playview.php.
             if ($seencards >= min($allcards, $flashcard->completionallviewed)) {
                 // Update completion state.
                 $completion->update_state($cm, COMPLETION_COMPLETE);

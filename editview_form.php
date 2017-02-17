@@ -35,11 +35,11 @@ class CardEdit_Form extends moodleform {
         $flashcard = $this->_customdata['flashcard'];
 
         // Course module id.
-        $mform->addElement('hidden', 'id'); 
+        $mform->addElement('hidden', 'id');
         $mform->setType('id', PARAM_INT);
 
-        // MVC Action keyword;
-        $mform->addElement('hidden', 'what', $this->_customdata['cmd']); 
+        // MVC Action keyword.
+        $mform->addElement('hidden', 'what', $this->_customdata['cmd']);
         $mform->setType('what', PARAM_TEXT);
 
         $num = 1;
@@ -53,7 +53,7 @@ class CardEdit_Form extends moodleform {
             $mform->setType('cardid', PARAM_INT);
         }
 
-        for ($i = 0; $i < $num ; $i++) {
+        for ($i = 0; $i < $num; $i++) {
             $cardnum = $i + 1;
             $mform->addElement('header', 'card'.$i, get_string('card', 'flashcard'). ' '.$cardnum);
             $mform->addElement('html', '<table width=100%">');

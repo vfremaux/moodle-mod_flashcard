@@ -120,7 +120,7 @@ function flashcard_import(&$flashcard) {
     }
 
     $options = $DB->get_record('question_match', array('question' => $question->id));
-    list($usql, $params) = $DB->get_in_or_equal(explode(",",$options->subquestions));
+    list($usql, $params) = $DB->get_in_or_equal(explode(',', $options->subquestions));
     $select = "id $usql AND answertext != '' AND questiontext != ''";
     if ($subquestions = $DB->get_records_select('question_match_sub', $select, $params)) {
 
@@ -168,7 +168,7 @@ function flashcard_get_deck_status(&$flashcard, $userid = 0) {
     $status->decks[1]->count = $dk2;
     $status->decks[1]->deckid = 2;
     if ($flashcard->decks >= 3) {
-        $dk3 = $DB->count_records('flashcard_card', array('flashcardid' => $flashcard->id, 'userid'=> $userid, 'deck' => 3));
+        $dk3 = $DB->count_records('flashcard_card', array('flashcardid' => $flashcard->id, 'userid' => $userid, 'deck' => 3));
         $status->decks[2] = new StdClass();
         $status->decks[2]->count = $dk3;
         $status->decks[2]->deckid = 3;
@@ -277,7 +277,7 @@ function flashcard_get_card_status(&$flashcard) {
 function flashcard_mp3_player(&$flashcard, $url, $htmlid) {
     global $CFG, $THEME;
 
-    $audiostart = ($flashcard->audiostart) ? 'no' : 'yes&autoPlay=yes' ;
+    $audiostart = ($flashcard->audiostart) ? 'no' : 'yes&autoPlay=yes';
     $c = 'bgColour=000000&btnColour=ffffff&btnBorderColour=cccccc&iconColour=000000&'.
          'iconOverColour=00cc00&trackColour=cccccc&handleColour=ffffff&loaderColour=ffffff&'.
          'waitForPlay='.$audiostart;
@@ -285,7 +285,7 @@ function flashcard_mp3_player(&$flashcard, $url, $htmlid) {
     static $count = 0;
     $count++;
     // We need something unique because it might be stored in text cache.
-    $id = ($htmlid) ? $htmlid : 'flashcard_filter_mp3_'.time().$count ;
+    $id = ($htmlid) ? $htmlid : 'flashcard_filter_mp3_'.time().$count;
 
     $url = addslashes_js($url);
 
@@ -305,7 +305,12 @@ function flashcard_mp3_dewplayer(&$flashcard, $url, $htmlid) {
     $audiostart = ($flashcard->audiostart) ? 1 : 0;
 
     $playerflashurl = $CFG->wwwroot.'/mod/flashcard/players/dewplayer/dewplayer-mini.swf';
-    $return = '<object type="application/x-shockwave-flash" data="'.$playerflashurl.'" width="160" height="20" id="'.$htmlid.'" name="dewplayer">';
+    $return = '<object type="application/x-shockwave-flash"
+                       data="'.$playerflashurl.'"
+                       width="160"
+                       height="20"
+                       id="'.$htmlid.'"
+                       name="dewplayer">';
     $return .= '<param name="wmode" value="transparent" />';
     $return .= '<param name="movie" value="dewplayer-mini.swf" />';
     $return .= '<param name="flashvars" value="mp3='.urlencode($url).'&amp;autostart='.$audiostart.'" />';
@@ -317,11 +322,15 @@ function flashcard_mp3_dewplayer(&$flashcard, $url, $htmlid) {
 function flashcard_flowplayer($flashcard, $videofileurl, $videotype, $htmlname, $thumb) {
     global $CFG;
 
-    $playerclass = ($thumb) ? 'flashcard-flowplayer-thumb' : 'flashcard-flowplayer' ;
+    $playerclass = ($thumb) ? 'flashcard-flowplayer-thumb' : 'flashcard-flowplayer';
 
     $str = '';
 
-    $str .= '<div id="'.$htmlname.'_player" style="z-index:10000" data-swf="'.$CFG->wwwroot.'/mod/flashcard/players/flowplayer/flowplayer.swf" class="flowplayer '.$playerclass.' play-button" data-ratio="0.416">';
+    $str .= '<div id="'.$htmlname.'_player"
+                  style="z-index:10000"
+                  data-swf="'.$CFG->wwwroot.'/mod/flashcard/players/flowplayer/flowplayer.swf"
+                  class="flowplayer '.$playerclass.' play-button"
+                  data-ratio="0.416">';
     $str .= '<video preload="none">';
     $str .= '<source type="video/'.$videotype.'" src="'.$videofileurl.'"/>';
     $str .= '</video>';
@@ -410,9 +419,9 @@ function flashcard_get_file_url($filerecid, $asobject = false) {
         $contextid = $file->get_contextid();
         $filearea = $file->get_filearea();
         $itemid = $file->get_itemid();
-    
+
         $url = $CFG->wwwroot."/pluginfile.php/{$contextid}/mod_flashcard/{$filearea}/{$itemid}/{$filename}";
-    
+
         if ($asobject) {
             $f = new StdClass();
             $f->pathname = $file->get_pathname();

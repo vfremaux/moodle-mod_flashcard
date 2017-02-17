@@ -77,7 +77,7 @@ if (!empty($courseusers)) {
             $countbox = '';
         }
         $table->data[] = array($userbox, $deckbox, $countbox);
-    }    
+    }
     echo html_writer::table($table);
 } else {
     echo '<center>';

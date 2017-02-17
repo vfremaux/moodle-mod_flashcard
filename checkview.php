@@ -16,7 +16,7 @@
 
 /**
  * This view allows checking deck states
- * 
+ *
  * @package mod_flashcard
  * @category mod
  * @author Gustav Delius
@@ -118,10 +118,10 @@ if ($flashcard->decks >= 4) {
     echo '<td>';
     print_string('cardsindeck', 'flashcard', 0 + @$decks->decks[3]->count);
     echo "<br/>";
-    if (@$decks->decks[3]->count == 0){
+    if (@$decks->decks[3]->count == 0) {
          echo $renderer->print_deck($flashcard, $cm, 0);
     } else {
-        if ($decks->decks[3]->reactivate){
+        if ($decks->decks[3]->reactivate) {
             echo $renderer->print_deck($flashcard, $cm, 4);
         } else {
             echo $renderer->print_deck($flashcard, $cm, -4);

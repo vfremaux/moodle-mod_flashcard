@@ -16,7 +16,7 @@
 
 /**
  * a controller for the play view
- * 
+ *
  * @package mod_flashcard
  * @category mod
  * @author Valery Fremaux
@@ -78,15 +78,15 @@ if ($action == 'doimport') {
     include_once($CFG->dirroot.'/mod/flashcard/import_form.php');
     $form = new flashcard_import_form();
 
-    $FIELDSEPPATTERNS[0] = ',';
-    $FIELDSEPPATTERNS[1] = ':';
-    $FIELDSEPPATTERNS[2] = ';';
+    $fieldseppatterns[0] = ',';
+    $fieldseppatterns[1] = ':';
+    $fieldseppatterns[2] = ';';
 
     if ($data = $form->get_data()) {
 
         if (!empty($data->confirm)) {
 
-            $fieldsep = $FIELDSEPPATTERNS[$data->fieldsep];
+            $fieldsep = $fieldseppatterns[$data->fieldsep];
 
             // Filters comments and non significant lines.
             $data->import = preg_replace("/^#.*\$/m", '', $data->import);
@@ -97,7 +97,7 @@ if ($action == 'doimport') {
 
             $pairs = preg_split("/\r?\n/", $data->import);
             if (!empty($pairs)) {
-                /// first integrity check
+                // First integrity check.
                 $report = new StdClass;
                 $report->cards = count($pairs);
                 $report->badcards = 0;

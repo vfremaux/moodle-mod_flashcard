@@ -41,7 +41,7 @@ if ($action != '') {
 
 // Unmark state for this deck.
 $params = array('userid' => $USER->id, 'flashcardid' => $flashcard->id, 'deck' => $deck);
-$DB->delete_records('flashcard_userdeck_state', $params); 
+$DB->delete_records('flashcard_userdeck_state', $params);
 
 if (empty($subquestions)) {
     echo $out;

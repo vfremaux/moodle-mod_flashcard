@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'flashcard', language 'en'
+ * Strings for component 'flashcard', language 'eu'
  *
  * @package     mod_flashcard
  * @category    mod
@@ -27,7 +27,7 @@ $string['backside'] = 'Karta-jokoaren atzealdea';
 $string['backtocourse'] = 'Ikastarora itzuli';
 $string['cardsremaining'] = 'Geratzen diren kartak ';
 $string['clickoncard'] = 'Buelta eman eta beste aldea ikusteko kartaren gainean klik egin';
-$string['customisation'] = 'Karta-jokoa zure gustura egokitzeko, behe aldeko css estilo-orria eskuratu, 
+$string['customisation'] = 'Karta-jokoa zure gustura egokitzeko, behe aldeko css estilo-orria eskuratu,
 <br/>aldatu eta <a href="{$a}">moddata/flashcard</a>/&lt;<i>instantzian</i>&gt; gorde, ikastaroaren fitxategietan, alegia.<br/>
 Hondoko irudia ere aldatu nahi baduzu, leku berean gorde eta izenaz deitu.';
 $string['editingcards1'] = 'Karta-jokoa editatu';
