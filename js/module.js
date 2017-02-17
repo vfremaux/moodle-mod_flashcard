@@ -52,12 +52,12 @@ function next_card() {
         if (currentitem >= maxitems) {
             currentitem = 0;
         }
-    }
-    while (cards[currentitem] !== true) {
-        document.getElementById('f' + currentitem).style.display = "table-cell";
-        if (qtobj = document.getElementById('bell_f' + currentitem + '_player')) {
-            qtobj.SetControllerVisible(true);
-        }
+    } while (cards[currentitem] !== true);
+
+    document.getElementById('f' + currentitem).style.display = "table-cell";
+    qtobj = document.getElementById('bell_f' + currentitem + '_player';
+    if (qtobj)) {
+        qtobj.SetControllerVisible(true);
     }
 }
 
@@ -69,12 +69,11 @@ function previous_card() {
         if (currentitem < 0) {
             currentitem = maxitems - 1;
         }
-    }
-    while (cards[currentitem] != true) {
-        document.getElementById('f' + currentitem).style.display = "table-cell";
-        if (qtobj = document.getElementById('bell_f' + currentitem + '_player')) {
-            qtobj.SetControllerVisible(true);
-        }
+    } while (cards[currentitem] !== true);
+    document.getElementById('f' + currentitem).style.display = "table-cell";
+    qtobj = document.getElementById('bell_f' + currentitem + '_player');
+    if (qtobj) {
+        qtobj.SetControllerVisible(true);
     }
 }
 
