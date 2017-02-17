@@ -206,10 +206,9 @@ if ($view == 'edit') {
             break;
         }
 
-        default: {
+        default:
             $currenttab = 'byusers';
             $activated[] = 'summary';
-        }
     }
 
     $tabname = get_string('byusers', 'flashcard');
@@ -281,10 +280,9 @@ switch ($view) {
         break;
     }
 
-    default: {
+    default:
         $event = \mod_flashcard\event\course_module_viewed::create($eventparams);
         include($CFG->dirroot.'/mod/flashcard/checkview.php');
-    }
 }
 
 if ($course->format == 'page') {
