@@ -78,9 +78,9 @@ if ($flashcard->flipdeck) {
 foreach ($subquestions as $subquestion) {
     echo '<center>';
     $divid = "f$i";
-    $divstyle = ($i > 0) ? 'display:none' : '' ;
+    $divstyle = ($i > 0) ? 'display:none' : '';
     $imageurl = $renderer->print_custom_url($flashcard, 'customback', 0);
-    echo '<div id="'.$divid.'" 
+    echo '<div id="'.$divid.'"
                class="flashcard-question"
                style="'.$divstyle.';background-repeat:no-repeat;background-image:url('.$imageurl.')"
                onclick="javascript:clicked(\'f\', \''.$i.'\')">';
@@ -122,7 +122,7 @@ foreach ($subquestions as $subquestion) {
         echo "<br/>";
         echo $renderer->play_sound($flashcard, "{$back}soundfile/{$subquestion->id}", $autoplay, false, "bell_b$i");
     } else {
-        echo format_text($subquestion->questiontext,FORMAT_HTML);
+        echo format_text($subquestion->questiontext, FORMAT_HTML);
     }
     echo '</td>';
     echo '</tr>';
@@ -151,7 +151,7 @@ foreach ($subquestions as $subquestion) {
         echo "<br/>";
         echo $renderer->play_sound($flashcard, "{$front}soundfile/{$subquestion->id}", $autoplay, false, "bell_f$i");
     } else {
-        echo format_text($subquestion->answertext,FORMAT_HTML);
+        echo format_text($subquestion->answertext, FORMAT_HTML);
     }
 
     echo '</td>';

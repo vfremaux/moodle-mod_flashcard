@@ -86,7 +86,7 @@ $out = $OUTPUT->header();
 
 // Non visible trap for timerange (security).
 
-if (!has_capability('moodle/course:viewhiddenactivities', $context) && !$cm->visible){
+if (!has_capability('moodle/course:viewhiddenactivities', $context) && !$cm->visible) {
     echo $out;
     echo $OUTPUT->notification(get_string('activityiscurrentlyhidden'));
     echo $OUTPUT->footer();
@@ -147,9 +147,8 @@ switch ($view) {
         break;
     }
 
-    default: {
+    default:
         $currenttab = 'play';
-    }
 }
 
 if ($action == 'import') {

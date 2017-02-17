@@ -5,7 +5,7 @@
 // jshint undef:false, unused:false
 
 var cards = new Array(maxitems);
-for(i = 0; i < maxitems; i++) {
+for (i = 0; i < maxitems; i++) {
     cards[i] = true;
 }
 
@@ -22,7 +22,7 @@ function clicked(type, item) {
 
     if (type === 'f') {
         if (atype > 2) {
-            qtobj = document.getElementById('bell_b' + item+'_player');
+            qtobj = document.getElementById('bell_b' + item + '_player');
             qtobj.SetControllerVisible(true);
         }
         if (atype === 4) {
@@ -32,7 +32,7 @@ function clicked(type, item) {
     }
     if (type === 'b') {
         if (qtype === 2 || atype === 3) {
-            qtobj = document.getElementById('bell_f' + item+'_player');
+            qtobj = document.getElementById('bell_f' + item + '_player');
             qtobj.SetControllerVisible(true);
         }
         if (qtype === 4) {
@@ -55,7 +55,7 @@ function next_card() {
     }
     while (cards[currentitem] !== true) {
         document.getElementById('f' + currentitem).style.display = "table-cell";
-        if (qtobj = document.getElementById('bell_f' + currentitem+'_player')) {
+        if (qtobj = document.getElementById('bell_f' + currentitem + '_player')) {
             qtobj.SetControllerVisible(true);
         }
     }
@@ -72,7 +72,7 @@ function previous_card() {
     }
     while (cards[currentitem] != true) {
         document.getElementById('f' + currentitem).style.display = "table-cell";
-        if (qtobj = document.getElementById('bell_f' + currentitem+'_player')) {
+        if (qtobj = document.getElementById('bell_f' + currentitem + '_player')) {
             qtobj.SetControllerVisible(true);
         }
     }
@@ -121,7 +121,7 @@ function togglecard() {
         if (qtype === 4) {
             var api = $('#bell_q_player').data('flowplayer');
             api.bind("error", function(e, api) {
-                 alert(e.code + ' '+e.message);
+                 alert(e.code + ' ' + e.message);
             });
             api.play();
         }
@@ -137,7 +137,7 @@ function togglecard() {
         if (atype === 4) {
             var api = $('#bell_a_player').data('flowplayer');
             api.bind("error", function(e, api) {
-                 alert(e.code + ' '+e.message);
+                 alert(e.code + ' ' + e.message);
             });
             api.play();
         }
@@ -153,4 +153,3 @@ function togglecard() {
         }
     }
 }
-

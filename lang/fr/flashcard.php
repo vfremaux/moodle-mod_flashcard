@@ -211,7 +211,7 @@ peut modifier graphiquement l\'apparence des cartes en proposant une CSS et un j
 $string['sourcequestion_help'] = '
 <p>Il est possible de constituer rapidement un jeu de cartes à partir d\'une question d\'appariement de la banque de questions.
 Pour cela, choisissez ici une question et cochez la case "forcer le rechargement". Les précédentes cartes seront effacées et
-les données des cartes seront récupérées de l\'entrée de questionnaire. 
+les données des cartes seront récupérées de l\'entrée de questionnaire.
 Attention : modifier par la suite les cartes `partir de l\'éditeur de cartes ne modifie pas la question d\'appariement dans
 la banque de questions.';
 

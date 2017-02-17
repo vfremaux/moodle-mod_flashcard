@@ -30,7 +30,7 @@ require_once($CFG->dirroot.'/repository/lib.php');
 
 class mod_flashcard_renderer extends plugin_renderer_base {
 
-    public function filepicker($elname, $value, $contextid, $filearea, $cardid, $maxbytes, $accepted_types = '*') {
+    public function filepicker($elname, $value, $contextid, $filearea, $cardid, $maxbytes, $acceptedtypes = '*') {
         global $COURSE, $PAGE, $USER;
 
         $str = '';
@@ -54,11 +54,9 @@ class mod_flashcard_renderer extends plugin_renderer_base {
             $context = context_course::instance($COURSE->id);
         }
 
-        $client_id = uniqid();
-
         $args = new stdClass();
         // Need these three to filter repositories list.
-        $args->accepted_types = $accepted_types ;
+        $args->accepted_types = $acceptedtypes;
         $args->return_types = FILE_INTERNAL;
         $args->itemid = $draftitemid;
         $args->maxbytes = $maxbytes;
@@ -73,8 +71,8 @@ class mod_flashcard_renderer extends plugin_renderer_base {
         $str .= '<input type="hidden" name="'.$elname.'" id="'.$id.'" value="'.$draftitemid.'" class="filepickerhidden"/>';
 
         $module = array(
-            'name' => 'form_filepicker', 
-            'fullpath' => '/lib/form/filepicker.js', 
+            'name' => 'form_filepicker',
+            'fullpath' => '/lib/form/filepicker.js',
             'requires' => array('core_filepicker', 'node', 'node-event-simulate')
         );
 
@@ -166,7 +164,7 @@ class mod_flashcard_renderer extends plugin_renderer_base {
 
         // Print for deck 1.
         if ($status->decks[0]->count) {
-            $image = ($status->decks[0]->reactivate) ? 'topenabled' : 'topdisabled' ;
+            $image = ($status->decks[0]->reactivate) ? 'topenabled' : 'topdisabled';
             $height = $status->decks[0]->count * 3;
             $str .= '<table>';
             $str .= '<tr><td>';
@@ -214,7 +212,7 @@ class mod_flashcard_renderer extends plugin_renderer_base {
 
         // Print for deck 2.
         if ($status->decks[1]->count) {
-            $image = ($status->decks[1]->reactivate) ? 'topenabled' : 'topdisabled' ;
+            $image = ($status->decks[1]->reactivate) ? 'topenabled' : 'topdisabled';
             $height = $status->decks[1]->count * 3;
             $str .= '<table>';
             $str .= '<tr>';
@@ -261,7 +259,7 @@ class mod_flashcard_renderer extends plugin_renderer_base {
 
             // Print for deck 3.
             if ($status->decks[2]->count) {
-                $image = ($status->decks[2]->reactivate) ? 'topenabled' : 'topdisabled' ;
+                $image = ($status->decks[2]->reactivate) ? 'topenabled' : 'topdisabled';
                 $height = $status->decks[2]->count * 3;
                 $str .= '<table>';
                 $str .= '<tr>';
@@ -441,7 +439,7 @@ class mod_flashcard_renderer extends plugin_renderer_base {
         $imagefile = array_pop($imagefiles);
         $filename = $imagefile->get_filename();
 
-        $magic = rand(0,100000);
+        $magic = rand(0, 100000);
         if (empty($htmlname)) {
             $htmlname = "bell_{$magic}";
         }
@@ -454,7 +452,7 @@ class mod_flashcard_renderer extends plugin_renderer_base {
     }
 
     /**
-     * plays a soundcard 
+     * plays a soundcard
      * @param reference $flashcard
      * @param string $soundname the local name of the sound file. Should be wav or any playable sound format.
      * @param string $autostart if 'true' the sound starts playing immediately
@@ -482,7 +480,7 @@ class mod_flashcard_renderer extends plugin_renderer_base {
         $soundfile = array_pop($soundfiles);
         $filename = $soundfile->get_filename();
 
-        $magic = rand(0,100000);
+        $magic = rand(0, 100000);
         if ($htmlname == '') {
             $htmlname = "bell_{$magic}";
         }
@@ -528,13 +526,13 @@ class mod_flashcard_renderer extends plugin_renderer_base {
             $videohtml = "<img src=\"{$videofileurl}\" />";
             return $videohtml;
         }
-    
+
         $videofile = array_pop($videofiles);
         $filename = $videofile->get_filename();
         $parts = pathinfo($filename);
         $videotype = $parts['extension'];
-    
-        $magic = rand(0,100000);
+
+        $magic = rand(0, 100000);
 
         if ($htmlname == '') {
             $htmlname = "bell_{$magic}";
@@ -572,7 +570,7 @@ class mod_flashcard_renderer extends plugin_renderer_base {
      * prints a graphical represnetation of decks, proportionnaly to card count
      * @param reference $flashcard
      * @param object $card
-     */ 
+     */
     public function print_cardcounts(&$flashcard, $card) {
         $str = '';
 
@@ -660,19 +658,27 @@ class mod_flashcard_renderer extends plugin_renderer_base {
             $str .= '<br/>';
             $str .= $this->play_sound($flashcard, "{$front}soundfile/{$subquestion->id}", $autoplay, 'bell_a');
         } else {
-            $str .= format_text($subquestion->answertext,FORMAT_HTML);
+            $str .= format_text($subquestion->answertext, FORMAT_HTML);
         }
         $str .= '</div>';
 
         $str .= '<div id="flashcard-controls">';
         $str .= '<p>'.get_string('cardsremaining', 'flashcard').': <span id="remain">'.count($subquestions).'</span></p>';
 
-        $params = array('id' => $cm->id, 'what' => 'igotit', 'view' => 'play', 'deck' => $deck, 'cardid' => $subquestions[$random]->cardid);
+        $params = array('id' => $cm->id,
+                        'what' => 'igotit',
+                        'view' => 'play',
+                        'deck' => $deck,
+                        'cardid' => $subquestions[$random]->cardid);
         $label = get_string('igotit', 'flashcard');
         $attrs = array('class' => 'flashcard_playbutton');
         $str .= $this->output->single_button(new moodle_url('view.php', $params), $label, 'post', $attrs);
 
-        $params = array('id' => $cm->id, 'what' => 'ifailed', 'view' => 'play', 'deck' => $deck, 'cardid' => $subquestions[$random]->cardid);
+        $params = array('id' => $cm->id,
+                        'what' => 'ifailed',
+                        'view' => 'play',
+                        'deck' => $deck,
+                        'cardid' => $subquestions[$random]->cardid);
         $label = get_string('ifailed', 'flashcard');
         $attrs = array('class' => 'flashcard-playbutton');
         $str .= $this->output->single_button(new moodle_url('view.php', $params), $label, 'post', $attrs);
@@ -715,22 +721,33 @@ class mod_flashcard_renderer extends plugin_renderer_base {
         $str .= '</tr>';
         $str .= '<tr>';
         $str .= '<td width="200px">';
-        $str .= '<input id="next" type="button" value="'.get_string('next', 'flashcard').'" onclick="javascript:next_card()" />';
+        $str .= '<input id="next"
+                        type="button"
+                        value="'.get_string('next', 'flashcard').'"
+                        onclick="javascript:next_card()" />';
         $str .= '</td>';
         $str .= '</tr>';
         $str .= '<tr>';
         $str .= '<td width="200px">';
-        $str .= '<input id="previous" type="button" value="'.get_string('previous', 'flashcard').'" onclick="javascript:previous_card()" />';
+        $str .= '<input id="previous"
+                        type="button"
+                        value="'.get_string('previous', 'flashcard').'"
+                        onclick="javascript:previous_card()" />';
         $str .= '</td>';
         $str .= '</tr>';
         $str .= '<tr>';
         $str .= '<td width="200px">';
-        $str .= '<input id="remove" type="button" value="'.get_string('removecard', 'flashcard').'" onclick="javascript:remove_card()" />';
+        $str .= '<input id="remove"
+                        type="button"
+                        value="'.get_string('removecard', 'flashcard').'"
+                        onclick="javascript:remove_card()" />';
         $str .= '</td>';
         $str .= '</tr>';
         $str .= '<tr>';
         $str .= '<td width="200px">';
-        $str .= '<input type="button" value="'.get_string('reset', 'flashcard').'" onclick="javascript:location.reload()" />';
+        $str .= '<input type="button"
+                        value="'.get_string('reset', 'flashcard').'"
+                        onclick="javascript:location.reload()" />';
         $str .= '</td>';
         $str .= '</tr>';
         $str .= '<tr>';
