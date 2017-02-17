@@ -28,7 +28,7 @@ require('../../config.php');
 require_once($CFG->dirroot.'/mod/flashcard/lib.php');
 require_once($CFG->dirroot.'/mod/flashcard/locallib.php');
 
-$PAGE->requires->js('/mod/flashcard/js/ufo.js', true);
+$PAGE->requires->js('/mod/flashcard/js/ufo/ufo.js', true);
 $PAGE->requires->js('/mod/flashcard/js/module.js', false);
 $PAGE->requires->css('/mod/flashcard/players/flowplayer/skin/minimalist.css');
 
