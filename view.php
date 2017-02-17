@@ -117,26 +117,39 @@ if (!empty($flashcard->extracss)) {
 // Determine the current tab.
 
 switch ($view) {
-    case 'checkdecks':
+    case 'checkdecks': {
         $currenttab = 'play';
         break;
-    case 'play':
+    }
+
+    case 'play': {
         $currenttab = 'play';
         break;
-    case 'freeplay':
+    }
+
+    case 'freeplay': {
         $currenttab = 'freeplay';
         break;
-    case 'summary': 
+    }
+
+    case 'summary': {
         $currenttab = 'summary';
         break;
-    case 'edit':
+    }
+
+    case 'edit': {
         $currenttab = 'edit';
         break;
-    case 'manage':
+    }
+
+    case 'manage': {
         $currenttab = 'manage';
         break;
-    default:
+    }
+
+    default: {
         $currenttab = 'play';
+    }
 }
 
 if ($action == 'import') {
@@ -188,14 +201,16 @@ if ($view == 'edit') {
     $currenttab = 'manage';
 } else if ($view == 'summary') {
     switch ($page) {
-        case 'bycards':
+        case 'bycards': {
             $currenttab = 'bycards';
             $activated[] = 'summary';
             break;
+        }
 
-        default:
+        default: {
             $currenttab = 'byusers';
             $activated[] = 'summary';
+        }
     }
 
     $tabname = get_string('byusers', 'flashcard');
@@ -222,7 +237,7 @@ $eventparams = array(
 );
 
 switch ($view) {
-    case 'summary':
+    case 'summary': {
         if (!has_capability('mod/flashcard:manage', $context)) {
             $params = array('view' => 'checkdecks', 'id' => $cm->id);
             redirect(new moodle_url('/mod/flashcard/view.php', $params));
@@ -234,8 +249,9 @@ switch ($view) {
             include($CFG->dirroot.'/mod/flashcard/usersummaryview.php');
         }
         break;
+    }
 
-    case 'manage':
+    case 'manage': {
         if (!has_capability('mod/flashcard:manage', $context)) {
             $params = array('view' => 'checkdecks', 'id' => $cm->id);
             redirect(new moodle_url('/mod/flashcard/view.php', $params));
@@ -243,28 +259,33 @@ switch ($view) {
         $event = \mod_flashcard\event\course_module_managed::create($eventparams);
         include($CFG->dirroot.'/mod/flashcard/managecards.php');
         break;
+    }
 
-    case 'edit':
+    case 'edit': {
         if (!has_capability('mod/flashcard:manage', $context)) {
             redirect($thisurl."?view=checkdecks&amp;id={$cm->id}");
         }
         $event = \mod_flashcard\event\course_module_edited::create($eventparams);
         include($CFG->dirroot.'/mod/flashcard/editview.php');
         break;
+    }
 
-    case 'freeplay':
+    case 'freeplay': {
         $event = \mod_flashcard\event\course_module_freeplayed::create($eventparams);
         include($CFG->dirroot.'/mod/flashcard/freeplayview.php');
         break;
+    }
 
-    case 'play':
+    case 'play': {
         $event = \mod_flashcard\event\course_module_played::create($eventparams);
         include($CFG->dirroot.'/mod/flashcard/playview.php');
         break;
+    }
 
-    default:
+    default: {
         $event = \mod_flashcard\event\course_module_viewed::create($eventparams);
-        include $CFG->dirroot.'/mod/flashcard/checkview.php';
+        include($CFG->dirroot.'/mod/flashcard/checkview.php');
+    }
 }
 
 if ($course->format == 'page') {

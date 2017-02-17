@@ -15,10 +15,14 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * @package mod-flashcard
- * @category mod
- * @author Tomasz Muras <nexor1984@gmail.com>
+ * @package     mod_flashcard
+ * @category    mod
+ * @author      Tomasz Muras <nexor1984@gmail.com>
+ * @author      Valery Fremaux <valery.fremaux@gmail.com>
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+defined('MOODLE_INTERNAL') || die();
+
 class restore_flashcard_activity_structure_step extends restore_activity_structure_step {
 
     protected function define_structure() {

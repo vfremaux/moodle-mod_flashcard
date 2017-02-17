@@ -14,8 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * This view provides a summary for the teacher
  *
@@ -26,10 +24,11 @@ defined('MOODLE_INTERNAL') || die();
  * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
  * @version Moodle 2.0
  */
+defined('MOODLE_INTERNAL') || die();
 
-echo $out; // Deffered header().
+echo $out; // Deffered header.
 
-// small controller here...
+// Small controller here...
 if ($action == 'reset') {
     $userid = required_param('userid', PARAM_INT);
     $DB->delete_records('flashcard_card', array('flashcardid' => $flashcard->id, 'userid' => $userid));
@@ -65,7 +64,7 @@ $table->size = array('30%', '50%', '20%');
 $table->width = '100%';
 
 if (!empty($courseusers)) {
-    foreach($courseusers as $auser) {
+    foreach ($courseusers as $auser) {
         $status = flashcard_get_deck_status($flashcard, $auser->id);
         $userbox = $OUTPUT->user_picture($auser);
         $userbox .= fullname($auser);

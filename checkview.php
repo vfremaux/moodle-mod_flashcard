@@ -46,107 +46,90 @@ if (!$decks = flashcard_get_deck_status($flashcard)) {
         echo $OUTPUT->continue_button($url);
     }
 }
-?>
 
-<center>
-<table width="90%" cellspacing="10">
-    <tr>
-        <th>
-            <?php print_string('difficultcards', 'flashcard') ?>
-        </th>
-<?php
+echo '<center>';
+echo '<table width="90%" cellspacing="10">';
+echo '<tr>';
+echo '<th>';
+print_string('difficultcards', 'flashcard');
+echo '</th>';
 if ($flashcard->decks >= 3) {
-?>
-        <th>
-            <?php print_string('mediumeffortcards', 'flashcard') ?>
-        </th>
-<?php
+    echo '<th>';
+    print_string('mediumeffortcards', 'flashcard');
+    echo '</th>';
 }
-?>
-        <th>
-            <?php print_string('easycards', 'flashcard') ?>
-        </th>
-<?php
+
+echo '<th>';
+print_string('easycards', 'flashcard');
+echo '</th>';
+
 if ($flashcard->decks >= 4) {
-?>
-        <th>
-            <?php print_string('trivialcards', 'flashcard') ?>
-        </th>
-<?php
+    echo '<th>';
+    print_string('trivialcards', 'flashcard');
+    echo '</th>';
 }
-?>
-    </tr>
-    <tr valign="top">
-        <td>
-            <?php
-                print_string('cardsindeck', 'flashcard', 0 + @$decks->decks[0]->count);
-                echo "<br/>";
-                if (@$decks->decks[0]->count == 0) {
-                     echo $renderer->print_deck($flashcard, $cm, 0);
-                } else {
-                    if ($decks->decks[0]->reactivate) {
-                        echo $renderer->print_deck($flashcard, $cm, 1);
-                    } else {
-                        echo $renderer->print_deck($flashcard, $cm, -1);
-                    }
-                }
-            ?>
-        </td>
-        <td>
-            <?php
-                print_string('cardsindeck', 'flashcard', 0 + @$decks->decks[1]->count);
-                echo "<br/>";
-                if (@$decks->decks[1]->count == 0) {
-                     echo $renderer->print_deck($flashcard, $cm, 0);
-                } else {
-                    if ($decks->decks[1]->reactivate) {
-                        echo $renderer->print_deck($flashcard, $cm, 2);
-                    } else {
-                        echo $renderer->print_deck($flashcard, $cm, -2);
-                    }
-                }
-            ?>
-        </td>
-<?php
+
+echo '</tr>';
+echo '<tr valign="top">';
+echo '<td>';
+print_string('cardsindeck', 'flashcard', 0 + @$decks->decks[0]->count);
+echo "<br/>";
+if (@$decks->decks[0]->count == 0) {
+     echo $renderer->print_deck($flashcard, $cm, 0);
+} else {
+    if ($decks->decks[0]->reactivate) {
+        echo $renderer->print_deck($flashcard, $cm, 1);
+    } else {
+        echo $renderer->print_deck($flashcard, $cm, -1);
+    }
+}
+echo '</td>';
+echo '<td>';
+print_string('cardsindeck', 'flashcard', 0 + @$decks->decks[1]->count);
+echo "<br/>";
+if (@$decks->decks[1]->count == 0) {
+     echo $renderer->print_deck($flashcard, $cm, 0);
+} else {
+    if ($decks->decks[1]->reactivate) {
+        echo $renderer->print_deck($flashcard, $cm, 2);
+    } else {
+        echo $renderer->print_deck($flashcard, $cm, -2);
+    }
+}
+echo '</td>';
+
 if ($flashcard->decks >= 3) {
-?>
-        <td>
-            <?php
-                print_string('cardsindeck', 'flashcard', 0 + @$decks->decks[2]->count);
-                echo "<br/>";
-                if (@$decks->decks[2]->count == 0) {
-                     echo $renderer->print_deck($flashcard, $cm, 0);
-                } else {
-                    if ($decks->decks[2]->reactivate) {
-                        echo $renderer->print_deck($flashcard, $cm, 3);
-                    } else {
-                        echo $renderer->print_deck($flashcard, $cm, -3);
-                    }
-                }
-            ?>
-        </td>
-<?php
+    echo '<td>';
+    print_string('cardsindeck', 'flashcard', 0 + @$decks->decks[2]->count);
+    echo "<br/>";
+    if (@$decks->decks[2]->count == 0) {
+         echo $renderer->print_deck($flashcard, $cm, 0);
+    } else {
+        if ($decks->decks[2]->reactivate) {
+            echo $renderer->print_deck($flashcard, $cm, 3);
+        } else {
+            echo $renderer->print_deck($flashcard, $cm, -3);
+        }
+    }
+    echo '</td>';
 }
+
 if ($flashcard->decks >= 4) {
-?>
-        <td>
-            <?php
-                print_string('cardsindeck', 'flashcard', 0 + @$decks->decks[3]->count);
-                echo "<br/>";
-                if (@$decks->decks[3]->count == 0){
-                     echo $renderer->print_deck($flashcard, $cm, 0);
-                } else {
-                    if ($decks->decks[3]->reactivate){
-                        echo $renderer->print_deck($flashcard, $cm, 4);
-                    } else {
-                        echo $renderer->print_deck($flashcard, $cm, -4);
-                    }
-                }
-            ?>
-        </td>
-<?php
+    echo '<td>';
+    print_string('cardsindeck', 'flashcard', 0 + @$decks->decks[3]->count);
+    echo "<br/>";
+    if (@$decks->decks[3]->count == 0){
+         echo $renderer->print_deck($flashcard, $cm, 0);
+    } else {
+        if ($decks->decks[3]->reactivate){
+            echo $renderer->print_deck($flashcard, $cm, 4);
+        } else {
+            echo $renderer->print_deck($flashcard, $cm, -4);
+        }
+    }
+    echo '</td>';
 }
-?>
-    </tr>
-</table>
-</center>
+
+echo '</tr>';
+echo '</table>';
+echo '</center>';

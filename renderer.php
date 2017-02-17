@@ -15,12 +15,12 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * @package mod_flashcard
- * @category mod
- * @author Gustav Delius
- * @author Valery Fremaux
- * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
- * @version Moodle 2.0
+ * @package     mod_flashcard
+ * @category    mod
+ * @author      Gustav Delius
+ * @author      Tomas Muraz
+ * @author      Valery Fremaux
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU Public License
  *
  * Master renderer
  */
@@ -292,7 +292,7 @@ class mod_flashcard_renderer extends plugin_renderer_base {
                         $str .= '<img src="'.$pixurl.'" valign="bottom" title="'.$strtimetoreview.'" />';
                     }
                 } else if ($dayslateness > $flashcard->deck3_delay / 24) {
-                    $pixurl = $this->output->pix_url('overtime', 'flashcard'):
+                    $pixurl = $this->output->pix_url('overtime', 'flashcard');
                     for ($i = 0; $i < min($dayslateness - floor($flashcard->deck3_delay / 24), $flashcard->deck3_release / 24); $i++) {
                         $str .= '<img src="'.$pixurl.'" valign="bottom" />';
                     }

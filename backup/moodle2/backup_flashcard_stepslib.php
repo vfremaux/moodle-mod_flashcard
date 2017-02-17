@@ -15,10 +15,14 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * @package mod-flashcard
- * @category mod
- * @author Tomasz Muras <nexor1984@gmail.com>
+ * @package     mod_flashcard
+ * @category    mod
+ * @author      Tomasz Muras <nexor1984@gmail.com>
+ * @author      Valery Fremaux <valery.fremaux@gmail.com>
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+defined('MOODLE_INTERNAL') || die();
+
 class backup_flashcard_activity_structure_step extends backup_activity_structure_step {
 
     protected function define_structure() {
@@ -47,7 +51,7 @@ class backup_flashcard_activity_structure_step extends backup_activity_structure
         $deckstate = new backup_nested_element('deckstate', array('id'), array(
                     'userid', 'deck', 'state'
                         ));
-        
+
         $flashcard->add_child($decks);
         $decks->add_child($deck);
 
