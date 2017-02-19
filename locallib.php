@@ -29,6 +29,10 @@ define('FLASHCARD_MEDIA_SOUND', 2);
 define('FLASHCARD_MEDIA_IMAGE_AND_SOUND', 3);
 define('FLASHCARD_MEDIA_VIDEO', 4);
 
+define('FLASHCARD_MODEL_BOTH', 3);
+define('FLASHCARD_MODEL_LEITNER', 1);
+define('FLASHCARD_MODEL_FREEUSE', 2);
+
 /**
  * computes the last accessed date for a deck as the oldest card being in the deck
  * @param reference $flashcard the flashcard object

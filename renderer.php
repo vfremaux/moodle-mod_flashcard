@@ -604,7 +604,35 @@ class mod_flashcard_renderer extends plugin_renderer_base {
         return $str;
     }
 
-    public function playview($flashcard, $cm, $cards) {
+    public function playview(&$flashcard, &$cm, &$cards, &$subquestions) {
+        global $DB, $COURSE;
+
+        $thisurl = new moodle_url('/mod/flashcard/view.php');
+        $deck = required_param('deck', PARAM_INT);
+
+        $random = rand(0, count($subquestions) - 1);
+        $subquestion = $DB->get_record('flashcard_deckdata', array('id' => $subquestions[$random]->entryid));
+
+        $back = 'question';
+        $front = 'answer';
+
+        if ($flashcard->flipdeck) {
+            // Flip card side values.
+            $tmp = $subquestion->answertext;
+            $subquestion->answertext = $subquestion->questiontext;
+            $subquestion->questiontext = $tmp;
+            $back = 'answer';
+            $front = 'question';
+
+            // Flip media types.
+            $tmp = $flashcard->answersmediatype;
+            $flashcard->answersmediatype = $flashcard->questionsmediatype;
+            $flashcard->questionsmediatype = $tmp;
+        }
+
+        $acardvideoclass = ($flashcard->answersmediatype == FLASHCARD_MEDIA_VIDEO) ? '-video' : '';
+        $qcardvideoclass = ($flashcard->answersmediatype == FLASHCARD_MEDIA_VIDEO) ? '-video' : '';
+        $autoplay = ($flashcard->audiostart) ? 'true' : 'false';
 
         $str = '<script type="text/javascript">
             var qtype = "'.$flashcard->questionsmediatype.'";
@@ -685,8 +713,6 @@ class mod_flashcard_renderer extends plugin_renderer_base {
 
         $str .= '<div class="flashcard-screenlinks">';
         $str .= '<a href="'.$thisurl.'?id='.$cm->id.'&amp;view=checkdecks">'.get_string('backtodecks', 'flashcard').'</a>';
-        $courseurl = new moodle_url('/course/view.php', array('id' => $COURSE->id));
-        $str .= '- <a href="'.$courseurl.'">'.get_string('backtocourse', 'flashcard').'</a>';
         $str .= '</div>';
         $str .= '</center>';
         $str .= '</div>';
@@ -756,6 +782,98 @@ class mod_flashcard_renderer extends plugin_renderer_base {
         $str .= '<br/><a href="'.$courseurl.'">'.get_string('backtocourse', 'flashcard').'</a>';
         $str .= '</td>';
         $str .= '</tr>';
+
+        return $str;
+    }
+
+    public function check_decks(&$flashcard, &$cm, &$decks) {
+
+        $str = '';
+
+        $boostrapdivider = 12 / $flashcard->decks;
+
+
+        $str .= '<div class="container-fluid m-b-1">'; // Table.
+        $str .= '<div class="row-fluid">'; // Row.
+
+        $str .= '<div class="col-md-'.$boostrapdivider.' span'.$boostrapdivider.'">'; // Cell.
+
+        $str .= $this->output->heading(get_string('difficultcards', 'flashcard'));
+
+        $str .= get_string('cardsindeck', 'flashcard', 0 + @$decks->decks[0]->count);
+        $str .= '<br/>';
+        if (@$decks->decks[0]->count == 0) {
+             $str .= $this->print_deck($flashcard, $cm, 0);
+        } else {
+            if ($decks->decks[0]->reactivate) {
+                $str .= $this->print_deck($flashcard, $cm, 1);
+            } else {
+                $str .= $this->print_deck($flashcard, $cm, -1);
+            }
+        }
+        $str .= '</div>'; // Cell.
+
+        $str .= '<div class="col-md-'.$boostrapdivider.' span'.$boostrapdivider.'">'; // Cell.
+
+        if ($flashcard->decks < 3) {
+            $str .= $this->output->heading(get_string('easycards', 'flashcard'));
+        } else {
+            $str .= $this->output->heading(get_string('mediumeffortcards', 'flashcard'));
+        }
+
+        $str .= get_string('cardsindeck', 'flashcard', 0 + @$decks->decks[1]->count);
+        $str .= '<br/>';
+        if (@$decks->decks[1]->count == 0) {
+             $str .= $this->print_deck($flashcard, $cm, 0);
+        } else {
+            if ($decks->decks[1]->reactivate) {
+                $str .= $this->print_deck($flashcard, $cm, 2);
+            } else {
+                $str .= $this->print_deck($flashcard, $cm, -2);
+            }
+        }
+        $str .= '</div>'; // Cell.
+
+        if ($flashcard->decks >= 3) {
+            $str .= '<div class="col-md-'.$boostrapdivider.' span'.$boostrapdivider.'">'; // Cell.
+
+            $str .= $this->output->heading(get_string('easycards', 'flashcard'));
+
+            $str .= get_string('cardsindeck', 'flashcard', 0 + @$decks->decks[2]->count);
+            $str .= '<br/>';
+            if (@$decks->decks[2]->count == 0) {
+                 $str .= $this->print_deck($flashcard, $cm, 0);
+            } else {
+                if ($decks->decks[2]->reactivate) {
+                    $str .= $this->print_deck($flashcard, $cm, 3);
+                } else {
+                    $str .= $this->print_deck($flashcard, $cm, -3);
+                }
+            }
+            $str .= '</div>'; // Cell.
+        }
+
+        if ($flashcard->decks >= 4) {
+            $str .= '<div class="col-md-'.$boostrapdivider.' span'.$boostrapdivider.'">'; // Cell.
+
+            $str .= $this->output->heading(get_string('trivialcards', 'flashcard'));
+
+            $str .= get_string('cardsindeck', 'flashcard', 0 + @$decks->decks[3]->count);
+            $str .= '<br/>';
+            if (@$decks->decks[3]->count == 0) {
+                 $str .= $this->print_deck($flashcard, $cm, 0);
+            } else {
+                if ($decks->decks[3]->reactivate) {
+                    $str .= $this->print_deck($flashcard, $cm, 4);
+                } else {
+                    $str .= $this->print_deck($flashcard, $cm, -4);
+                }
+            }
+            $str .= '</div>'; // Cell.
+        }
+
+        $str .= '</div>'; // Row.
+        $str .= '</div>'; // Table.
 
         return $str;
     }

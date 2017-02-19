@@ -371,6 +371,18 @@ function xmldb_flashcard_upgrade($oldversion = 0) {
         upgrade_mod_savepoint(true, 2014051200, 'flashcard');
     }
 
+    if ($oldversion < 2017022000) {
+        $table = new xmldb_table('flashcard');
+
+        // Launch add field models.
+        $field = new xmldb_field('models');
+        $field->set_attributes(XMLDB_TYPE_INTEGER, '4', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, 3, 'questionid');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+        upgrade_mod_savepoint(true, 2017022000, 'flashcard');
+    }
+
     return true;
 }
 

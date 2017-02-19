@@ -22,7 +22,6 @@
  * @author Gustav Delius
  * @author Valery Fremaux
  * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
- * @version Moodle 2.0
  */
 defined('MOODLE_INTERNAL') || die();
 
@@ -84,28 +83,5 @@ echo $out;
 
 // Randomize and get a question (obviously it is not a consumed question).
 
-$random = rand(0, count($subquestions) - 1);
-$subquestion = $DB->get_record('flashcard_deckdata', array('id' => $subquestions[$random]->entryid));
 
-$back = 'question';
-$front = 'answer';
-
-if ($flashcard->flipdeck) {
-    // Flip card side values.
-    $tmp = $subquestion->answertext;
-    $subquestion->answertext = $subquestion->questiontext;
-    $subquestion->questiontext = $tmp;
-    $back = 'answer';
-    $front = 'question';
-    // Flip media types.
-    $tmp = $flashcard->answersmediatype;
-    $flashcard->answersmediatype = $flashcard->questionsmediatype;
-    $flashcard->questionsmediatype = $tmp;
-}
-
-$acardvideoclass = ($flashcard->answersmediatype == FLASHCARD_MEDIA_VIDEO) ? '-video' : '';
-$qcardvideoclass = ($flashcard->answersmediatype == FLASHCARD_MEDIA_VIDEO) ? '-video' : '';
-
-$autoplay = ($flashcard->audiostart) ? 'true' : 'false';
-
-echo $renderer->playview();
+echo $renderer->playview($flashcard, $cm, $cards, $subquestions);

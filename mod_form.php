@@ -102,6 +102,12 @@ class mod_flashcard_mod_form extends moodleform_mod {
         $mform->setAdvanced('forcereload');
         $mform->addHelpButton('forcereload', 'forcereload', 'flashcard');
 
+        $modeloptions[FLASHCARD_MODEL_BOTH] = get_string('bothmodels', 'flashcard');
+        $modeloptions[FLASHCARD_MODEL_LEITNER] = get_string('leitner', 'flashcard');
+        $modeloptions[FLASHCARD_MODEL_FREEUSE] = get_string('freeuse', 'flashcard');
+        $mform->addElement('select', 'models', get_string('models', 'flashcard'), $modeloptions);
+        $mform->addHelpButton('models', 'models', 'flashcard');
+
         $mediaoptions[FLASHCARD_MEDIA_TEXT] = get_string('text', 'flashcard');
         $mediaoptions[FLASHCARD_MEDIA_IMAGE] = get_string('image', 'flashcard');
         $mediaoptions[FLASHCARD_MEDIA_SOUND] = get_string('sound', 'flashcard');

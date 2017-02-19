@@ -39,16 +39,16 @@ class backup_flashcard_activity_task extends backup_activity_task {
         $base = preg_quote($CFG->wwwroot . '/mod/flashcard', '#');
 
         $pattern = "#(" . $base . "\/index.php\?id\=)([0-9]+)#";
-        $content = preg_replace($pattern, '$@flashcardINDEX*$2@$', $content);
+        $content = preg_replace($pattern, '$@FLASHCARDINDEX*$2@$', $content);
 
         $pattern = "#(" . $base . "\/view.php\?id\=)([0-9]+)#";
-        $content = preg_replace($pattern, '$@flashcardVIEWBYID*$2@$', $content);
+        $content = preg_replace($pattern, '$@FLASHCARDVIEWBYID*$2@$', $content);
 
         $pattern = "#(" . $base . "\/report.php\?id\=)([0-9]+)#";
-        $content = preg_replace($pattern, '$@flashcardREPORT*$2@$', $content);
+        $content = preg_replace($pattern, '$@FLASHCARDREPORT*$2@$', $content);
 
         $pattern = "#(" . $base . "\/edit.php\?id\=)([0-9]+)#";
-        $content = preg_replace($pattern, '$@flashcardEDIT*$2@$', $content);
+        $content = preg_replace($pattern, '$@FLASHCARDEDIT*$2@$', $content);
 
         return $content;
     }

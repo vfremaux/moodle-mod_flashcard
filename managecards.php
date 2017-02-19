@@ -24,9 +24,6 @@ if ($action) {
     include($CFG->dirroot.'/mod/flashcard/manageview.controller.php');
 }
 
-$PAGE->requires->css('/mod/flashcard/players/flowplayer/skin/minimalist.css');
-$PAGE->requires->js('/mod/flashcard/players/flowplayer/flowplayer.js');
-
 $pagesize = 20;
 $allcards = $DB->count_records('flashcard_deckdata', array('flashcardid' => $flashcard->id));
 
@@ -87,7 +84,7 @@ if ($cards) {
         $command = '<a href="'.$editurl.'">'.$pix.'</a>';
 
         $pix = '<img src="'.$OUTPUT->pix_url('t/delete').'" />';
-        $params = array('id' => $id, 'view' => 'manage', 'what' => 'delete', 'items' => array($card->id));
+        $params = array('id' => $id, 'view' => 'manage', 'what' => 'delete', 'items[]' => $card->id);
         $deleteurl = new moodle_url('/mod/flashcard/view.php', $params);
         $command .= ' <a href="'.$deleteurl.'">'.$pix.'</a>';
         $table->data[] = array($check, $back, $front, $command);
@@ -123,7 +120,7 @@ if ($cards) {
     echo '<a href="'.$jshandler.'">'.$deleteselectionstr.'</a> - ';
 }
 
-$params = array('id' => $id, 'view' => 'edit', 'what' => 'addone', 'sesskey' => $sesskey());
+$params = array('id' => $id, 'view' => 'edit', 'what' => 'addone', 'sesskey' => sesskey());
 $addurl = new moodle_url('/mod/flashcard/view.php', $params);
 echo '<a href="'.$addurl.'">'.$addone.'</a> - ';
 

@@ -28,7 +28,7 @@ class backup_flashcard_activity_structure_step extends backup_activity_structure
     protected function define_structure() {
 
         $flashcard = new backup_nested_element('flashcard', array('id'), array(
-                    'name', 'intro', 'introformat', 'timemodified', 'starttime', 'endtime', 'questionid',
+                    'name', 'intro', 'introformat', 'timemodified', 'starttime', 'endtime', 'questionid', 'models',
                     'autodowngrade', 'decks', 'deck2_release', 'deck3_release', 'deck4_release', 'deck1_delay',
                     'deck2_delay', 'deck3_delay', 'deck4_delay', 'questionsmediatype', 'answersmediatype',
                     'audiostart', 'flipdeck', 'custombackfileid', 'customfrontfileid', 'customemptyfileid',

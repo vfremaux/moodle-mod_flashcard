@@ -31,6 +31,7 @@ require_once($CFG->dirroot.'/mod/flashcard/locallib.php');
 $PAGE->requires->js('/mod/flashcard/js/ufo/ufo.js', true);
 $PAGE->requires->js('/mod/flashcard/js/module.js', false);
 $PAGE->requires->css('/mod/flashcard/players/flowplayer/skin/minimalist.css');
+$PAGE->requires->js('/mod/flashcard/players/flowplayer/flowplayer.js');
 
 $id = optional_param('id', '', PARAM_INT);    // Course Module ID, or.
 $f = optional_param('f', '', PARAM_INT);     // Flashcard ID.
@@ -160,15 +161,19 @@ if (!preg_match("/summary|freeplay|play|checkdecks|manage|edit/", $view)) {
     $view = 'checkdecks';
 }
 
-$tabname = get_string('leitnergame', 'flashcard');
-$params = array('id' => $cm->id, 'view' => 'checkdecks');
-$taburl = new moodle_url('/mod/flashcard/view.php', $params);
-$row[] = new tabobject('play', $taburl, $tabname);
+if ($flashcard->models | FLASHCARD_MODEL_LEITNER) {
+    $tabname = get_string('leitnergame', 'flashcard');
+    $params = array('id' => $cm->id, 'view' => 'checkdecks');
+    $taburl = new moodle_url('/mod/flashcard/view.php', $params);
+    $row[] = new tabobject('play', $taburl, $tabname);
+}
 
-$tabname = get_string('freegame', 'flashcard');
-$params = array('view' => 'freeplay', 'id' => $cm->id);
-$taburl = new moodle_url('/mod/flashcard/view.php', $params);
-$row[] = new tabobject('freeplay', $taburl, $tabname);
+if ($flashcard->models | FLASHCARD_MODEL_FREEUSE) {
+    $tabname = get_string('freegame', 'flashcard');
+    $params = array('view' => 'freeplay', 'id' => $cm->id);
+    $taburl = new moodle_url('/mod/flashcard/view.php', $params);
+    $row[] = new tabobject('freeplay', $taburl, $tabname);
+}
 
 if (has_capability('mod/flashcard:manage', $context)) {
 
@@ -290,11 +295,9 @@ if ($course->format == 'page') {
     page_print_page_format_navigation($cm, $backtocourse = false);
 } else {
     if ($COURSE->format != 'singleactivity') {
-        echo '<div style="text-align:center;margin:8px">';
         $buttonurl = new moodle_url('/course/view.php', array('id' => $course->id));
         $label = get_string('backtocourse', 'flashcard');
-        echo $OUTPUT->single_button($buttonurl, $label, 'post', array('class' => 'backtocourse'));
-        echo '</div>';
+        echo $OUTPUT->single_button($buttonurl, $label, 'post', array('class' => 'flashcard-backtocourse'));
     }
 }
 
