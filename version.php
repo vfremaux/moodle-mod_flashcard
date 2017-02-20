@@ -17,13 +17,13 @@
 /**
  * Version details.
  *
- * @package mod_flashcard
- * @category mod
- * @author     Tomasz Muras
- * @author     Valery Fremaux (valery.fremaux@gmail.com)
- * @copyright 2011 onwards Tomasz Muras
- * @copyright 2013 onwards Valery Fremaux (valery.fremaux@gmail.com)
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package     mod_flashcard
+ * @category    mod
+ * @author      Tomasz Muras
+ * @author      Valery Fremaux (valery.fremaux@gmail.com)
+ * @copyright   2011 onwards Tomasz Muras
+ * @copyright   2013 onwards Valery Fremaux (valery.fremaux@gmail.com)
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
@@ -36,4 +36,4 @@ $plugin->release = '3.1.0 (Build 2017022000)';
 $plugin->maturity = MATURITY_STABLE;
 
 // Non Moodle attributes.
-$plugin->codeincrement = '3.1.0000';
+$plugin->codeincrement = '3.1.0001';

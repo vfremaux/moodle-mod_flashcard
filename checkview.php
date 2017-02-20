@@ -45,8 +45,8 @@ if (!$decks = flashcard_get_deck_status($flashcard)) {
         echo $OUTPUT->notification(get_string('nocards', 'flashcard'));
         echo $OUTPUT->continue_button($url);
     }
+} else {
+    echo '<center>';
+    echo $renderer->check_decks($flashcard, $cm, $decks);
+    echo '</center>';
 }
-
-echo '<center>';
-echo $renderer->check_decks($flashcard, $cm, $decks);
-echo '</center>';

@@ -161,14 +161,14 @@ if (!preg_match("/summary|freeplay|play|checkdecks|manage|edit/", $view)) {
     $view = 'checkdecks';
 }
 
-if ($flashcard->models | FLASHCARD_MODEL_LEITNER) {
+if ($flashcard->models & FLASHCARD_MODEL_LEITNER) {
     $tabname = get_string('leitnergame', 'flashcard');
     $params = array('id' => $cm->id, 'view' => 'checkdecks');
     $taburl = new moodle_url('/mod/flashcard/view.php', $params);
     $row[] = new tabobject('play', $taburl, $tabname);
 }
 
-if ($flashcard->models | FLASHCARD_MODEL_FREEUSE) {
+if ($flashcard->models & FLASHCARD_MODEL_FREEUSE) {
     $tabname = get_string('freegame', 'flashcard');
     $params = array('view' => 'freeplay', 'id' => $cm->id);
     $taburl = new moodle_url('/mod/flashcard/view.php', $params);

@@ -268,10 +268,12 @@ class mod_flashcard_mod_form extends moodleform_mod {
     }
 
     public function set_data($data) {
+        global $CFG;
 
         if ($data->coursemodule) {
             $context = context_module::instance($data->coursemodule);
 
+            $maxbytes = $CFG->maxbytes;
             $options = array('subdirs' => 0, 'maxbytes' => $maxbytes, 'maxfiles' => 1);
 
             $draftitemid = file_get_submitted_draft_itemid('customfront');
