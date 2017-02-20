@@ -14,8 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * A form to import textual cards from a csv file
  *
@@ -24,6 +22,8 @@ defined('MOODLE_INTERNAL') || die();
  * @author Valery Fremaux (valery.fremaux@gmail.com) http://www.mylearningfactory.com
  * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
  */
+defined('MOODLE_INTERNAL') || die();
+
 require_once($CFG->libdir.'/formslib.php');
 
 class flashcard_import_form extends moodleform {
@@ -33,18 +33,18 @@ class flashcard_import_form extends moodleform {
         $mform =& $this->_form;
 
         // Course module id.
-        $mform->addElement('hidden', 'id'); 
+        $mform->addElement('hidden', 'id');
         $mform->setType('id', PARAM_TEXT);
 
         // Current active view.
-        $mform->addElement('hidden', 'view'); 
+        $mform->addElement('hidden', 'view');
         $mform->setType('view', PARAM_TEXT);
 
         // MVC Action keyword.
-        $mform->addElement('hidden', 'what'); 
+        $mform->addElement('hidden', 'what');
         $mform->setType('what', PARAM_TEXT);
 
-        $mform->addElement('header', 'cardimport', ''); 
+        $mform->addElement('header', 'cardimport', '');
 
         $fieldsepoptions[0] = ',';
         $fieldsepoptions[1] = ':';
