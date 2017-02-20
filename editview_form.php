@@ -17,10 +17,10 @@
 /**
  * A form to edit one card or adding one or three cards
  *
- * @package mod_flashcard
- * @category mod
- * @author Valery Fremaux (valery.fremaux@gmail.com) http://www.mylearningfactory.com
- * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
+ * @package     mod_flashcard
+ * @category    mod
+ * @author      Valery Fremaux (valery.fremaux@gmail.com) http://www.mylearningfactory.com
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU Public License
  */
 defined('MOODLE_INTERNAL') || die();
 
@@ -29,10 +29,8 @@ require_once($CFG->libdir.'/formslib.php');
 class CardEdit_Form extends moodleform {
 
     public function definition() {
-        global $DB, $OUTPUT;
 
         $mform = $this->_form;
-        $flashcard = $this->_customdata['flashcard'];
 
         // Course module id.
         $mform->addElement('hidden', 'id');
@@ -84,8 +82,6 @@ class CardEdit_Form extends moodleform {
         $sideprefix = substr($side, 0, 1);
         $key = $side.'smediatype';
         $mediatype = $this->_customdata['flashcard']->$key;
-
-        $maxbytes = 100000;
 
         if ($mediatype == FLASHCARD_MEDIA_IMAGE) {
             $options = array('maxfiles' => 1, 'maxbytes' => $COURSE->maxbytes, 'accepted_types' => array('.jpg', '.png', '.gif'));

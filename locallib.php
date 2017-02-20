@@ -42,7 +42,7 @@ define('FLASHCARD_MODEL_FREEUSE', 0x02);
  * @uses $CFG, $DB
  */
 function flashcard_get_lastaccessed(&$flashcard, $deck, $userid = 0) {
-    global $USER, $CFG, $DB;
+    global $USER, $DB;
 
     if ($userid == 0) {
         $userid = $USER->id;
@@ -256,7 +256,7 @@ function flashcard_get_card_status(&$flashcard) {
     $accesses = $DB->get_records_sql($sql, array($flashcard->id));
 
     $cards = array();
-    foreach ($recs as $questionid => $rec) {
+    foreach (array_values($recs) as $rec) {
         if ($rec->deck == 1) {
             $cards[$rec->question]->deck[0] = $rec->amount;
         }
@@ -279,7 +279,7 @@ function flashcard_get_card_status(&$flashcard) {
  * @TODO : remove as deprecated. Dewplayer more stable.
  */
 function flashcard_mp3_player(&$flashcard, $url, $htmlid) {
-    global $CFG, $THEME;
+    global $CFG;
 
     $audiostart = ($flashcard->audiostart) ? 'no' : 'yes&autoPlay=yes';
     $c = 'bgColour=000000&btnColour=ffffff&btnBorderColour=cccccc&iconColour=000000&'.
@@ -304,7 +304,7 @@ function flashcard_mp3_player(&$flashcard, $url, $htmlid) {
 }
 
 function flashcard_mp3_dewplayer(&$flashcard, $url, $htmlid) {
-    global $CFG, $THEME;
+    global $CFG;
 
     $audiostart = ($flashcard->audiostart) ? 1 : 0;
 

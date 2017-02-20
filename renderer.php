@@ -31,12 +31,9 @@ require_once($CFG->dirroot.'/repository/lib.php');
 class mod_flashcard_renderer extends plugin_renderer_base {
 
     public function filepicker($elname, $value, $contextid, $filearea, $cardid, $maxbytes, $acceptedtypes = '*') {
-        global $COURSE, $PAGE, $USER;
+        global $COURSE, $PAGE;
 
         $str = '';
-
-        $usercontext = context_user::instance($USER->id);
-        $fs = get_file_storage();
 
         // No existing area info provided - let's use fresh new draft area.
         if ($value) {
@@ -419,8 +416,6 @@ class mod_flashcard_renderer extends plugin_renderer_base {
     public function print_image(&$flashcard, $imagefileid) {
         global $CFG;
 
-        $strmissingimage = get_string('missingimage', 'flashcard');
-
         $fs = get_file_storage();
 
         // New way : probably no effective fielids storage needed anymore.
@@ -459,8 +454,6 @@ class mod_flashcard_renderer extends plugin_renderer_base {
      */
     public function play_sound(&$flashcard, $soundfileid, $autostart = 'false', $htmlname = '') {
         global $CFG;
-
-        $strmissingsound = get_string('missingsound', 'flashcard');
 
         $fs = get_file_storage();
 
@@ -509,8 +502,6 @@ class mod_flashcard_renderer extends plugin_renderer_base {
 
     public function play_video(&$flashcard, $videofileid, $autostart = 'false', $htmlname = '', $thumb = false) {
         global $CFG;
-
-        $strmissingvid = get_string('missingvid', 'flashcard');
 
         $fs = get_file_storage();
 
@@ -605,7 +596,7 @@ class mod_flashcard_renderer extends plugin_renderer_base {
     }
 
     public function playview(&$flashcard, &$cm, &$cards, &$subquestions) {
-        global $DB, $COURSE;
+        global $DB;
 
         $thisurl = new moodle_url('/mod/flashcard/view.php');
         $deck = required_param('deck', PARAM_INT);
@@ -791,7 +782,6 @@ class mod_flashcard_renderer extends plugin_renderer_base {
         $str = '';
 
         $boostrapdivider = 12 / $flashcard->decks;
-
 
         $str .= '<div class="container-fluid m-b-1">'; // Table.
         $str .= '<div class="row-fluid">'; // Row.
