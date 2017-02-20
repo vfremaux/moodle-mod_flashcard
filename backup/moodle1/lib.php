@@ -80,21 +80,21 @@ class moodle1_mod_flashcard_handler extends moodle1_mod_handler {
      * data available
      */
     public function process_flashcard($data) {
-        // get the course module id and context id
+        // Get the course module id and context id.
         $instanceid     = $data['id'];
         $cminfo         = $this->get_cminfo($instanceid);
         $this->moduleid = $cminfo['id'];
         $contextid      = $this->converter->get_contextid(CONTEXT_MODULE, $this->moduleid);
 
-        // get a fresh new file manager for this instance
+        // Get a fresh new file manager for this instance.
         $this->fileman = $this->converter->get_file_manager($contextid, 'mod_flashcard');
 
-        // convert course files embedded into the intro
+        // Convert course files embedded into the intro.
         $this->fileman->filearea = 'intro';
         $this->fileman->itemid   = 0;
         $data['intro'] = moodle1_converter::migrate_referenced_files($data['intro'], $this->fileman);
 
-        // start writing flashcard.xml
+        // Start writing flashcard.xml.
         $this->open_xml_writer("activities/flashcard_{$this->moduleid}/flashcard.xml");
         $this->xmlwriter->begin_tag('activity', array('id' => $instanceid, 'moduleid' => $this->moduleid,
             'modulename' => 'flashcard', 'contextid' => $contextid));
@@ -120,15 +120,15 @@ class moodle1_mod_flashcard_handler extends moodle1_mod_handler {
 
         $contextid = $this->converter->get_contextid(CONTEXT_MODULE, $this->moduleid);
 
-        // get a fresh new file manager for this instance
+        // Get a fresh new file manager for this instance.
         $this->fileman = $this->converter->get_file_manager($contextid, 'mod_flashcard');
 
-        // convert course files embedded into the intro
+        // Convert course files embedded into the intro.
         $this->fileman->filearea = 'answertext';
         $this->fileman->itemid   = 0;
         $data['intro'] = moodle1_converter::migrate_referenced_files($data['answertext'], $this->fileman);
 
-        // convert course files embedded into the intro
+        // Convert course files embedded into the intro.
         $this->fileman->filearea = 'responsetext';
         $this->fileman->itemid   = 0;
         $data['intro'] = moodle1_converter::migrate_referenced_files($data['responsetext'], $this->fileman);
@@ -138,13 +138,13 @@ class moodle1_mod_flashcard_handler extends moodle1_mod_handler {
      * This is executed when we reach the closing </MOD> tag of our 'flashcard' path
      */
     public function on_flashcard_end() {
-        // finish writing flashcard.xml
+        // Finish writing flashcard.xml.
         $this->xmlwriter->end_tag('group_deck');
         $this->xmlwriter->end_tag('flashcard');
         $this->xmlwriter->end_tag('activity');
         $this->close_xml_writer();
 
-        // write inforef.xml
+        // Write inforef.xml.
         $this->open_xml_writer("activities/flashcard_{$this->moduleid}/inforef.xml");
         $this->xmlwriter->begin_tag('inforef');
         $this->xmlwriter->begin_tag('fileref');

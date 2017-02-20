@@ -17,23 +17,23 @@
 /**
  * Version details.
  *
- * @package mod_flashcard
- * @category mod
- * @author     Tomasz Muras
- * @author     Valery Fremaux (valery.fremaux@gmail.com)
- * @copyright 2011 onwards Tomasz Muras
- * @copyright 2013 onwards Valery Fremaux (valery.fremaux@gmail.com)
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package     mod_flashcard
+ * @category    mod
+ * @author      Tomasz Muras
+ * @author      Valery Fremaux (valery.fremaux@gmail.com)
+ * @copyright   2011 onwards Tomasz Muras
+ * @copyright   2013 onwards Valery Fremaux (valery.fremaux@gmail.com)
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version  = 2015061200;  // The current module version (Date: YYYYMMDDXX)
-$plugin->requires = 2016052300;  // Requires this Moodle version (2.3 and above)
-$plugin->cron     = 1; // Period for cron to check this module (secs)
-$plugin->component = 'mod_flashcard'; // Full name of the plugin (used for diagnostics)
-$plugin->release = '3.1.0 (Build 2015061200)';
+$plugin->version  = 2017022000;  // The current module version (Date: YYYYMMDDXX).
+$plugin->requires = 2016052300;  // Requires this Moodle version (2.3 and above).
+$plugin->cron     = 1; // Period for cron to check this module (secs).
+$plugin->component = 'mod_flashcard'; // Full name of the plugin (used for diagnostics).
+$plugin->release = '3.1.0 (Build 2017022000)';
 $plugin->maturity = MATURITY_STABLE;
 
 // Non Moodle attributes.
-$plugin->codeincrement = '3.1.0000';
+$plugin->codeincrement = '3.1.0001';
