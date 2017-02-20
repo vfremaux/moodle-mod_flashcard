@@ -14,8 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * This view allows free playing with a deck
  *
@@ -24,8 +22,10 @@ defined('MOODLE_INTERNAL') || die();
  * @author Gustav Delius
  * @author Valery Fremaux
  */
+defined('MOODLE_INTERNAL') || die();
 
 $subquestions = $DB->get_records('flashcard_deckdata', array('flashcardid' => $flashcard->id));
+
 if (empty($subquestions)) {
     echo $out;
     echo $OUTPUT->notification(get_string('nosubquestions', 'flashcard'));
@@ -42,7 +42,7 @@ echo $out;
 
 if (!empty($flashcard->summary)) {
     echo $OUTPUT->box_start();
-    echo format_text($flashcard->summary, $flashcard->summaryformat, NULL, $course->id);
+    echo format_text($flashcard->summary, $flashcard->summaryformat, null, $course->id);
     echo $OUTPUT->box_end();
 }
 
@@ -61,15 +61,11 @@ var atype = "<?php echo $flashcard->answersmediatype ?>";
 <script src="<?php echo $CFG->wwwroot.'/mod/flashcard/js/module.js' ?>"></script>
 
 <p><?php print_string('freeplayinstructions', 'flashcard'); ?>.</p>
-
-<style>
-    <?php echo $flashcard->extracss ?>
-</style>
-
-<table class="flashcard_board" width="100%">
-    <tr>
-        <td rowspan="6">
 <?php
+echo '<table class="flashcard_board" width="100%">';
+echo '<tr>';
+echo '<td rowspan="6">';
+
 $i = 0;
 
 if ($flashcard->flipdeck) {
@@ -82,10 +78,12 @@ if ($flashcard->flipdeck) {
 foreach ($subquestions as $subquestion) {
     echo '<center>';
     $divid = "f$i";
-    $divstyle = ($i > 0) ? 'display:none' : '' ;
-    echo '<div id="'.$divid.'" ';
-    echo 'class="flashcard-question" style="'.$divstyle.';background-repeat:no-repeat;background-image:url('.$renderer->print_custom_url($flashcard, 'customback', 0).')" ';
-    echo ' onclick="javascript:clicked(\'f\', \''.$i.'\')">';
+    $divstyle = ($i > 0) ? 'display:none' : '';
+    $imageurl = $renderer->print_custom_url($flashcard, 'customback', 0);
+    echo '<div id="'.$divid.'"
+               class="flashcard-question"
+               style="'.$divstyle.';background-repeat:no-repeat;background-image:url('.$imageurl.')"
+               onclick="javascript:clicked(\'f\', \''.$i.'\')">';
 
     $back = 'question';
     $front = 'answer';
@@ -109,104 +107,68 @@ foreach ($subquestions as $subquestion) {
         $subquestion->answertext = $subquestion->questiontext;
         $subquestion->questiontext = $tmp;
     }
-?>
-            <table width="100%" height="100%">
-                <tr>
-                    <td align="center" valign="center">
-                        <?php
-                        if ($flashcard->questionsmediatype == FLASHCARD_MEDIA_IMAGE) {
-                            echo $renderer->print_image($flashcard, "{$back}imagefile/{$subquestion->id}");
-                        } elseif ($flashcard->questionsmediatype == FLASHCARD_MEDIA_SOUND) {
-                            echo $renderer->play_sound($flashcard, "{$back}soundfile/{$subquestion->id}", 'false', false, "bell_b$i");
-                        } elseif ($flashcard->questionsmediatype == FLASHCARD_MEDIA_VIDEO) {
-                            echo $renderer->play_video($flashcard, "{$back}videofile/{$subquestion->id}", $autoplay, false, "bell_b$i");
-                        } elseif ($flashcard->questionsmediatype == FLASHCARD_MEDIA_IMAGE_AND_SOUND) {
-                            echo $renderer->print_image($flashcard, "{$back}imagefile/{$subquestion->id}");
-                            echo "<br/>";
-                            echo $renderer->play_sound($flashcard, "{$back}soundfile/{$subquestion->id}", $autoplay, false, "bell_b$i");
-                        } else {
-                            echo format_text($subquestion->questiontext,FORMAT_HTML);
-                        }
-                        ?>
-                    </td>
-                </tr>
-            </table>
-            </div>
-            </center>
-            <center>
-<?php
-        echo "<div id=\"b{$i}\" ";
-        echo 'class="flashcard-answer" style="display:none;background-repeat:no-repeat;background-image:url('.$renderer->print_custom_url($flashcard, 'customfront', 0).')" ';
-        echo " onclick=\"javascript:clicked('b', '{$i}')\">";
-?>
-            <table width="100%" height="100%">
-                <tr>
-                    <td align="center" valign="center" style="">
-                        <?php 
-                        if ($flashcard->answersmediatype == FLASHCARD_MEDIA_IMAGE) {
-                            echo $renderer->print_image($flashcard, "{$front}imagefile/{$subquestion->id}");
-                        } elseif ($flashcard->answersmediatype == FLASHCARD_MEDIA_SOUND) {
-                            echo $renderer->play_sound($flashcard, "{$front}soundfile/{$subquestion->id}", 'false', false, "bell_f$i");
-                        } elseif ($flashcard->answersmediatype == FLASHCARD_MEDIA_VIDEO) {
-                            echo $renderer->play_video($flashcard, "{$front}videofile/{$subquestion->id}", $autoplay, false, "bell_f$i");
-                        } elseif ($flashcard->answersmediatype == FLASHCARD_MEDIA_IMAGE_AND_SOUND) {
-                            echo $renderer->print_image($flashcard, "{$front}imagefile/{$subquestion->id}");
-                            echo "<br/>";
-                            echo $renderer->play_sound($flashcard, "{$front}soundfile/{$subquestion->id}", $autoplay, false, "bell_f$i");
-                        } else {
-                            echo format_text($subquestion->answertext,FORMAT_HTML);
-                        }
-                        ?>
-                    </td>
-                </tr>
-            </table>
-            </div>
-            </center>
-<?php
+
+    echo '<table width="100%" height="100%">';
+    echo '<tr>';
+    echo '<td align="center" valign="center">';
+    if ($flashcard->questionsmediatype == FLASHCARD_MEDIA_IMAGE) {
+        echo $renderer->print_image($flashcard, "{$back}imagefile/{$subquestion->id}");
+    } else if ($flashcard->questionsmediatype == FLASHCARD_MEDIA_SOUND) {
+        echo $renderer->play_sound($flashcard, "{$back}soundfile/{$subquestion->id}", 'false', false, "bell_b$i");
+    } else if ($flashcard->questionsmediatype == FLASHCARD_MEDIA_VIDEO) {
+        echo $renderer->play_video($flashcard, "{$back}videofile/{$subquestion->id}", $autoplay, false, "bell_b$i");
+    } else if ($flashcard->questionsmediatype == FLASHCARD_MEDIA_IMAGE_AND_SOUND) {
+        echo $renderer->print_image($flashcard, "{$back}imagefile/{$subquestion->id}");
+        echo "<br/>";
+        echo $renderer->play_sound($flashcard, "{$back}soundfile/{$subquestion->id}", $autoplay, false, "bell_b$i");
+    } else {
+        echo format_text($subquestion->questiontext, FORMAT_HTML);
+    }
+    echo '</td>';
+    echo '</tr>';
+    echo '</table>';
+    echo '</div>';
+    echo '</center>';
+    echo '<center>';
+
+    $imageurl = $renderer->print_custom_url($flashcard, 'customfront', 0);
+    echo '<div id="b'.$i.'"
+               class="flashcard-answer"
+               style="display:none;background-repeat:no-repeat;background-image:url('.$imageurl.')"
+               onclick="javascript:clicked(\'b\', \''.$i.'\')">';
+    echo '<table width="100%" height="100%">';
+    echo '<tr>';
+    echo '<td align="center" valign="center" style="">';
+
+    if ($flashcard->answersmediatype == FLASHCARD_MEDIA_IMAGE) {
+        echo $renderer->print_image($flashcard, "{$front}imagefile/{$subquestion->id}");
+    } else if ($flashcard->answersmediatype == FLASHCARD_MEDIA_SOUND) {
+        echo $renderer->play_sound($flashcard, "{$front}soundfile/{$subquestion->id}", 'false', false, "bell_f$i");
+    } else if ($flashcard->answersmediatype == FLASHCARD_MEDIA_VIDEO) {
+        echo $renderer->play_video($flashcard, "{$front}videofile/{$subquestion->id}", $autoplay, false, "bell_f$i");
+    } else if ($flashcard->answersmediatype == FLASHCARD_MEDIA_IMAGE_AND_SOUND) {
+        echo $renderer->print_image($flashcard, "{$front}imagefile/{$subquestion->id}");
+        echo "<br/>";
+        echo $renderer->play_sound($flashcard, "{$front}soundfile/{$subquestion->id}", $autoplay, false, "bell_f$i");
+    } else {
+        echo format_text($subquestion->answertext, FORMAT_HTML);
+    }
+
+    echo '</td>';
+    echo '</tr>';
+    echo '</table>';
+    echo '</div>';
+    echo '</center>';
+
     $i++;
 }
-?>
-            <center>
-            <div id="finished" style="display: none;" class="finished">
-            <table width="100%" height="100%">
-                <tr>
-                    <td align="center" valign="middle" class="emptyset">
-                        <?php print_string('emptyset', 'flashcard'); ?>
-                    </td>
-                </tr>
-            </table>
-            </div>
-            </center>
-        </td>
-    </tr>
-    <tr>
-        <td width="200px">
-            <p><?php print_string('cardsremaining', 'flashcard'); ?>: <span id="remain"><?php echo count($subquestions);?></span></p>
-        </td>
-    </tr>
-    <tr>
-        <td width="200px">
-            <input id="next" type="button" value="<?php print_string('next', 'flashcard') ?>" onclick="javascript:next_card()" />
-        </td>
-    </tr>
-    <tr>
-        <td width="200px">
-            <input id="previous" type="button" value="<?php print_string('previous', 'flashcard') ?>" onclick="javascript:previous_card()" />
-        </td>
-    </tr>
-    <tr>
-        <td width="200px">
-            <input id="remove" type="button" value="<?php print_string('removecard', 'flashcard') ?>" onclick="javascript:remove_card()" />
-        </td>
-    </tr>
-    <tr>
-        <td width="200px">
-            <input type="button" value="<?php print_string('reset', 'flashcard') ?>" onclick="javascript:location.reload()" />
-        </td>
-    </tr>
-    <tr>
-        <td width="200px" align="center" colspan="2">
-            <br/><a href="<?php echo $CFG->wwwroot ?>/course/view.php?id=<?php echo $course->id ?>"><?php print_string('backtocourse', 'flashcard') ?></a>
-        </td>
-      </tr>
-</table>
+
+echo '<center>';
+echo $renderer->finishtable();
+echo '</center>';
+echo '</td>';
+echo '</tr>';
+
+echo $renderer->freebuttons($subquestions);
+
+echo '</table>';
