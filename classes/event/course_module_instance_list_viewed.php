@@ -27,11 +27,6 @@ defined('MOODLE_INTERNAL') || die();
 
 /**
  * mod_flashcard course module instance list event class.
- *
- * @package    mod_flashcard
- * @since      Moodle 2.7
- * @copyright  2013 onwards Ankit Agarwal
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class course_module_instance_list_viewed extends \core\event\course_module_instance_list_viewed {
 }
