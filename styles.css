@@ -78,7 +78,6 @@
     border-style: dashed;
     display: table-cell;
     height: 400px;
-    margin: 10px auto 10px auto;
     padding: 10px 30px;
     vertical-align:middle;
     width: 600px;
@@ -87,7 +86,7 @@
 .flowplayer {
     background-color: #222;
     background-size: cover;
-    margin-bottom:30px
+    margin-bottom:30px;
     width: 80%;
 }
 .flowplayer .fp-controls { background-color: rgba(17, 17, 17, 1)}
@@ -112,9 +111,9 @@
 }
 
 .flashcard-backtocourse {
-    text-align:center;
     margin:8px;
     padding-top:20px;
+    text-align:center;
 }
 
 .flashcard-card-form .ffilepicker {
