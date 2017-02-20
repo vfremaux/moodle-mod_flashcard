@@ -89,10 +89,9 @@ function flashcard_supports($feature) {
  * (defined by the form in mod.html) this function
  * will create a new instance and return the id number
  * of the new instance.
- * @uses $COURSE, $DB
  */
 function flashcard_add_instance($flashcard) {
-    global $COURSE, $DB;
+    global $DB;
 
     $flashcard->timemodified = time();
 
@@ -129,10 +128,9 @@ function flashcard_add_instance($flashcard) {
  * Given an object containing all the necessary data,
  * (defined by the form in mod.html) this function
  * will update an existing instance with new data.
- * @uses $COURSE, $DB
  */
 function flashcard_update_instance($flashcard) {
-    global $COURSE, $DB;
+    global $DB;
 
     $flashcard->timemodified = time();
     $flashcard->id = $flashcard->instance;
@@ -171,10 +169,9 @@ function flashcard_update_instance($flashcard) {
  * Given an ID of an instance of this module,
  * this function will permanently delete the instance
  * and any data that depends on it.
- * @uses $COURSE, $DB
  */
 function flashcard_delete_instance($id) {
-    global $COURSE, $DB;
+    global $DB;
 
     if (!$flashcard = $DB->get_record('flashcard', array('id' => $id))) {
         return false;
@@ -210,6 +207,7 @@ function flashcard_delete_instance($id) {
  * $return->info = a short text description
  */
 function flashcard_user_outline($course, $user, $mod, $flashcard) {
+    global $DB;
 
     $params = array('userid' => $user->id, 'flashcardid' => $flashcard->id);
     if ($lastaccess = $DB->get_field('flashcard_card', 'MAX(lastaccessed)', $params)) {
@@ -266,8 +264,6 @@ function flashcard_user_complete($course, $user, $mod, $flashcard) {
  * @return boolean True if the scale is used by any assignment
  */
 function flashcard_scale_used_anywhere($scaleid) {
-    global $DB;
-
     return false;
 }
 
@@ -281,8 +277,6 @@ function flashcard_scale_used_anywhere($scaleid) {
  * @uses $CFG
  */
 function flashcard_print_recent_activity($course, $isteacher, $timestart) {
-    global $CFG;
-
     return false; // True if anything was printed, otherwise false.
 }
 
@@ -352,7 +346,6 @@ function flashcard_cron() {
                 foreach ($users as $u) {
                     $decks = flashcard_get_deck_status($flashcard, $u->id);
                     foreach ($decks->decks as $deck) {
-                        $sendnotif = 0;
                         if (@$deck->reactivate) {
                             $params = array('userid' => $u->id, 'flashcardid' => $flashcard->id, 'deck' => $deck->deckid);
                             if ($state = $DB->get_record('flashcard_userdeck_state', $params)) {
@@ -473,7 +466,7 @@ function flashcard_scale_used($flashcardid, $scaleid) {
  * @return bool false if file not found, does not return if found - justsend the file
  */
 function flashcard_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload) {
-    global $CFG, $DB;
+    global $DB;
 
     require_login($course);
 
@@ -527,7 +520,7 @@ function flashcard_pluginfile($course, $cm, $context, $filearea, $args, $forcedo
  *   value depends on comparison type)
  */
 function flashcard_get_completion_state($course, $cm, $userid, $type) {
-    global $CFG, $DB;
+    global $DB;
 
     // Get flashcard details.
     if (!($flashcard = $DB->get_record('flashcard', array('id' => $cm->instance)))) {
@@ -598,7 +591,7 @@ function flashcard_get_completion_state($course, $cm, $userid, $type) {
  * @return array status array
  */
 function flashcard_reset_userdata($data) {
-    global $CFG, $DB;
+    global $DB;
 
     $componentstr = get_string('modulenameplural', 'flashcard');
     $status = array();

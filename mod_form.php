@@ -352,7 +352,7 @@ class mod_flashcard_mod_form extends moodleform_mod {
     }
 
     public function validation($data, $files = array()) {
-        $errors = array();
+        $errors = parent::validation($data, $files);
 
         if ($data['starttime'] > $data['endtime']) {
             $errors['endfrom'] = get_string('mustbehigherthanstart', 'flashcard');
