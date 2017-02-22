@@ -14,8 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * This view provides a summary for the teacher
  *
@@ -24,11 +22,11 @@ defined('MOODLE_INTERNAL') || die();
  * @author Valery Fremaux, Gustav Delius
  * @contributors
  * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
- * @version Moodle 2.0
  */
+defined('MOODLE_INTERNAL') || die();
 
-// Deffered header().
-echo $out; 
+// Deffered header.
+echo $out;
 
 $cards = flashcard_get_card_status($flashcard);
 

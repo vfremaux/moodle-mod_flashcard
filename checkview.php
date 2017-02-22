@@ -14,11 +14,9 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * This view allows checking deck states
- * 
+ *
  * @package mod_flashcard
  * @category mod
  * @author Gustav Delius
@@ -26,6 +24,7 @@ defined('MOODLE_INTERNAL') || die();
  * @version Moodle 2.0
  * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
  */
+defined('MOODLE_INTERNAL') || die();
 
 // Print deferred header.
 
@@ -43,110 +42,11 @@ if (!$decks = flashcard_get_deck_status($flashcard)) {
         } else {
             $url = new moodle_url('/course/view.php', array('id' => $course->id));
         }
-        echo $OUTPUT->notification(get_string('nocards', 'flashcard'), $url);
+        echo $OUTPUT->notification(get_string('nocards', 'flashcard'));
+        echo $OUTPUT->continue_button($url);
     }
+} else {
+    echo '<center>';
+    echo $renderer->check_decks($flashcard, $cm, $decks);
+    echo '</center>';
 }
-?>
-
-<center>
-<table width="90%" cellspacing="10">
-    <tr>
-        <th>
-            <?php print_string('difficultcards', 'flashcard') ?>
-        </th>
-<?php
-if ($flashcard->decks >= 3) {
-?>
-        <th>
-            <?php print_string('mediumeffortcards', 'flashcard') ?>
-        </th>
-<?php
-}
-?>
-        <th>
-            <?php print_string('easycards', 'flashcard') ?>
-        </th>
-<?php
-if ($flashcard->decks >= 4) {
-?>
-        <th>
-            <?php print_string('trivialcards', 'flashcard') ?>
-        </th>
-<?php
-}
-?>
-    </tr>
-    <tr valign="top">
-        <td>
-            <?php
-                print_string('cardsindeck', 'flashcard', 0 + @$decks->decks[0]->count);
-                echo "<br/>";
-                if (@$decks->decks[0]->count == 0) {
-                     echo $renderer->print_deck($flashcard, $cm, 0);
-                } else {
-                    if ($decks->decks[0]->reactivate) {
-                        echo $renderer->print_deck($flashcard, $cm, 1);
-                    } else {
-                        echo $renderer->print_deck($flashcard, $cm, -1);
-                    }
-                }
-            ?>
-        </td>
-        <td>
-            <?php
-                print_string('cardsindeck', 'flashcard', 0 + @$decks->decks[1]->count);
-                echo "<br/>";
-                if (@$decks->decks[1]->count == 0) {
-                     echo $renderer->print_deck($flashcard, $cm, 0);
-                } else {
-                    if ($decks->decks[1]->reactivate) {
-                        echo $renderer->print_deck($flashcard, $cm, 2);
-                    } else {
-                        echo $renderer->print_deck($flashcard, $cm, -2);
-                    }
-                }
-            ?>
-        </td>
-<?php
-if ($flashcard->decks >= 3) {
-?>
-        <td>
-            <?php
-                print_string('cardsindeck', 'flashcard', 0 + @$decks->decks[2]->count);
-                echo "<br/>";
-                if (@$decks->decks[2]->count == 0) {
-                     echo $renderer->print_deck($flashcard, $cm, 0);
-                } else {
-                    if ($decks->decks[2]->reactivate) {
-                        echo $renderer->print_deck($flashcard, $cm, 3);
-                    } else {
-                        echo $renderer->print_deck($flashcard, $cm, -3);
-                    }
-                }
-            ?>
-        </td>
-<?php
-}
-if ($flashcard->decks >= 4) {
-?>
-        <td>
-            <?php
-                print_string('cardsindeck', 'flashcard', 0 + @$decks->decks[3]->count);
-                echo "<br/>";
-                if (@$decks->decks[3]->count == 0){
-                     echo $renderer->print_deck($flashcard, $cm, 0);
-                } else {
-                    if ($decks->decks[3]->reactivate){
-                        echo $renderer->print_deck($flashcard, $cm, 4);
-                    } else {
-                        echo $renderer->print_deck($flashcard, $cm, -4);
-                    }
-                }
-            ?>
-        </td>
-<?php
-}
-?>
-    </tr>
-</table>
-</center>
