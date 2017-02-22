@@ -29,11 +29,11 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->version  = 2017022000;  // The current module version (Date: YYYYMMDDXX).
-$plugin->requires = 2015111100;  // Requires this Moodle version (2.3 and above).
+$plugin->requires = 2015050500;  // Requires this Moodle version (2.3 and above).
 $plugin->cron     = 1; // Period for cron to check this module (secs).
 $plugin->component = 'mod_flashcard'; // Full name of the plugin (used for diagnostics).
-$plugin->release = '3.2.0 (Build 2017022000)';
+$plugin->release = '2.9.0 (Build 2017022000)';
 $plugin->maturity = MATURITY_STABLE;
 
 // Non Moodle attributes.
-$plugin->codeincrement = '3.2.0001';
+$plugin->codeincrement = '2.9.0001';
