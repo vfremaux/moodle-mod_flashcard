@@ -98,6 +98,8 @@ function xmldb_flashcard_upgrade($oldversion = 0) {
 
         // Launch create table for flashcard_card.
         $result = $result && $dbman->create_table($table);
+
+        upgrade_mod_savepoint(true, 2008050400, 'flashcard');
     }
 
     if ($oldversion < 2008050500) {
@@ -123,6 +125,8 @@ function xmldb_flashcard_upgrade($oldversion = 0) {
         $field = new xmldb_field('answersasimages');
         $field->set_attributes(XMLDB_TYPE_INTEGER, '1', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, '0', 'questionsasimages');
         $result = $result && $dbman->add_field($table, $field);
+
+        upgrade_mod_savepoint(true, 2008050500, 'flashcard');
     }
 
     if ($oldversion < 2008050501) {
@@ -134,6 +138,8 @@ function xmldb_flashcard_upgrade($oldversion = 0) {
         $field = new xmldb_field('decks');
         $field->set_attributes(XMLDB_TYPE_INTEGER, '3', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, '3', 'autodowngrade');
         $result = $result && $dbman->add_field($table, $field);
+
+        upgrade_mod_savepoint(true, 2008050501, 'flashcard');
     }
 
     if ($oldversion < 2008050800) {
@@ -152,6 +158,8 @@ function xmldb_flashcard_upgrade($oldversion = 0) {
 
         // Launch create table for flashcard_deckdata.
         $dbman->create_table($table);
+
+        upgrade_mod_savepoint(true, 2008050800, 'flashcard');
     }
 
     if ($oldversion < 2008050900) {
@@ -163,6 +171,8 @@ function xmldb_flashcard_upgrade($oldversion = 0) {
 
         // Launch add field accesscount.
         $dbman->add_field($table, $field);
+
+        upgrade_mod_savepoint(true, 2008050900, 'flashcard');
     }
 
     if ($oldversion < 2008051100) {
@@ -223,6 +233,8 @@ function xmldb_flashcard_upgrade($oldversion = 0) {
                 }
             }
         }
+
+        upgrade_mod_savepoint(true, 2012040200, 'flashcard');
     }
 
     // Then continue upgrade.
