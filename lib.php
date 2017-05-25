@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+defined('MOODLE_INTERNAL') || die();
+
 /**
  * Library of functions and constants for module flashcard
  * @package mod_flashcard
@@ -21,11 +23,11 @@
  * @author Gustav Delius
  * @contributors Valery Fremaux
  */
-defined('MOODLE_INTERNAL') || die();
-
 require_once($CFG->dirroot.'/lib/ddllib.php');
 require_once($CFG->dirroot.'/mod/flashcard/locallib.php');
 require_once($CFG->dirroot.'/mod/flashcard/mailtemplatelib.php');
+
+/** Include eventslib.php */
 require_once($CFG->libdir.'/eventslib.php');
 
 /**
@@ -44,32 +46,22 @@ require_once($CFG->libdir.'/eventslib.php');
  */
 function flashcard_supports($feature) {
     switch($feature) {
-        case FEATURE_GROUPS:
-            return true;
-        case FEATURE_GROUPINGS:
-            return false;
-        case FEATURE_GROUPMEMBERSONLY:
-            return false;
-        case FEATURE_MOD_INTRO:
-            return true;
-        case FEATURE_COMPLETION_TRACKS_VIEWS:
-            return true;
-        case FEATURE_COMPLETION_HAS_RULES:
-            return true;
-        case FEATURE_GRADE_HAS_GRADE:
-            return false;
-        case FEATURE_GRADE_OUTCOMES:
-            return false;
-        case FEATURE_RATE:
-            return false;
-        case FEATURE_BACKUP_MOODLE2:
-            return true;
-        case FEATURE_SHOW_DESCRIPTION:
-            return true;
-        default:
-            return null;
+        case FEATURE_GROUPS:                  return true;
+        case FEATURE_GROUPINGS:               return false;
+        case FEATURE_GROUPMEMBERSONLY:        return false;
+        case FEATURE_MOD_INTRO:               return true;
+        case FEATURE_COMPLETION_TRACKS_VIEWS: return true;
+        case FEATURE_COMPLETION_HAS_RULES:    return true;
+        case FEATURE_GRADE_HAS_GRADE:         return false;
+        case FEATURE_GRADE_OUTCOMES:          return false;
+        case FEATURE_RATE:                    return false;
+        case FEATURE_BACKUP_MOODLE2:          return true;
+        case FEATURE_SHOW_DESCRIPTION:        return true;
+
+        default: return null;
     }
 }
+
 
 /**
  * Given an object containing all the necessary data, 
@@ -92,12 +84,7 @@ function flashcard_add_instance($flashcard) {
     }
 
     // Saves draft customization image files into definitive filearea.
-    $customimages = array('custombackfileid',
-                          'customfrontfileid',
-                          'customemptyfileid',
-                          'customreviewfileid',
-                          'customreviewedfileid',
-                          'customreviewemptyfileid');
+    $customimages = array('custombackfileid', 'customfrontfileid', 'customemptyfileid', 'customreviewfileid', 'customreviewedfileid', 'customreviewemptyfileid');
     foreach ($customimages as $ci) {
         flashcard_save_draft_customimage($flashcard, $ci);
     }
@@ -140,12 +127,7 @@ function flashcard_update_instance($flashcard) {
     }
 
     // Saves draft customization image files into definitive filearea.
-    $customimages = array('custombackfileid',
-                          'customfrontfileid',
-                          'customemptyfileid',
-                          'customreviewfileid',
-                          'customreviewedfileid',
-                          'customreviewemptyfileid');
+    $customimages = array('custombackfileid', 'customfrontfileid', 'customemptyfileid', 'customreviewfileid', 'customreviewedfileid', 'customreviewemptyfileid');
     foreach ($customimages as $ci) {
         flashcard_save_draft_customimage($flashcard, $ci);
     }
@@ -199,8 +181,7 @@ function flashcard_delete_instance($id) {
  */
 function flashcard_user_outline($course, $user, $mod, $flashcard) {
 
-    $params = array('userid' => $user->id, 'flashcardid' => $flashcard->id);
-    if ($lastaccess = $DB->get_field('flashcard_card', 'MAX(lastaccessed)', $params)) {
+    if ($lastaccess = $DB->get_field('flashcard_card', 'MAX(lastaccessed)', array('userid' => $user->id, 'flashcardid' => $flashcard->id))) {
 
         $return->time = $lastaccess;
         $return->info = get_string('lastaccessed', 'flashcard');
@@ -211,7 +192,7 @@ function flashcard_user_outline($course, $user, $mod, $flashcard) {
 }
 
 /**
- * Print a detailed representation of what a  user has done with
+ * Print a detailed representation of what a  user has done with 
  * a given particular instance of this module, for user activity reports.
  * @param object $course
  * @param object $user User object
@@ -259,8 +240,8 @@ function flashcard_scale_used_anywhere($scaleid) {
 }
 
 /**
- * Given a course and a time, this module should find recent activity
- * that has occurred in flashcard activities and print it out.
+ * Given a course and a time, this module should find recent activity 
+ * that has occurred in flashcard activities and print it out. 
  * Return true if there was output, or false is there was none.
  * @param object $course
  * @param bool $isteacher
@@ -270,13 +251,15 @@ function flashcard_scale_used_anywhere($scaleid) {
 function flashcard_print_recent_activity($course, $isteacher, $timestart) {
     global $CFG;
 
-    return false;  //  True if anything was printed, otherwise false.
+    return false;  //  True if anything was printed, otherwise false 
 }
 
 /**
  * Function to be run periodically according to the moodle cron
- * This function searches for things that need to be done, such
- * as sending out mail, toggling flags etc ...
+ * This function searches for things that need to be done, such 
+ * as sending out mail, toggling flags etc ... 
+ * @uses $CFG
+ *
  */
 function flashcard_cron() {
     global $CFG, $DB, $SITE;
@@ -295,13 +278,13 @@ function flashcard_cron() {
         if ($flashcard->autodowngrade) {
             $cards = $DB->get_records_select('flashcard_card', 'flashcardid = ? AND deck > 1', array($flashcard->id));
             foreach ($cards as $card) {
-                // Downgrades to deck 3 (middle low).
+                // downgrades to deck 3 (middle low)
                 if ($flashcard->decks > 3) {
                     if ($card->deck == 4 && time() > $card->lastaccessed + ($flashcard->deck4_delay * HOURSECS + $flashcard->deck4_release * HOURSECS)) {
                         $DB->set_field('flashcard_card', 'deck', 3, array('id' => $card->id));
                     }
                 }
-                // Downgrades to deck 2 (middle).
+                // downgrades to deck 2 (middle)
                 if ($flashcard->decks > 2) {
                     if ($card->deck == 3 && time() > $card->lastaccessed + ($flashcard->deck3_delay * HOURSECS + $flashcard->deck3_release * HOURSECS)) {
                         $DB->set_field('flashcard_card', 'deck', 2, array('id' => $card->id));
@@ -336,8 +319,7 @@ function flashcard_cron() {
                     foreach ($decks->decks as $deck) {
                         $sendnotif = 0;
                         if (@$deck->reactivate) {
-                            $params = array('userid' => $u->id, 'flashcardid' => $flashcard->id, 'deck' => $deck->deckid);
-                            if ($state = $DB->get_record('flashcard_userdeck_state', $params)){
+                            if ($state = $DB->get_record('flashcard_userdeck_state', array('userid' => $u->id, 'flashcardid' => $flashcard->id, 'deck' => $deck->deckid))){
                                 if ($state->state) {
                                     continue;
                                 }
@@ -357,15 +339,11 @@ function flashcard_cron() {
                             $notification = flashcard_compile_mail_template('notifyreview', $vars, $u->lang);
                             $notification_html = flashcard_compile_mail_template('notifyreview_html', $vars, $u->lang);
                             if ($CFG->debugsmtp) {
-                                mtrace("Sending Review Notification Mail Notification to ".fullname($u).'<br/>'.$notification_html);
+                                mtrace("Sending Review Notification Mail Notification to " . fullname($u) . '<br/>'.$notification_html);
                             }
-                            $fcname = $SITE->shortname.':'.format_string($flashcard->name);
-                            $subject = get_string('flashcardneedsreview', 'flashcard', $fcname);
-                            email_to_user($u, $voiduser, $subject, $notification, $notification_html);
-
+                            email_to_user($u, $voiduser, get_string('flashcardneedsreview', 'flashcard', $SITE->shortname.':'.format_string($flashcard->name)), $notification, $notification_html);
                             // Mark it has been sent.
-                            $params = array('userid' => $u->id, 'flashcardid' => $flashcard->id, 'deck' => $deck->deckid);
-                            $DB->set_field('flashcard_userdeck_state', 'state', 1, $params);
+                            $DB->set_field('flashcard_userdeck_state', 'state', 1, array('userid' => $u->id, 'flashcardid' => $flashcard->id, 'deck' => $deck->deckid));
                             $notified++;
                         }
                     }
@@ -379,7 +357,7 @@ function flashcard_cron() {
 }
 
 /**
- * Must return an array of grades for a given instance of this module,
+ * Must return an array of grades for a given instance of this module, 
  * indexed by user.  It also returns a maximum allowed grade.
  *
  *    $return->grades = array of grades;
@@ -403,7 +381,7 @@ function flashcard_get_participants($flashcardid) {
 
     $sql = "
         SELECT DISTINCT
-            userid,
+            userid, 
             userid
         FROM
             {flashcard_card}
@@ -463,18 +441,18 @@ function flashcard_pluginfile($course, $cm, $context, $filearea, $args, $forcedo
         return false;
     }
 
-    $allfileareas = array('intro',
-                          'questionsoundfile',
-                          'questionimagefile',
-                          'questionvideofile',
-                          'answersoundfile',
-                          'answerimagefile',
-                          'answervideofile',
-                          'customfront',
-                          'customempty',
-                          'customback',
-                          'customreview',
-                          'customreviewed',
+    $allfileareas = array('intro', 
+                          'questionsoundfile', 
+                          'questionimagefile', 
+                          'questionvideofile', 
+                          'answersoundfile', 
+                          'answerimagefile', 
+                          'answervideofile', 
+                          'customfront', 
+                          'customempty', 
+                          'customback', 
+                          'customreview', 
+                          'customreviewed', 
                           'customreviewempty');
 
     if (!in_array($filearea, $allfileareas)) {
@@ -485,8 +463,7 @@ function flashcard_pluginfile($course, $cm, $context, $filearea, $args, $forcedo
 
     $fs = get_file_storage();
 
-    $sortfiles = 'sortorder, itemid, filepath, filename';
-    if ($files = $fs->get_area_files($context->id, 'mod_flashcard', $filearea, $itemid, $sortfiles, false)) {
+    if ($files = $fs->get_area_files($context->id, 'mod_flashcard', $filearea, $itemid, "sortorder, itemid, filepath, filename", false)) {
         $file = array_pop($files);
 
         // Finally send the file.
@@ -516,7 +493,7 @@ function flashcard_get_completion_state($course, $cm, $userid, $type) {
         throw new Exception("Can't find flashcard {$cm->instance}");
     }
 
-    $result = $type; // Default return value.
+    $result = $type; // Default return value
 
     // Completion condition 1 is have no cards in deck.
 
@@ -542,16 +519,16 @@ function flashcard_get_completion_state($course, $cm, $userid, $type) {
         } else {
             $result = $result || ($good == $allcards);
         }
-    } else if ($flashcard->completionallviewed) {
-        // Allgood superseedes allviewed.
+    } elseif ($flashcard->completionallviewed) {
+        // Allgood superseedes allviewed
 
-        // Match distinct viewed cards.
+        // Match distinct viewed cards
         $sql = "
             SELECT
                 COUNT(DISTINCT c.entryid)
             FROM
                 {flashcard_card} c
-            WHERE
+            WHERE 
                 c.userid = ? AND
                 c.flashcardid = ?
         ";
@@ -594,6 +571,14 @@ function flashcard_reset_userdata($data) {
             f.course = ?
     ";
 
+    // Remove all grades from gradebook.
+    /*
+    // for future extensions
+    if (empty($data->reset_gradebook_grades)) {
+        flashcard_reset_gradebook($data->courseid);
+    }
+    */
+
     // Remove all states and usr attempts unconditionally - even for users still enrolled in course.
     if (!empty($data->reset_flashcard_all)) {
         $params = array($data->courseid);
@@ -621,25 +606,4 @@ function flashcard_reset_course_form_definition(&$mform) {
  */
 function flashcard_reset_course_form_defaults($course) {
     return array('reset_flashcard_all' => 1);
-}
-
-/**
- * This function allows the tool_dbcleaner to register integrity checks
- */
-function flashcard_dbcleaner_add_keys() {
-    global $DB;
-
-    $flashcardmoduleid = $DB->get_field('modules', 'id', array('name' => 'flashcard'));
-
-    $keys = array(
-        array('flashcard', 'course', 'course', 'id', ''),
-        array('flashcard', 'id', 'course_modules', 'instance', ' module = '.$flashcardmoduleid.' '),
-        array('flashcard_card', 'flashcardid', 'flashcard', 'id', ''),
-        array('flashcard_card', 'userid', 'user', 'id', ''),
-        array('flashcard_deckdata', 'flashcardid', 'flashcard', 'id', ''),
-        array('flashcard_userdeck_state', 'flashcardid', 'flashcard', 'id', ''),
-        array('flashcard_userdeck_state', 'userid', 'user', 'id', ''),
-    );
-
-    return $keys;
 }

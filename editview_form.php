@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+defined('MOODLE_INTERNAL') || die();
+
 /**
  * A form to edit one card or adding one or three cards
  *
@@ -22,7 +24,6 @@
  * @author Valery Fremaux (valery.fremaux@gmail.com) http://www.mylearningfactory.com
  * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
  */
-defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->libdir.'/formslib.php');
 
@@ -38,8 +39,8 @@ class CardEdit_Form extends moodleform {
         $mform->addElement('hidden', 'id'); 
         $mform->setType('id', PARAM_INT);
 
-        // MVC Action keyword.
-        $mform->addElement('hidden', 'what', $this->_customdata['cmd']);
+        // MVC Action keyword;
+        $mform->addElement('hidden', 'what', $this->_customdata['cmd']); 
         $mform->setType('what', PARAM_TEXT);
 
         $num = 1;
@@ -47,13 +48,13 @@ class CardEdit_Form extends moodleform {
             $num = 3;
         }
 
-        // Card id.
+        // Card id
         if (!empty($this->_customdata['cardid'])) {
             $mform->addElement('hidden', 'cardid');
             $mform->setType('cardid', PARAM_INT);
         }
 
-        for ($i = 0; $i < $num; $i++) {
+        for ($i = 0; $i < $num ; $i++) {
             $cardnum = $i + 1;
             $mform->addElement('header', 'card'.$i, get_string('card', 'flashcard'). ' '.$cardnum);
             $mform->addElement('html', '<table width=100%">');
@@ -87,19 +88,15 @@ class CardEdit_Form extends moodleform {
 
         $maxbytes = 100000;
 
-        $imgoptions = array('maxfiles' => 1, 'maxbytes' => $COURSE->maxbytes, 'accepted_types' => array('.jpg', '.png', '.gif'));
-        $sndoptions = array('maxfiles' => 1, 'maxbytes' => $COURSE->maxbytes, 'accepted_types' => array('.mp3', '.swf'));
-
         if ($mediatype == FLASHCARD_MEDIA_IMAGE) {
-            $mform->addElement('filepicker', $sideprefix.$podid, '', null, $imgoptions);
-        } else if ($mediatype == FLASHCARD_MEDIA_SOUND) {
-            $mform->addElement('filepicker', $sideprefix.$podid, '', null, $sndoptions);
-        } else if ($mediatype == FLASHCARD_MEDIA_VIDEO) {
-            $vidoptions = array('maxfiles' => 1, 'maxbytes' => $COURSE->maxbytes, 'accepted_types' => array('.mp4', '.flv'));
-            $mform->addElement('filepicker', $sideprefix.$podid, '', null, $vidoptions);
-        } else if ($mediatype == FLASHCARD_MEDIA_IMAGE_AND_SOUND) {
-            $mform->addElement('filepicker', $sideprefix.'i'.$podid, get_string('image', 'flashcard'), null, $imgoptions);
-            $mform->addElement('filepicker', $sideprefix.'s'.$podid, get_string('sound', 'flashcard'), null, $sndoptions);
+            $mform->addElement('filepicker', $sideprefix.$podid, '', null, array('maxfiles' => 1, 'maxbytes' => $COURSE->maxbytes, 'accepted_types' => array('.jpg', '.png', '.gif')));
+        } elseif ($mediatype == FLASHCARD_MEDIA_SOUND) {
+            $mform->addElement('filepicker', $sideprefix.$podid, '', null, array('maxfiles' => 1, 'maxbytes' => $COURSE->maxbytes, 'accepted_types' => array('.mp3', '.swf')));
+        } elseif ($mediatype == FLASHCARD_MEDIA_VIDEO) {
+            $mform->addElement('filepicker', $sideprefix.$podid, '', null, array('maxfiles' => 1, 'maxbytes' => $COURSE->maxbytes, 'accepted_types' => array('.mp4', '.flv')));
+        } elseif ($mediatype == FLASHCARD_MEDIA_IMAGE_AND_SOUND) {
+            $mform->addElement('filepicker', $sideprefix.'i'.$podid, get_string('image', 'flashcard'), null, array('maxbytes' => $COURSE->maxbytes, 'accepted_types' => array('.jpg', '.png', '.gif')));
+            $mform->addElement('filepicker', $sideprefix.'s'.$podid, get_string('sound', 'flashcard'), null, array('maxbytes' => $COURSE->maxbytes, 'accepted_types' => array('.mp3', '.swf')));
         } else {
             $mform->addElement('textarea', $sideprefix.$podid, '', array('cols' => 60, 'rows' => 4));
         }
@@ -107,6 +104,7 @@ class CardEdit_Form extends moodleform {
 
     /**
      * preloads existing images
+     *
      */
     public function set_data($data) {
         global $DB;

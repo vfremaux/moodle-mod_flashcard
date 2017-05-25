@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+defined('MOODLE_INTERNAL') || die();
+
 /**
  * internal library of functions and constants for module flashcard
  * @package mod_flashcard
@@ -21,13 +23,12 @@
  * @author Gustav Delius
  * @author Valery Fremaux
  */
-defined('MOODLE_INTERNAL') || die();
 
-define('FLASHCARD_MEDIA_TEXT', 0);
-define('FLASHCARD_MEDIA_IMAGE', 1);
-define('FLASHCARD_MEDIA_SOUND', 2);
-define('FLASHCARD_MEDIA_IMAGE_AND_SOUND', 3);
-define('FLASHCARD_MEDIA_VIDEO', 4);
+define('FLASHCARD_MEDIA_TEXT', 0); 
+define('FLASHCARD_MEDIA_IMAGE', 1); 
+define('FLASHCARD_MEDIA_SOUND', 2); 
+define('FLASHCARD_MEDIA_IMAGE_AND_SOUND', 3); 
+define('FLASHCARD_MEDIA_VIDEO', 4); 
 
 /**
  * computes the last accessed date for a deck as the oldest card being in the deck
@@ -45,7 +46,7 @@ function flashcard_get_lastaccessed(&$flashcard, $deck, $userid = 0) {
     }
 
     $sql = "
-        SELECT
+        SELECT 
             MIN(lastaccessed) as lastaccessed
         FROM
             {flashcard_card}
@@ -69,8 +70,7 @@ function flashcard_initialize(&$flashcard, $userid) {
     global $DB;
 
     // Get all cards (all decks).
-    $select = 'flashcardid = ? AND userid = ?';
-    $cards = $DB->get_records_select('flashcard_card', $select, array($flashcard->id, $userid));
+    $cards = $DB->get_records_select('flashcard_card', 'flashcardid = ? AND userid = ?', array($flashcard->id, $userid));
     $registered = array();
     if (!empty($cards)) {
         foreach ($cards as $card) {
@@ -79,8 +79,7 @@ function flashcard_initialize(&$flashcard, $userid) {
     }
 
     // Get all subquestions.
-    $params = array('flashcardid' => $flashcard->id);
-    if ($subquestions = $DB->get_records('flashcard_deckdata', $params, '', 'id,id')) {
+    if ($subquestions = $DB->get_records('flashcard_deckdata', array('flashcardid' => $flashcard->id), '', 'id,id')) {
         foreach ($subquestions as $subquestion) {
             if (in_array($subquestion->id, $registered)) {
                 continue;
@@ -115,14 +114,13 @@ function flashcard_import(&$flashcard) {
     $question = $DB->get_record('question', array('id' => $flashcard->questionid));
 
     if ($question->qtype != 'match') {
-        echo $OUTPUT->notification("Not a match question. Internal error");
+        notice("Not a match question. Internal error");
         return;
     }
 
     $options = $DB->get_record('question_match', array('question' => $question->id));
     list($usql, $params) = $DB->get_in_or_equal(explode(",",$options->subquestions));
-    $select = "id $usql AND answertext != '' AND questiontext != ''";
-    if ($subquestions = $DB->get_records_select('question_match_sub', $select, $params)) {
+    if ($subquestions = $DB->get_records_select('question_match_sub', "id $usql AND answertext != '' AND questiontext != ''", $params)) {
 
         // Cleanup the flashcard.
         $DB->delete_records('flashcard_card', array('flashcardid' => $flashcard->id));

@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+defined('MOODLE_INTERNAL') || die();
+
 /**
  * DEPRECATED
  * File System Abstract Layer
@@ -26,7 +28,6 @@
  * @date 2007/11/04
  *
  */
-defined('MOODLE_INTERNAL') || die();
 
 // Avoids reloading the lib when keeped in third party plugin.
 if (!function_exists('filesystem_create_dir')) {

@@ -27,7 +27,7 @@
 require('../../config.php');
 require_once($CFG->dirroot.'/mod/flashcard/lib.php');
 
-$id = required_param('id', PARAM_INT);   // Course id.
+$id = required_param('id', PARAM_INT);   // Course id
 
 if (!$course = $DB->get_record('course', array('id' => $id))) {
     print_error('coursemisconf');
@@ -61,8 +61,7 @@ echo $OUTPUT->header();
 // Get all the appropriate data.
 
 if (! $flashcards = get_all_instances_in_course('flashcard', $course)) {
-    $returnurl;
-    $OUTPUT->notification(get_string('noflashcards', 'flashcard'), $returnurl);
+    $OUTPUT->notification(get_string('noflashcards', 'flashcard'), new moodle_url('/course/view.php', array('id' => $course->id)));
     die;
 }
 
@@ -89,10 +88,10 @@ if ($course->format == 'weeks') {
 foreach ($flashcards as $flashcard) {
     $instanceurl = new moodle_url('/mod/flashcard/view.php', array('id' => $flashcard->coursemodule));
     if (!$flashcard->visible) {
-        // Show dimmed if the mod is hidden.
+        //Show dimmed if the mod is hidden
         $link = '<a class="dimmed" href="'.$instanceuel.'">'.$flashcard->name.'</a>';
     } else {
-        // Show normal if the mod is visible.
+        //Show normal if the mod is visible
         $link = '<a href="'.$instanceurl.'">'.$flashcard->name.'</a>';
     }
 

@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+defined('MOODLE_INTERNAL') || die();
+
 /**
  * This library is a third-party proposal for standardizing mail
  * message constitution for third party modules. It is actually used
@@ -27,8 +29,6 @@
  * @date 2008/03/03
  * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
  */
-
-defined('MOODLE_INTERNAL') || die();
 
 /**
  * useful templating functions from an older project of mine, hacked for Moodle
