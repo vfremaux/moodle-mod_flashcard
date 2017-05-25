@@ -14,12 +14,11 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-defined('MOODLE_INTERNAL') || die ();
-
 /**
  * @package   mod_flashbard
  * @category  mod
  */
+defined('MOODLE_INTERNAL') || die ();
 
 if ($action) {
     include($CFG->dirroot.'/mod/flashcard/manageview.controller.php');
@@ -32,10 +31,9 @@ $page = optional_param('page', 0, PARAM_INT);
 $from = $page * $pagesize;
 
 $PAGE->requires->js('/mod/flashcard/players/flowplayer/flowplayer.js');
+$PAGE->requires->css('/mod/flashcard/players/flowplayer/skin/minimalist.css');
 
 echo $out;
-
-echo '<link href="'.$CFG->wwwroot.'/mod/flashcard/players/flowplayer/skin/minimalist.css" rel="stylesheet" type="text/css" />';
 
 $cards = $DB->get_records('flashcard_deckdata', array('flashcardid' => $flashcard->id), 'id', '*', $from, $pagesize);
 
@@ -48,12 +46,12 @@ $table->size = array('10%', '40%', '40%', '10%');
 $table->width = '100%';
 $table->align = array('center', 'center', 'center', 'center');
 
-$editurl = $CFG->wwwroot.'/mod/flashcard/view.php?id='.$id.'&view=edit';
+$editurl = new moodle_url('/mod/flashcard/view.php', array('id' => $id, 'view' => 'edit'));
 
 $i = 0;
 if ($cards) {
     foreach ($cards as $card) {
-        $check = "<input type=\"checkbox\" name=\"items[]\" value=\"{$card->id}\" />";
+        $check = '<input type="checkbox" name="items[]" value="'.$card->id.'" />';
 
         if ($flashcard->questionsmediatype == FLASHCARD_MEDIA_IMAGE) {
             $back = $renderer->print_image($flashcard, "questionimagefile/{$card->id}", true);

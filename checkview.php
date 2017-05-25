@@ -14,8 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * This view allows checking deck states
  * 
@@ -26,6 +24,7 @@ defined('MOODLE_INTERNAL') || die();
  * @version Moodle 2.0
  * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
  */
+defined('MOODLE_INTERNAL') || die();
 
 // Print deferred header.
 
