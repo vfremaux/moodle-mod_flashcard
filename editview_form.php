@@ -17,10 +17,10 @@
 /**
  * A form to edit one card or adding one or three cards
  *
- * @package     mod_flashcard
- * @category    mod
- * @author      Valery Fremaux (valery.fremaux@gmail.com) http://www.mylearningfactory.com
- * @license     http://www.gnu.org/copyleft/gpl.html GNU Public License
+ * @package mod_flashcard
+ * @category mod
+ * @author Valery Fremaux (valery.fremaux@gmail.com) http://www.mylearningfactory.com
+ * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
  */
 defined('MOODLE_INTERNAL') || die();
 
@@ -29,11 +29,13 @@ require_once($CFG->libdir.'/formslib.php');
 class CardEdit_Form extends moodleform {
 
     public function definition() {
+        global $DB, $OUTPUT;
 
         $mform = $this->_form;
+        $flashcard = $this->_customdata['flashcard'];
 
         // Course module id.
-        $mform->addElement('hidden', 'id');
+        $mform->addElement('hidden', 'id'); 
         $mform->setType('id', PARAM_INT);
 
         // MVC Action keyword.
@@ -83,20 +85,21 @@ class CardEdit_Form extends moodleform {
         $key = $side.'smediatype';
         $mediatype = $this->_customdata['flashcard']->$key;
 
+        $maxbytes = 100000;
+
+        $imgoptions = array('maxfiles' => 1, 'maxbytes' => $COURSE->maxbytes, 'accepted_types' => array('.jpg', '.png', '.gif'));
+        $sndoptions = array('maxfiles' => 1, 'maxbytes' => $COURSE->maxbytes, 'accepted_types' => array('.mp3', '.swf'));
+
         if ($mediatype == FLASHCARD_MEDIA_IMAGE) {
-            $options = array('maxfiles' => 1, 'maxbytes' => $COURSE->maxbytes, 'accepted_types' => array('.jpg', '.png', '.gif'));
-            $mform->addElement('filepicker', $sideprefix.$podid, '', null, $options);
+            $mform->addElement('filepicker', $sideprefix.$podid, '', null, $imgoptions);
         } else if ($mediatype == FLASHCARD_MEDIA_SOUND) {
-            $options = array('maxfiles' => 1, 'maxbytes' => $COURSE->maxbytes, 'accepted_types' => array('.mp3', '.swf'));
-            $mform->addElement('filepicker', $sideprefix.$podid, '', null, $options);
+            $mform->addElement('filepicker', $sideprefix.$podid, '', null, $sndoptions);
         } else if ($mediatype == FLASHCARD_MEDIA_VIDEO) {
-            $options = array('maxfiles' => 1, 'maxbytes' => $COURSE->maxbytes, 'accepted_types' => array('.mp4', '.flv'));
-            $mform->addElement('filepicker', $sideprefix.$podid, '', null, $options);
+            $vidoptions = array('maxfiles' => 1, 'maxbytes' => $COURSE->maxbytes, 'accepted_types' => array('.mp4', '.flv'));
+            $mform->addElement('filepicker', $sideprefix.$podid, '', null, $vidoptions);
         } else if ($mediatype == FLASHCARD_MEDIA_IMAGE_AND_SOUND) {
-            $options = array('maxbytes' => $COURSE->maxbytes, 'accepted_types' => array('.jpg', '.png', '.gif'));
-            $mform->addElement('filepicker', $sideprefix.'i'.$podid, get_string('image', 'flashcard'), null, $options);
-            $options = array('maxbytes' => $COURSE->maxbytes, 'accepted_types' => array('.mp3', '.swf'));
-            $mform->addElement('filepicker', $sideprefix.'s'.$podid, get_string('sound', 'flashcard'), null, $options);
+            $mform->addElement('filepicker', $sideprefix.'i'.$podid, get_string('image', 'flashcard'), null, $imgoptions);
+            $mform->addElement('filepicker', $sideprefix.'s'.$podid, get_string('sound', 'flashcard'), null, $sndoptions);
         } else {
             $mform->addElement('textarea', $sideprefix.$podid, '', array('cols' => 60, 'rows' => 4));
         }
@@ -104,7 +107,6 @@ class CardEdit_Form extends moodleform {
 
     /**
      * preloads existing images
-     *
      */
     public function set_data($data) {
         global $DB;
@@ -171,7 +173,7 @@ class CardEdit_Form extends moodleform {
             $maxbytes = 100000;
             file_prepare_draft_area($draftitemid, $context->id, 'mod_flashcard', $filearea, $card->id, $fileoptions);
             $data->$elmname = $draftitemid;
-        } else if ($mediatype == FLASHCARD_MEDIA_IMAGE_AND_SOUND) {
+        } elseif ($mediatype == FLASHCARD_MEDIA_IMAGE_AND_SOUND) {
             $elmname = $sideprefix.'i0';
             $draftitemid = file_get_submitted_draft_itemid($elmname);
             $maxbytes = 100000;

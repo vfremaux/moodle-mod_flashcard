@@ -95,7 +95,3 @@ handling diverging work about using media files.
 
 In addition, this version now fully handles course completion requirements, and completes
 properly summary and course overviews.
-
-----------------------
-
-2017022000 : Add models per instance selection.

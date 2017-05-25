@@ -1,29 +1,14 @@
 <?php
-// This file is part of Moodle - http://moodle.org/
-//
-// Moodle is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// Moodle is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
-
 /**
  * Strings for component 'flashcard', language 'en'
  *
- * @package     mod_flashcard
- * @category    mod
- * @copyright   Valery Fremaux, Tomasz Muras
- * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    mod
+ * @subpackage flashcard
+ * @copyright  Valery Fremaux, Tomasz Muras
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-// Capabilities.
+// Capabilities
 $string['flashcard:manage'] = 'Manage the cards';
 $string['flashcard:canplayfree'] = 'Play free';
 $string['flashcard:addinstance'] = 'Add a flashcard';
@@ -46,7 +31,7 @@ $string['cardback'] = 'Back card image';
 $string['cardfront'] = 'Front card image';
 $string['cardsep'] = 'Card Separator in text import:';
 $string['cardsindeck'] = 'Remains : {$a} card(s)';
-$string['cardsread'] = 'Card(s) read: ';
+$string['cardsread'] = 'Card(s) read:&ensp;';
 $string['cardsremaining'] = 'Cards Remaining';
 $string['commands'] = '';
 $string['completionallgoodenabled'] = 'Student must bring all cards in last deck to complete';
@@ -85,46 +70,41 @@ $string['errorbindcard'] = 'Could not bind card to user {$a} deck';
 $string['errordeletecard'] = 'Could not delete cards from deck';
 $string['errorupdatecard'] = 'Could not update deck card';
 $string['extracss'] = 'Extra css';
-$string['fieldsep'] = 'Field separator:';
+$string['fieldsep'] = 'Field separator:&ensp;';
 $string['flashcardneedsreview'] = 'Flashcard needs review';
 $string['flipdeck'] = 'Flip answers and questions';
 $string['forcereload'] = 'Force reloading from question';
 $string['freegame'] = 'Free play';
 $string['freeplayinstructions'] = 'Consider each card in the deck. If you think you know what the presented term means, click it to flip the card over and check your answer. If you got it right, click "Remove" to remove it from the deck. If you don&apos;t know the answer or are incorrect, go to the next card. When you have gone through all of the cards, review the course materials for information on the terms you don&apos;t know and try those cards again.';
 $string['frontside'] = 'Flash Card Front';
-$string['goodcards'] = 'Valid card(s) : ';
+$string['goodcards'] = 'Valid card(s):&ensp;';
 $string['havetologin'] = 'You have to log in before you can submit your choice';
-$string['ifailed'] = 'I missed !';
-$string['igotit'] = 'I got it !';
+$string['ifailed'] = 'I missed!';
+$string['igotit'] = 'I got it!';
 $string['image'] = 'image';
 $string['imageplussound'] = 'image + sound';
 $string['import'] = 'Import';
 $string['importadvice'] = 'When importing new card set, you will remove all old cardset along with the previous information about user\'s plays';
-$string['imported'] = 'Import:';
+$string['imported'] = 'Import:&ensp;';
 $string['importingcards'] = 'Import cards';
-$string['importreport'] = '<b>Flashcard imported new cards:</b>';
+$string['importreport'] = '<b>Flashcard imported new cards:&ensp;</b>';
 $string['instructions'] = 'Click on the flashcard to turn it over and see the other side';
 $string['lastaccessed'] = 'Last accessed';
 $string['leitnergame'] = 'Leitner play';
 $string['matchingquestion'] = 'Matching question from question bank';
-$string['maxaccess'] = 'More viewed ticks ';
+$string['maxaccess'] = 'More viewed ticks';
 $string['mediatypes'] = 'Media type';
 $string['mediumeffortcards'] = 'Middle effort set';
-$string['minaccess'] = 'Less viewed ticks ';
+$string['minaccess'] = 'Less viewed ticks';
 $string['missingimage'] = '{missing image file}';
 $string['missingsound'] = '{missing sound file}';
 $string['missingvid'] = '{missing video file}';
-$string['models'] = 'Gameplay';
-$string['models_help'] = 'Enable or disable gameplay models';
-$string['bothmodels'] = 'Both Leitner and free training';
-$string['leitner'] = 'Leitner training';
-$string['freeuse'] = 'Free training';
 $string['modulename'] = 'Flash Card Set';
 $string['modulenameplural'] = 'Flash Cards';
 $string['next'] = 'Next card';
 $string['nocards'] = 'No cards defined.';
 $string['noflashcards'] = 'No flashcards in this course.';
-$string['nomorecards'] = 'No more cards. ';
+$string['nomorecards'] = 'No more cards.';
 $string['nosubquestions'] = 'Error: Missing subquestions for this question!';
 $string['notinitialized'] = 'This student never used this flashcard.';
 $string['notifications'] = 'Notifications';
@@ -149,10 +129,10 @@ $string['reviewedback'] = 'Reviewed deck image';
 $string['reviewedempty'] = 'Empty reviewed deck image';
 $string['sound'] = 'sound';
 $string['sourcequestion'] = 'Question to import';
-$string['starttime'] = 'Start time ';
+$string['starttime'] = 'Start time';
 $string['stylesheet'] = 'Obtain the stylesheet';
 $string['styling'] = 'Customisation';
-$string['sumaccess'] = 'Total viewed cards ';
+$string['sumaccess'] = 'Total viewed cards';
 $string['summary'] = 'Flash Card Set Summary';
 $string['teachersummary'] = 'Summary';
 $string['text'] = 'text';

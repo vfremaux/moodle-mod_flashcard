@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
+/** 
  * This page prints a particular instance of a flashcard
  *
  * @package mod_flashcard
@@ -27,7 +27,7 @@
 require('../../config.php');
 require_once($CFG->dirroot.'/mod/flashcard/lib.php');
 
-$id = required_param('id', PARAM_INT); // Course id.
+$id = required_param('id', PARAM_INT);   // Course id.
 
 if (!$course = $DB->get_record('course', array('id' => $id))) {
     print_error('coursemisconf');
@@ -61,7 +61,7 @@ echo $OUTPUT->header();
 // Get all the appropriate data.
 
 if (! $flashcards = get_all_instances_in_course('flashcard', $course)) {
-    $returnurl = new moodle_url('/course/view.php', array('id' => $course->id));
+    $returnurl;
     $OUTPUT->notification(get_string('noflashcards', 'flashcard'), $returnurl);
     die;
 }

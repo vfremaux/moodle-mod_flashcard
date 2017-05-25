@@ -14,7 +14,9 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
+defined('MOODLE_INTERNAL') || die();
+
+/** 
  * a controller for the play view
  *
  * @package mod_flashcard
@@ -28,13 +30,11 @@
  * @usecase igotit
  * @usecase ifailed
  */
-defined('MOODLE_INTERNAL') || die();
 
 /* ********************************** initialize a deck *************************************** */
 
-if ($action == 'initialize') {
-    $select = "flashcardid = ? AND userid = ? AND deck = ? ";
-    if ($initials = $DB->get_records_select('flashcard_card', $select, array($flashcard->id, $USER->id, $deck))) {
+if ($action == 'initialize'){
+    if ($initials = $DB->get_records_select('flashcard_card', "flashcardid = ? AND userid = ? AND deck = ? ", array($flashcard->id, $USER->id, $deck))){   
         $_SESSION['flashcard_initials'] = implode("','", array_keys($initials));
     }
     unset($_SESSION['flashcard_consumed']);
@@ -42,11 +42,11 @@ if ($action == 'initialize') {
 
 /* ********************************** reset a deck *************************************** */
 
-if ($action == 'reset') {
+if ($action == 'reset'){
     $initials = explode("','", $_SESSION['flashcard_initials']);
     list($usql, $params) = $DB->get_in_or_equal(array_keys($initials));
     $DB->set_field_select('flashcard_card', 'deck', $deck, "id $usql ", $params);
-    unset($_SESSION['flashcard_consumed']);
+    unset($_SESSION['flashcard_consumed']);         
 }
 
 /* ********************************* a card was declared right ************************ */
@@ -67,14 +67,14 @@ if ($action == 'igotit') {
         }
     }
     $card->lastaccessed = time();
-    $card->accesscount++;
+    $card->accesscount++ ;
     if (!$DB->update_record('flashcard_card', $card)) {
         print_error('dbcouldnotupdate', 'flashcard', '', get_string('cardinfo', 'flashcard'));
     }
 
     /*
-     * If pre-last deck, we need check the completion condition for "all good",
-     * that is this is the last card that is passing to the last deck
+     * If pre-last deck, we need check the completion condition for "all good", that is this is the
+     * last card that is passing to the last deck
      * note we will also confirm in checkview.php
      */
 
@@ -87,7 +87,7 @@ if ($action == 'igotit') {
 
                 $conditions = array('userid' => $USER->id, 'flashcardid' => $flashcard->id, 'deck' => $flashcard->decks);
                 $lastdeckcards = $DB->count_records('flashcard_card', $conditions);
-                $allcards = count($subquestions); // See playview.php.
+                $allcards = count($subquestions); // @see playview.php
 
                 if ($lastdeckcards == $allcards) {
                     // Whatever the status of the last deck, we have brought all the cards there.
@@ -95,11 +95,11 @@ if ($action == 'igotit') {
                     $completion->update_state($cm, COMPLETION_COMPLETE);
                 }
             }
-        } else if ($flashcard->completionallviewed) {
+        } elseif ($flashcard->completionallviewed) {
             // Allgood superseedes allviewed.
             // Deck does not matter here, all viewed cards in all decks... usually the first one.
             $allseencards = $DB->count_records('flashcard_card', array('userid' => $USER->id, 'flashcardid' => $flashcard->id));
-            $allcards = count($subquestions); // See playview.php.
+            $allcards = count($subquestions); // @see playview.php
             if ($seencards >= min($allcards, $flashcard->completionallviewed)) {
                 // Update completion state.
                 $completion = new completion_info($course);
@@ -116,7 +116,7 @@ if ($action == 'ifailed') {
     $card->id = required_param('cardid', PARAM_INT);
     $card = $DB->get_record('flashcard_card', array('id' => $card->id));
     $card->lastaccessed = time();
-    $card->accesscount++;
+    $card->accesscount++ ;
 
     if (!$DB->update_record('flashcard_card', $card)) {
         print_error('dbcouldnotupdate', 'flashcard', '', get_string('cardinfo', 'flashcard'));
@@ -132,9 +132,8 @@ if ($action == 'ifailed') {
     if ($completion->is_enabled($cm)) {
         if ($flashcard->completionallviewed) {
             // Deck does not matter here, all viewed cards in all decks... usually the first one.
-            $params = array('userid' => $USER->id, 'flashcardid' => $flashcard->id);
-            $allseencards = $DB->count_records('flashcard_card', $params);
-            $allcards = count($subquestions); // See playview.php.
+            $allseencards = $DB->count_records('flashcard_card', array('userid' => $USER->id, 'flashcardid' => $flashcard->id));
+            $allcards = count($subquestions); // @see playview.php
             if ($seencards >= min($allcards, $flashcard->completionallviewed)) {
                 // Update completion state.
                 $completion->update_state($cm, COMPLETION_COMPLETE);

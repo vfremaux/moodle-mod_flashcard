@@ -24,8 +24,9 @@
  */
 defined('MOODLE_INTERNAL') || die();
 
-$subquestions = $DB->get_records('flashcard_deckdata', array('flashcardid' => $flashcard->id));
+$PAGE->requires->js('/mod/flashcard/js/module.js');
 
+$subquestions = $DB->get_records('flashcard_deckdata', array('flashcardid' => $flashcard->id));
 if (empty($subquestions)) {
     echo $out;
     echo $OUTPUT->notification(get_string('nosubquestions', 'flashcard'));
@@ -42,26 +43,19 @@ echo $out;
 
 if (!empty($flashcard->summary)) {
     echo $OUTPUT->box_start();
-    echo format_text($flashcard->summary, $flashcard->summaryformat, null, $course->id);
+    echo format_text($flashcard->summary, $flashcard->summaryformat, NULL, $course->id);
     echo $OUTPUT->box_end();
 }
 
-?>
+echo $renderer->free_script_fragment($flashcard, $subquestions);
 
-<script language="javascript">
-//<![CDATA[
-currentitem = 0;
-maxitems = <?php echo count($subquestions); ?>;
-remaining = maxitems;
+echo '<p>';
+echo get_string('freeplayinstructions', 'flashcard');
+echo '.';
+echo '</p>';
 
-var qtype = "<?php echo $flashcard->questionsmediatype ?>";
-var atype = "<?php echo $flashcard->answersmediatype ?>";
-//]]>
-</script>
-<script src="<?php echo $CFG->wwwroot.'/mod/flashcard/js/module.js' ?>"></script>
+echo $renderer->extracss($flashcard);
 
-<p><?php print_string('freeplayinstructions', 'flashcard'); ?>.</p>
-<?php
 echo '<table class="flashcard_board" width="100%">';
 echo '<tr>';
 echo '<td rowspan="6">';
@@ -78,12 +72,10 @@ if ($flashcard->flipdeck) {
 foreach ($subquestions as $subquestion) {
     echo '<center>';
     $divid = "f$i";
-    $divstyle = ($i > 0) ? 'display:none' : '';
-    $imageurl = $renderer->print_custom_url($flashcard, 'customback', 0);
-    echo '<div id="'.$divid.'"
-               class="flashcard-question"
-               style="'.$divstyle.';background-repeat:no-repeat;background-image:url('.$imageurl.')"
-               onclick="javascript:clicked(\'f\', \''.$i.'\')">';
+    $divstyle = ($i > 0) ? 'display:none' : '' ;
+    echo '<div id="'.$divid.'" ';
+    echo 'class="flashcard-question" style="'.$divstyle.';background-repeat:no-repeat;background-image:url('.$renderer->print_custom_url($flashcard, 'customback', 0).')" ';
+    echo ' onclick="javascript:clicked(\'f\', \''.$i.'\')">';
 
     $back = 'question';
     $front = 'answer';
@@ -122,20 +114,20 @@ foreach ($subquestions as $subquestion) {
         echo "<br/>";
         echo $renderer->play_sound($flashcard, "{$back}soundfile/{$subquestion->id}", $autoplay, false, "bell_b$i");
     } else {
-        echo format_text($subquestion->questiontext, FORMAT_HTML);
+        echo format_text($subquestion->questiontext,FORMAT_HTML);
     }
     echo '</td>';
     echo '</tr>';
     echo '</table>';
+
     echo '</div>';
     echo '</center>';
     echo '<center>';
 
-    $imageurl = $renderer->print_custom_url($flashcard, 'customfront', 0);
-    echo '<div id="b'.$i.'"
-               class="flashcard-answer"
-               style="display:none;background-repeat:no-repeat;background-image:url('.$imageurl.')"
-               onclick="javascript:clicked(\'b\', \''.$i.'\')">';
+    echo "<div id=\"b{$i}\" ";
+    echo 'class="flashcard-answer" style="display:none;background-repeat:no-repeat;background-image:url('.$renderer->print_custom_url($flashcard, 'customfront', 0).')" ';
+    echo " onclick=\"javascript:clicked('b', '{$i}')\">";
+
     echo '<table width="100%" height="100%">';
     echo '<tr>';
     echo '<td align="center" valign="center" style="">';
@@ -151,24 +143,31 @@ foreach ($subquestions as $subquestion) {
         echo "<br/>";
         echo $renderer->play_sound($flashcard, "{$front}soundfile/{$subquestion->id}", $autoplay, false, "bell_f$i");
     } else {
-        echo format_text($subquestion->answertext, FORMAT_HTML);
+        echo format_text($subquestion->answertext,FORMAT_HTML);
     }
-
     echo '</td>';
     echo '</tr>';
     echo '</table>';
+
     echo '</div>';
     echo '</center>';
-
     $i++;
 }
 
-echo '<center>';
-echo $renderer->finishtable();
-echo '</center>';
+echo $renderer->free_empty_set();
+
+echo '</td>';
+echo '</tr>';
+echo '<tr>';
+echo '<td width="200px">';
+
+echo $renderer->free_indicators();
+
 echo '</td>';
 echo '</tr>';
 
-echo $renderer->freebuttons($subquestions);
+echo $renderer->free_control_buttons();
 
 echo '</table>';
+
+echo $renderer->back_to_course();

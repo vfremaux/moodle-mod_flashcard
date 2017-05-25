@@ -30,7 +30,8 @@ $allcards = $DB->count_records('flashcard_deckdata', array('flashcardid' => $fla
 $page = optional_param('page', 0, PARAM_INT);
 $from = $page * $pagesize;
 
-// Deferred header output.
+$PAGE->requires->js('/mod/flashcard/players/flowplayer/flowplayer.js');
+$PAGE->requires->css('/mod/flashcard/players/flowplayer/skin/minimalist.css');
 
 echo $out;
 
@@ -45,18 +46,20 @@ $table->size = array('10%', '40%', '40%', '10%');
 $table->width = '100%';
 $table->align = array('center', 'center', 'center', 'center');
 
+$editurl = new moodle_url('/mod/flashcard/view.php', array('id' => $id, 'view' => 'edit'));
+
 $i = 0;
 if ($cards) {
     foreach ($cards as $card) {
-        $check = "<input type=\"checkbox\" name=\"items[]\" value=\"{$card->id}\" />";
+        $check = '<input type="checkbox" name="items[]" value="'.$card->id.'" />';
 
         if ($flashcard->questionsmediatype == FLASHCARD_MEDIA_IMAGE) {
             $back = $renderer->print_image($flashcard, "questionimagefile/{$card->id}", true);
-        } else if ($flashcard->questionsmediatype == FLASHCARD_MEDIA_SOUND) {
+        } elseif ($flashcard->questionsmediatype == FLASHCARD_MEDIA_SOUND) {
             $back = $renderer->play_sound($flashcard, "questionsoundfile/{$card->id}", 'false', true, "bell_b$i");
-        } else if ($flashcard->questionsmediatype == FLASHCARD_MEDIA_VIDEO) {
+        } elseif ($flashcard->questionsmediatype == FLASHCARD_MEDIA_VIDEO) {
             $back = $renderer->play_video($flashcard, "questionvideofile/{$card->id}", 'false', true, "bell_b$i", true);
-        } else if ($flashcard->questionsmediatype == FLASHCARD_MEDIA_IMAGE_AND_SOUND) {
+        } elseif ($flashcard->questionsmediatype == FLASHCARD_MEDIA_IMAGE_AND_SOUND) {
             $back = $renderer->print_image($flashcard, "questionimagefile/{$card->id}", true);
             $back .= "<br/>";
             $back = $renderer->play_sound($flashcard, "questionsoundfile/{$card->id}", 'false', true, "bell_b$i");
@@ -66,11 +69,11 @@ if ($cards) {
 
         if ($flashcard->answersmediatype == FLASHCARD_MEDIA_IMAGE) {
             $front = $renderer->print_image($flashcard, "answerimagefile/{$card->id}", true);
-        } else if ($flashcard->answersmediatype == FLASHCARD_MEDIA_SOUND) {
+        } elseif ($flashcard->answersmediatype == FLASHCARD_MEDIA_SOUND) {
             $front = $renderer->play_sound($flashcard, "answersoundfile/{$card->id}", 'false', true, "bell_f$i");
-        } else if ($flashcard->answersmediatype == FLASHCARD_MEDIA_VIDEO) {
+        } elseif ($flashcard->answersmediatype == FLASHCARD_MEDIA_VIDEO) {
             $front = $renderer->play_video($flashcard, "answervideofile/{$card->id}", 'false', true, "bell_f$i", true);
-        } else if ($flashcard->answersmediatype == FLASHCARD_MEDIA_IMAGE_AND_SOUND) {
+        } elseif ($flashcard->answersmediatype == FLASHCARD_MEDIA_IMAGE_AND_SOUND) {
             $front = $renderer->print_image($flashcard, "answerimagefile/{$card->id}", true);
             $front .= "<br/>";
             $front = $renderer->play_sound($flashcard, "answersoundfile/{$card->id}", 'false', true, "bell_f$i");
@@ -78,15 +81,8 @@ if ($cards) {
             $front = format_text($card->answertext, FORMAT_MOODLE);
         }
 
-        $pix = '<img src="'.$OUTPUT->pix_url('t/edit').'" />';
-        $params = array('id' => $id, 'view' => 'edit', 'what' => 'update', 'cardid' => $card->id);
-        $editurl = new moodle_url('/mod/flashcard/view.php', $params);
-        $command = '<a href="'.$editurl.'">'.$pix.'</a>';
-
-        $pix = '<img src="'.$OUTPUT->pix_url('t/delete').'" />';
-        $params = array('id' => $id, 'view' => 'manage', 'what' => 'delete', 'items[]' => $card->id);
-        $deleteurl = new moodle_url('/mod/flashcard/view.php', $params);
-        $command .= ' <a href="'.$deleteurl.'">'.$pix.'</a>';
+        $command = "<a href=\"{$editurl}&what=update&cardid={$card->id}\"><img src=\"".$OUTPUT->pix_url('t/edit').'" /></a>';
+        $command .= " <a href=\"{$url}?id={$id}&view=manage&what=delete&items[]={$card->id}\"><img src=\"".$OUTPUT->pix_url('t/delete').'" /></a>';
         $table->data[] = array($check, $back, $front, $command);
         $i++;
     }
@@ -102,8 +98,7 @@ if ($cards) {
     echo html_writer::table($table);
     echo '</form>';
     echo '<center>';
-    $url = new moodle_url('/mod/flashcard/view.php', array('id' => $id, 'view' => 'manage'));
-    echo $OUTPUT->paging_bar($allcards, $page, $pagesize, $url, 'page');
+    echo $OUTPUT->paging_bar($allcards, $page, $pagesize, $url.'?id='.$id.'&view=manage', 'page');
     echo '</center>';
 } else {
     echo $OUTPUT->box(get_string('nocards', 'flashcard'));
@@ -114,16 +109,8 @@ $addone = get_string('addone', 'flashcard');
 $addthree = get_string('addthree', 'flashcard');
 $deleteselectionstr = get_string('deleteselection', 'flashcard');
 $sesskey = sesskey();
-echo '<div class="rightlinks">';
+echo '<div class=\"rightlinks\">';
 if ($cards) {
-    $jshandler = 'javascript:document.forms[\'deletecards\'].submit();';
-    echo '<a href="'.$jshandler.'">'.$deleteselectionstr.'</a> - ';
+    echo "<a href=\"javascript:document.forms['deletecards'].submit();\">$deleteselectionstr</a> - ";
 }
-
-$params = array('id' => $id, 'view' => 'edit', 'what' => 'addone', 'sesskey' => sesskey());
-$addurl = new moodle_url('/mod/flashcard/view.php', $params);
-echo '<a href="'.$addurl.'">'.$addone.'</a> - ';
-
-$params = array('id' => $id, 'view' => 'edit', 'what' => 'addthree', 'sesskey' => sesskey());
-$addthreeurl = new moodle_url('/mod/flashcard/view.php', $params);
-echo '<a href="'.$addthreeurl.'">'.$addthree.'</a></div>';
+echo "<a href=\"{$editurl}&what=addone&sesskey={$sesskey}\">$addone</a> - <a href=\"{$editurl}&what=addthree&sesskey={$sesskey}\">$addthree</a></div>";

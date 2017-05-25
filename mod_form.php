@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+defined('MOODLE_INTERNAL') || die();
+
 /**
  * This view allows checking deck states
  *
@@ -24,7 +26,6 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
  * @version Moodle 2.0
  */
-defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->dirroot.'/course/moodleform_mod.php');
 require_once($CFG->libdir.'/questionlib.php');
@@ -44,16 +45,12 @@ class mod_flashcard_mod_form extends moodleform_mod {
 
         $mform->addElement('header', 'general', get_string('general', 'form'));
 
-        $mform->addElement('text', 'name', get_string('name'), array('size' => '64'));
-        if (!empty($CFG->formatstringstriptags)) {
-            $mform->setType('name', PARAM_TEXT);
-        } else {
-            $mform->setType('name', PARAM_CLEANHTML);
-        }
+        $mform->addElement('text', 'name', get_string('name'), array('size'=>'64'));
+        $mform->setType('name', PARAM_TEXT);
         $mform->addRule('name', null, 'required', null, 'client');
-        $mform->addRule('name', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
 
-        $this->standard_intro_elements();
+        // Introduction.
+        $this->add_intro_editor(false, get_string('summary', 'flashcard'));
 
         $startdatearray[] = &$mform->createElement('date_time_selector', 'starttime', '');
         $startdatearray[] = &$mform->createElement('checkbox', 'starttimeenable', '');
@@ -74,10 +71,7 @@ class mod_flashcard_mod_form extends moodleform_mod {
                 function drop_questions($a) {
                     global $DB;
 
-                    /*
-                     * First sanity check the existance of the context.
-                     * There may be deleted contexts and some question wreck inside.
-                     */
+                    // First sanity check the existance of the context. there may be deleted contexts and some question wreck inside.
                     $contextid = $DB->get_field('question_categories', 'contextid', array('id' => $a->category));
                     if (!$DB->record_exists('context', array('id' => $contextid))) {
                         return false;
@@ -102,20 +96,14 @@ class mod_flashcard_mod_form extends moodleform_mod {
         $mform->setAdvanced('forcereload');
         $mform->addHelpButton('forcereload', 'forcereload', 'flashcard');
 
-        $modeloptions[FLASHCARD_MODEL_BOTH] = get_string('bothmodels', 'flashcard');
-        $modeloptions[FLASHCARD_MODEL_LEITNER] = get_string('leitner', 'flashcard');
-        $modeloptions[FLASHCARD_MODEL_FREEUSE] = get_string('freeuse', 'flashcard');
-        $mform->addElement('select', 'models', get_string('models', 'flashcard'), $modeloptions);
-        $mform->addHelpButton('models', 'models', 'flashcard');
-
         $mediaoptions[FLASHCARD_MEDIA_TEXT] = get_string('text', 'flashcard');
         $mediaoptions[FLASHCARD_MEDIA_IMAGE] = get_string('image', 'flashcard');
         $mediaoptions[FLASHCARD_MEDIA_SOUND] = get_string('sound', 'flashcard');
         $mediaoptions[FLASHCARD_MEDIA_IMAGE_AND_SOUND] = get_string('imageplussound', 'flashcard');
-        $mediaoptions[FLASHCARD_MEDIA_VIDEO] = get_string('video', 'flashcard').' (Experimental)';
+        $mediaoptions[FLASHCARD_MEDIA_VIDEO] = get_string('video', 'flashcard'). ' (Experimental)';
         $mform->addElement('select', 'questionsmediatype', get_string('questionsmediatype', 'flashcard'), $mediaoptions);
         $mform->addHelpButton('questionsmediatype', 'mediatypes', 'flashcard');
-
+        
         $mform->addElement('select', 'answersmediatype', get_string('answersmediatype', 'flashcard'), $mediaoptions);
         $mform->addHelpButton('answersmediatype', 'mediatypes', 'flashcard');
 
@@ -133,7 +121,7 @@ class mod_flashcard_mod_form extends moodleform_mod {
         $options['3'] = 3;
         $options['4'] = 4;
         $mform->addElement('select', 'decks', get_string('decks', 'flashcard'), $options);
-        $mform->setType('decks', PARAM_INT);
+        $mform->setType('decks', PARAM_INT); 
         $mform->setDefault('decks', 2);
         $mform->addHelpButton('decks', 'decks', 'flashcard');
 
@@ -141,45 +129,45 @@ class mod_flashcard_mod_form extends moodleform_mod {
         $mform->addHelpButton('autodowngrade', 'autodowngrade', 'flashcard');
         $mform->setAdvanced('autodowngrade');
 
-        $mform->addElement('text', 'deck2_release', get_string('deck2_release', 'flashcard'), array('size' => '5'));
+        $mform->addElement('text', 'deck2_release', get_string('deck2_release', 'flashcard'), array('size'=>'5'));
         $mform->addHelpButton('deck2_release', 'deck_release', 'flashcard');
         $mform->setType('deck2_release', PARAM_INT);
         $mform->setDefault('deck2_release', 96);
         $mform->addRule('deck2_release', get_string('numericrequired', 'flashcard'), 'numeric', null, 'client');
         $mform->setAdvanced('deck2_release');
-
-        $mform->addElement('text', 'deck3_release', get_string('deck3_release', 'flashcard'), array('size' => '5'));
+ 
+        $mform->addElement('text', 'deck3_release', get_string('deck3_release', 'flashcard'), array('size'=>'5'));
         $mform->setType('deck3_release', PARAM_INT);
         $mform->setDefault('deck3_release', 96);
         $mform->addRule('deck3_release', get_string('numericrequired', 'flashcard'), 'numeric', null, 'client');
         $mform->disabledIf('deck3_release', 'decks', 'eq', 2);
         $mform->setAdvanced('deck3_release');
 
-        $mform->addElement('text', 'deck4_release', get_string('deck4_release', 'flashcard'), array('size' => '5'));
+        $mform->addElement('text', 'deck4_release', get_string('deck4_release', 'flashcard'), array('size'=>'5'));
         $mform->setType('deck4_release', PARAM_INT);
         $mform->setDefault('deck4_release', 96);
         $mform->addRule('deck4_release', get_string('numericrequired', 'flashcard'), 'numeric', null, 'client');
         $mform->disabledIf('deck4_release', 'decks', 'neq', 4);
         $mform->setAdvanced('deck4_release');
 
-        $mform->addElement('text', 'deck1_delay', get_string('deck1_delay', 'flashcard'), array('size' => '5'));
+        $mform->addElement('text', 'deck1_delay', get_string('deck1_delay', 'flashcard'), array('size'=>'5'));
         $mform->addHelpButton('deck1_delay', 'deck_delay', 'flashcard');
         $mform->setType('deck1_delay', PARAM_INT);
         $mform->setDefault('deck1_delay', 48);
         $mform->addRule('deck1_delay', get_string('numericrequired', 'flashcard'), 'numeric', null, 'client');
 
-        $mform->addElement('text', 'deck2_delay', get_string('deck2_delay', 'flashcard'), array('size' => '5'));
+        $mform->addElement('text', 'deck2_delay', get_string('deck2_delay', 'flashcard'), array('size'=>'5'));
         $mform->setType('deck2_delay', PARAM_INT);
         $mform->setDefault('deck2_delay', 96);
         $mform->addRule('deck2_delay', get_string('numericrequired', 'flashcard'), 'numeric', null, 'client');
 
-        $mform->addElement('text', 'deck3_delay', get_string('deck3_delay', 'flashcard'), array('size' => '5'));
+        $mform->addElement('text', 'deck3_delay', get_string('deck3_delay', 'flashcard'), array('size'=>'5'));
         $mform->setType('deck3_delay', PARAM_INT);
         $mform->setDefault('deck3_delay', 168);
         $mform->addRule('deck3_delay', get_string('numericrequired', 'flashcard'), 'numeric', null, 'client');
         $mform->disabledIf('deck3_delay', 'decks', 'eq', 2);
 
-        $mform->addElement('text', 'deck4_delay', get_string('deck4_delay', 'flashcard'), array('size' => '5'));
+        $mform->addElement('text', 'deck4_delay', get_string('deck4_delay', 'flashcard'), array('size'=>'5'));
         $mform->setType('deck4_delay', PARAM_INT);
         $mform->setDefault('deck4_delay', 336);
         $mform->addRule('deck4_delay', get_string('numericrequired', 'flashcard'), 'numeric', null, 'client');
@@ -193,32 +181,23 @@ class mod_flashcard_mod_form extends moodleform_mod {
         $mform->addElement('header', 'customfiles_head', get_string('customisationfiles', 'flashcard'));
         $mform->setAdvanced('customfiles_head');
 
-        $customcardoptions = array('maxfiles' => 1,
-                                   'maxbytes' => $COURSE->maxbytes,
-                                   'accepted_types' => array('.jpg', '.png', '.gif'));
+        $customcardoptions = array('maxfiles' => 1, 'maxbytes' => $COURSE->maxbytes, 'accepted_types' => array('.jpg', '.png', '.gif'));
 
         $maxbytes = 100000;
-        $label = get_string('cardfront', 'flashcard');
-        $mform->addElement('filepicker', 'custombackfileid', $label, null, $customcardoptions);
+        $mform->addElement('filepicker', 'custombackfileid', get_string('cardfront', 'flashcard'), null, $customcardoptions);
         $mform->setAdvanced('custombackfileid');
-        $label = get_string('cardback', 'flashcard');
-        $mform->addElement('filepicker', 'customfrontfileid', $label, null, $customcardoptions);
+        $mform->addElement('filepicker', 'customfrontfileid', get_string('cardback', 'flashcard'), null, $customcardoptions);
         $mform->setAdvanced('customfrontfileid');
-        $label = get_string('emptydeck', 'flashcard');
-        $mform->addElement('filepicker', 'customemptyfileid', $label, null, $customcardoptions);
+        $mform->addElement('filepicker', 'customemptyfileid', get_string('emptydeck', 'flashcard'), null, $customcardoptions);
         $mform->setAdvanced('customemptyfileid');
-        $label = get_string('reviewback', 'flashcard');
-        $mform->addElement('filepicker', 'customreviewfileid', $label, null, $customcardoptions);
+        $mform->addElement('filepicker', 'customreviewfileid', get_string('reviewback', 'flashcard'), null, $customcardoptions);
         $mform->setAdvanced('customreviewfileid');
-        $label = get_string('reviewedback', 'flashcard');
-        $mform->addElement('filepicker', 'customreviewedfileid', $label, null, $customcardoptions);
+        $mform->addElement('filepicker', 'customreviewedfileid', get_string('reviewedback', 'flashcard'), null, $customcardoptions);
         $mform->setAdvanced('customreviewedfileid');
-        $label = get_string('reviewedempty', 'flashcard');
-        $mform->addElement('filepicker', 'customreviewemptyfileid', $label, null, $customcardoptions);
+        $mform->addElement('filepicker', 'customreviewemptyfileid', get_string('reviewedempty', 'flashcard'), null, $customcardoptions);
         $mform->setAdvanced('customreviewemptyfileid');
 
-        $label = get_string('extracss', 'flashcard');
-        $mform->addElement('textarea', 'extracss', $label, array('cols' => '60', 'rows' => 15));
+        $mform->addElement('textarea', 'extracss', get_string('extracss', 'flashcard'), array('cols'=>'60', 'rows' => 15));
         $mform->setAdvanced('extracss');
 
         $this->standard_coursemodule_elements();
@@ -230,80 +209,70 @@ class mod_flashcard_mod_form extends moodleform_mod {
         $mform =& $this->_form;
 
         $group = array();
-        $label = get_string('completionallviewed', 'flashcard');
-        $group[] =& $mform->createElement('checkbox', 'completionallviewedenabled', '', $label);
+        $group[] =& $mform->createElement('checkbox', 'completionallviewedenabled', '', get_string('completionallviewed', 'flashcard'));
         $group[] =& $mform->createElement('text', 'completionallviewed', '', array('size' => 3));
         $mform->setType('completionallviewed', PARAM_INT);
-        $label = get_string('completionallviewedgroup', 'flashcard');
-        $mform->addGroup($group, 'completionallviewedgroup', $label, array(' '), false);
+        $mform->addGroup($group, 'completionallviewedgroup', get_string('completionallviewedgroup', 'flashcard'), array(' '), false);
         $mform->disabledIf('completionallviewedgroup', 'completionallgoodenabled', 'checked');
 
         $group = array();
-        $label = get_string('completionallgoodenabled', 'flashcard');
-        $group[] =& $mform->createElement('checkbox', 'completionallgoodenabled', '', $label);
-        $label = get_string('completionallgoodgroup', 'flashcard');
-        $mform->addGroup($group, 'completionallgoodgroup', $label, array(' '), false);
+        $group[] =& $mform->createElement('checkbox', 'completionallgoodenabled', '', get_string('completionallgoodenabled', 'flashcard'));
+        $mform->addGroup($group, 'completionallgoodgroup', get_string('completionallgoodgroup', 'flashcard'), array(' '), false);
 
-        return array('completionallviewedgroup', 'completionallgoodgroup');
+        return array('completionallviewedgroup','completionallgoodgroup');
     }
 
     public function completion_rule_enabled($data) {
-        return (!empty($data['completionallviewedenabled']) && $data['completionallviewed'] != 0) ||
+        return (!empty($data['completionallviewedenabled']) && $data['completionallviewed']!=0) ||
             (!empty($data['completionallgood']));
     }
 
-    public function data_preprocessing(&$defaultvalues) {
-        parent::data_preprocessing($defaultvalues);
+    public function data_preprocessing(&$default_values) {
+        parent::data_preprocessing($default_values);
 
-        /*
-         * Set up the completion checkboxes which aren't part of standard data.
-         * We also make the default value (if you turn on the checkbox) for those
-         * numbers to be 1, this will not apply unless checkbox is ticked.
-         */
-        $defaultvalues['completionallviewedenabled'] = !empty($defaultvalues['completionallviewed']) ? 1 : 0;
-        if (empty($defaultvalues['completionallviewed'])) {
-            $defaultvalues['completionallviewed'] = 999;
+        // Set up the completion checkboxes which aren't part of standard data.
+        // We also make the default value (if you turn on the checkbox) for those
+        // numbers to be 1, this will not apply unless checkbox is ticked.
+        $default_values['completionallviewedenabled'] = !empty($default_values['completionallviewed']) ? 1 : 0;
+        if (empty($default_values['completionallviewed'])) {
+            $default_values['completionallviewed'] = 999;
         }
-        $defaultvalues['completionallgoodenabled'] = !empty($defaultvalues['completionallgood']) ? 1 : 0;
+        $default_values['completionallgoodenabled'] = !empty($default_values['completionallgood']) ? 1 : 0;
     }
 
     public function set_data($data) {
-        global $CFG;
 
         if ($data->coursemodule) {
             $context = context_module::instance($data->coursemodule);
 
-            $maxbytes = $CFG->maxbytes;
-            $options = array('subdirs' => 0, 'maxbytes' => $maxbytes, 'maxfiles' => 1);
-
             $draftitemid = file_get_submitted_draft_itemid('customfront');
             $maxbytes = 100000;
-            file_prepare_draft_area($draftitemid, $context->id, 'mod_flashcard', 'customfront', 0, $options);
+            file_prepare_draft_area($draftitemid, $context->id, 'mod_flashcard', 'customfront', 0, array('subdirs' => 0, 'maxbytes' => $maxbytes, 'maxfiles' => 1));
             $data->customfrontfileid = $draftitemid;
 
             $draftitemid = file_get_submitted_draft_itemid('customback');
             $maxbytes = 100000;
-            file_prepare_draft_area($draftitemid, $context->id, 'mod_flashcard', 'customback', 0, $options);
+            file_prepare_draft_area($draftitemid, $context->id, 'mod_flashcard', 'customback', 0, array('subdirs' => 0, 'maxbytes' => $maxbytes, 'maxfiles' => 1));
             $data->custombackfileid = $draftitemid;
 
             $draftitemid = file_get_submitted_draft_itemid('customempty');
             $maxbytes = 100000;
-            file_prepare_draft_area($draftitemid, $context->id, 'mod_flashcard', 'customempty', 0, $options);
+            file_prepare_draft_area($draftitemid, $context->id, 'mod_flashcard', 'customempty', 0, array('subdirs' => 0, 'maxbytes' => $maxbytes, 'maxfiles' => 1));
             $data->customemptyfileid = $draftitemid;
 
             $draftitemid = file_get_submitted_draft_itemid('customreview');
             $maxbytes = 100000;
-            file_prepare_draft_area($draftitemid, $context->id, 'mod_flashcard', 'customreview', 0, $options);
+            file_prepare_draft_area($draftitemid, $context->id, 'mod_flashcard', 'customreview', 0, array('subdirs' => 0, 'maxbytes' => $maxbytes, 'maxfiles' => 1));
             $data->customreviewfileid = $draftitemid;
 
             $draftitemid = file_get_submitted_draft_itemid('customreview');
             $maxbytes = 100000;
-            file_prepare_draft_area($draftitemid, $context->id, 'mod_flashcard', 'customreviewed', 0, $options);
+            file_prepare_draft_area($draftitemid, $context->id, 'mod_flashcard', 'customreviewed', 0, array('subdirs' => 0, 'maxbytes' => $maxbytes, 'maxfiles' => 1));         
             $data->customreviewedfileid = $draftitemid;
 
             $draftitemid = file_get_submitted_draft_itemid('customreviewempty');
             $maxbytes = 100000;
-            file_prepare_draft_area($draftitemid, $context->id, 'mod_flashcard', 'customreviewempty', 0, $options);
+            file_prepare_draft_area($draftitemid, $context->id, 'mod_flashcard', 'customreviewempty', 0, array('subdirs' => 0, 'maxbytes' => $maxbytes, 'maxfiles' => 1));         
             $data->customreviewemptyfileid = $draftitemid;
         }
 
@@ -352,7 +321,7 @@ class mod_flashcard_mod_form extends moodleform_mod {
     }
 
     public function validation($data, $files = array()) {
-        $errors = parent::validation($data, $files);
+        $errors = array();
 
         if ($data['starttime'] > $data['endtime']) {
             $errors['endfrom'] = get_string('mustbehigherthanstart', 'flashcard');

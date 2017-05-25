@@ -1,20 +1,21 @@
-.finished {
-    background-image: url('pix/finished.jpg');
-    height: 201px;
-    width: 307px
+
+.finished { 
+    background-image: url('pix/finished.jpg'); 
+    height: 201px; 
+    width: 307px 
 }
 
-.emptyset {
-    color: red;
+.emptyset { 
+    color: red; 
 }
 
 .graphdeck{
      background-image: url('pix/cardslice.png');
      background-repeat: repeat-y;
-}
+} 
 
 .error{
-    color: red;
+    color: red; 
 }
 
 .bar{
@@ -23,11 +24,7 @@
     border: solid 1px #0B2386;
 }
 
-.flashcard-screenlinks{
-    padding: 10px;
-}
-
-.flashcard-playbutton{
+.flashcard_playbutton{
     display: inline-block;
     padding: 10px;
 }
@@ -43,51 +40,48 @@
 }
 
 .flashcard-question{
+    border-style: dashed; 
+    padding: 10px 30px; 
+    width: 300px; 
+    height: 200px; 
     background-position:50% 50%;
-    border-style: dashed;
-    display: table-cell;
-    height: 200px;
-    padding: 10px 30px;
     vertical-align:middle;
-    width: 300px;
+    display: table-cell;
 }
 
 .flashcard-question-video{
+    border-style: dashed; 
+    padding: 10px 30px; 
+    width: 600px; 
+    height: 400px; 
     background-position:50% 50%;
-    border-style: dashed;
-    display: table-cell;
-    height: 400px;
-    padding: 10px 30px;
     vertical-align:middle;
-    width: 600px;
+    display: table-cell;
 }
 
 .flashcard-answer{
+    border-style: dashed; 
+    margin: 10px auto 10px auto; 
+    padding: 10px 30px; 
+    width: 300px; 
+    height: 200px; 
     background-position:50% 50%;
-    border-style: dashed;
-    display: table-cell;
-    height: 200px;
-    padding: 10px 30px;
     vertical-align:middle;
-    width: 300px;
+    display: table-cell;
 }
 
 .flashcard-answer-video{
+    border-style: dashed; 
+    margin: 10px auto 10px auto; 
+    padding: 10px 30px; 
+    width: 600px; 
+    height: 400px; 
     background-position:50% 50%;
-    border-style: dashed;
-    display: table-cell;
-    height: 400px;
-    padding: 10px 30px;
     vertical-align:middle;
-    width: 600px;
+    display: table-cell;
 }
 
-.flowplayer {
-    background-color: #222;
-    background-size: cover;
-    margin-bottom:30px;
-    width: 80%;
-}
+.flowplayer { width: 80%; background-color: #222; background-size: cover; margin-bottom:30px }
 .flowplayer .fp-controls { background-color: rgba(17, 17, 17, 1)}
 .flowplayer .fp-timeline { background-color: rgba(204, 204, 204, 1)}
 .flowplayer .fp-progress { background-color: rgba(0, 167, 200, 1)}
@@ -98,7 +92,7 @@
 }
 
 .flashcard-flowplayer-thumb{
-     max-width: 300px;
+     max-width: 300px; 
 }
 
 #flashcard-card-form .fitemtitle {
@@ -107,14 +101,4 @@
 
 #flashcard-card-form .ftextarea {
     margin-left:50px !important;
-}
-
-.flashcard-backtocourse {
-    margin:8px;
-    padding-top:20px;
-    text-align:center;
-}
-
-.flashcard-card-form .ffilepicker {
-    margin-left:10px;
 }

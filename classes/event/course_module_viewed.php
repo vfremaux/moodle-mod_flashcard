@@ -27,6 +27,18 @@ defined('MOODLE_INTERNAL') || die();
 
 /**
  * Event for when a flashcard activity is viewed.
+ *
+ * @property-read array $other {
+ *      Extra information about event.
+ *
+ *      @type int anonymous if flashcard is anonymous.
+ *      @type int cmid course module id.
+ * }
+ *
+ * @package    mod_flashcard
+ * @since      Moodle 2.7
+ * @copyright  2013 Ankit Agarwal
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class course_module_viewed extends \core\event\course_module_viewed {
 
@@ -53,5 +65,15 @@ class course_module_viewed extends \core\event\course_module_viewed {
         }
     }
 
+    /**
+     * Custom validations.
+     *
+     * @throws \coding_exception in case of any problems.
+     */
+    protected function validate_data() {
+
+        // Call parent validations.
+        parent::validate_data();
+    }
 }
 
