@@ -78,12 +78,12 @@ if ($cards) {
             $front = format_text($card->answertext, FORMAT_MOODLE);
         }
 
-        $pix = '<img src="'.$OUTPUT->pix_url('t/edit').'" />';
+        $pix = '<img src="'.$OUTPUT->image_url('t/edit').'" />';
         $params = array('id' => $id, 'view' => 'edit', 'what' => 'update', 'cardid' => $card->id);
         $editurl = new moodle_url('/mod/flashcard/view.php', $params);
         $command = '<a href="'.$editurl.'">'.$pix.'</a>';
 
-        $pix = '<img src="'.$OUTPUT->pix_url('t/delete').'" />';
+        $pix = '<img src="'.$OUTPUT->image_url('t/delete').'" />';
         $params = array('id' => $id, 'view' => 'manage', 'what' => 'delete', 'items[]' => $card->id);
         $deleteurl = new moodle_url('/mod/flashcard/view.php', $params);
         $command .= ' <a href="'.$deleteurl.'">'.$pix.'</a>';
