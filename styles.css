@@ -20,7 +20,7 @@
 .bar {
     background-image: url('pix/men.png');
     background-repeat: repeat-x;
-    border: solid 1px #0B2386;
+    border: solid 1px #0b2386;
 }
 
 .flashcard-screenlinks {
@@ -34,12 +34,12 @@
 
 .flashcard-question-container {
     display: block;
-    margin: 10px auto 10px auto; 
+    margin: 10px auto 10px auto;
 }
 
 .flashcard-answer-container {
     display: block;
-    margin: 10px auto 10px auto; 
+    margin: 10px auto 10px auto;
 }
 
 .flashcard-question {
@@ -90,19 +90,19 @@
 }
 
 .flowplayer .fp-controls {
-    background-color: rgba(17, 17, 17, 1)
+    background-color: rgba(17, 17, 17, 1);
 }
 
 .flowplayer .fp-timeline {
-    background-color: rgba(204, 204, 204, 1)
+    background-color: rgba(204, 204, 204, 1);
 }
 
 .flowplayer .fp-progress {
-    background-color: rgba(0, 167, 200, 1)
+    background-color: rgba(0, 167, 200, 1);
 }
 
 .flowplayer .fp-buffer {
-    background-color: rgba(249, 249, 249, 1)
+    background-color: rgba(249, 249, 249, 1);
 }
 
 .flashcard-flowplayer video {
