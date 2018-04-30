@@ -108,17 +108,17 @@ class mod_flashcard_renderer extends plugin_renderer_base {
 
         $str = '';
 
-        $emptydeckurl = $this->output->pix_url('emptydeck', 'flashcard');
+        $emptydeckurl = $this->output->image_url('emptydeck', 'flashcard');
         if (!empty($flashcard->customreviewemptyfileid)) {
             $emptydeckurl = flashcard_get_file_url($flashcard->customreviewemptyfileid);
         }
 
-        $decktoreviewurl = $this->output->pix_url('enableddeck', 'flashcard');
+        $decktoreviewurl = $this->output->image_url('enableddeck', 'flashcard');
         if (!empty($flashcard->customreviewfileid)) {
             $decktoreviewurl = flashcard_get_file_url($flashcard->customreviewfileid);
         }
 
-        $deckreviewedurl = $this->output->pix_url('disableddeck', 'flashcard');
+        $deckreviewedurl = $this->output->image_url('disableddeck', 'flashcard');
         if (!empty($flashcard->customreviewedfileid)) {
             $deckreviewedurl = flashcard_get_file_url($flashcard->customreviewedfileid);
         }
@@ -166,9 +166,8 @@ class mod_flashcard_renderer extends plugin_renderer_base {
             $str .= '<table>';
             $str .= '<tr><td>';
             $str .= '<div style="padding-bottom: '.$height.'px" class="graphdeck" align="top">';
-            $pixurl = $this->output->pix_url($image, 'flashcard');
             $title = get_string('cardsindeck', 'flashcard', $status->decks[0]->count);
-            $str .= '<img src="'.$pixurl.'" title="'.$title.'"/>';
+            $str .= $OUTPUT->pix_icon($image, $title, 'flashcard');
             $str .= '</div>';
             $str .= '</td>';
 
@@ -178,19 +177,16 @@ class mod_flashcard_renderer extends plugin_renderer_base {
             $timetoreview = round(max(0, ($status->decks[0]->lastaccess + ($flashcard->deck1_delay * HOURSECS) - time()) / DAYSECS));
             $strtimetoreview = get_string('timetoreview', 'flashcard', $timetoreview);
             for ($i = 0; $i < min($dayslateness, floor($flashcard->deck1_delay / 24)); $i++) {
-                $pixurl = $this->output->pix_url('clock', 'flashcard');
-                $str .= '<img src="'.$pixurl.'" valign="bottom" title="'.$strtimetoreview.'" />';
+                $str .= $this->output->pix_icon('clock', $strtimetoreview, 'flashcard', array('valign' => 'bottom'));
             }
             if ($dayslateness < $flashcard->deck1_delay / 24) {
                 for (; $i < $flashcard->deck1_delay / 24; $i++) {
-                    $pixurl = $this->output->pix_url('shadowclock', 'flashcard');
-                    $str .= '<img src="'.$pixurl.'" valign="bottom" title="'.$strtimetoreview.'" />';
+                    $str .= $this->output->pix_icon('shadowclock', $strtimetoreview, 'flashcard', array('valign' => 'bottom'));
                 }
             } else if ($dayslateness > $flashcard->deck1_delay / 24) {
                 // Deck 1 has no release limit as cards can stay here as long as not viewed.
                 for ($i = 0; $i < min($dayslateness - floor($flashcard->deck1_delay / 24), 4); $i++) {
-                    $pixurl = $this->output->pix_url('overtime', 'flashcard');
-                    $str .= '<img src="'.$pixurl.'" valign="bottom" title="'.$strtimetoreview.'" />';
+                    $str .= $this->output->pix_icon('overtime', $strtimetoreview, 'flashcard', array('valign' => 'bottom'));
                 }
             }
             $str .= '</td>';
@@ -198,13 +194,12 @@ class mod_flashcard_renderer extends plugin_renderer_base {
             $str .= '</table>';
         } else {
             $str .= '<div height="12px" align="top">';
-            $pixurl = $this->output->pix_url('topempty', 'flashcard');
-            $str .= '<img src="'.$pixurl.'" />';
+            $str .= $this->output->pix_icon('topempty', '', 'flashcard');
             $str .= '</div>';
         }
 
         $str .= '</td>';
-        $str .= '<td>'. $this->output->pix_icon('a/r_breadcrumb', 'right breadcrumb icon').'</td>';
+        $str .= '<td>'. $this->output->pix_icon('a/r_breadcrumb', '', 'core', array('class' => 'right breadcrumb icon')).'</td>';
         $str .= '<td width="30%" align="center">';
 
         // Print for deck 2.
@@ -215,9 +210,8 @@ class mod_flashcard_renderer extends plugin_renderer_base {
             $str .= '<tr>';
             $str .= '<td>';
             $str .= '<div style="padding-bottom: '.$height.'px" class="graphdeck" align="top">';
-            $pixurl = $this->output->pix_url($image, 'flashcard');
             $title = get_string('cardsindeck', 'flashcard', $status->decks[1]->count);
-            $str .= '<img src="'.$pixurl.'" title="'.$title.'"/>';
+            $str .= $this->output->pix_icon($image, $title, 'flashcard');
             $str .= '</div>';
             $str .= '</td>';
             $str .= '<td>';
@@ -225,18 +219,15 @@ class mod_flashcard_renderer extends plugin_renderer_base {
             $timetoreview = round(max(0, ($status->decks[1]->lastaccess + ($flashcard->deck2_delay * HOURSECS) - time()) / DAYSECS));
             $strtimetoreview = get_string('timetoreview', 'flashcard', $timetoreview);
             for ($i = 0; $i < min($dayslateness, floor($flashcard->deck2_delay / 24)); $i++) {
-                $pixurl = $this->output->pix_url('clock', 'flashcard');
-                $str .= '<img src="'.$pixurl.'" valign="bottom" title="'.$strtimetoreview.'" />';
+                $str .= $this->output->pix_icon('clock', $strtimetoreview, 'flashcard', array('valign' => 'bottom'));
             }
             if ($dayslateness < $flashcard->deck2_delay / 24) {
                 for (; $i < $flashcard->deck2_delay / 24; $i++) {
-                    $pixurl = $this->output->pixurl('shadowclock', 'flashcard');
-                    $str .= '<img src="'.$pixurl.'" valign="bottom" title="'.$strtimetoreview.'" />';
+                    $str .= $this->output->pix_icon('shadowclock', $strtimetoreview, 'flashcard', array('valign' => 'bottom'));
                 }
             } else if ($dayslateness > $flashcard->deck2_delay / 24) {
                 for ($i = 0; $i < min($dayslateness - floor($flashcard->deck2_delay / 24), $flashcard->deck2_release / 24); $i++) {
-                    $pixurl = $this->output->pixurl('overtime', 'flashcard');
-                    $str .= '<img src="'.$pixurl.'" valign="bottom" />';
+                    $str .= $this->output->pix_icon('overtime', $strtimetoreview, 'flashcard');
                 }
             }
             $str .= '</td>';
@@ -244,8 +235,7 @@ class mod_flashcard_renderer extends plugin_renderer_base {
             $str .= '</table>';
         } else {
             $str .= '<div height="12px" align="top">';
-            $pixurl = $this->output->pix_url('topempty', 'flashcard');
-            $str .= '<img src="'.$pixurl.'" />';
+            $str .= $this->output->pix_icon('topempty', '', 'flashcard');
             $str .= '</div>';
         }
 
@@ -263,9 +253,8 @@ class mod_flashcard_renderer extends plugin_renderer_base {
 
                 $str .= '<td>';
                 $str .= '<div style="padding-bottom: '.$height.'px" class="graphdeck" align="top">';
-                $pixurl = $this->output->pix_url($image, 'flashcard');
                 $title = get_string('cardsindeck', 'flashcard', $status->decks[2]->count);
-                $str .= '<img src="'.$pixurl.'" title="'.$title.'"/>';
+                $str .= $this->output->pix_icon($image, $title, 'flashcard');
                 $str .= '</div>';
                 $str .= '</td>';
 
@@ -273,19 +262,16 @@ class mod_flashcard_renderer extends plugin_renderer_base {
                 $dayslateness = floor((time() - $status->decks[2]->lastaccess) / DAYSECS);
                 $timetoreview = round(max(0, ($status->decks[2]->lastaccess + ($flashcard->deck3_delay * HOURSECS) - time()) / DAYSECS));
                 $strtimetoreview = get_string('timetoreview', 'flashcard', $timetoreview);
-                $pixurl = $this->output->pix_url('clock', 'flashcard');
                 for ($i = 0; $i < min($dayslateness, floor($flashcard->deck3_delay / 24)); $i++) {
-                    $str .= '<img src="'.$pixurl.'" valign="bottom" />';
+                    $str .= $this->output->pix_icon('clock', $strtimetoreview, 'flashcard', array('valign' => 'bottom'));
                 }
                 if ($dayslateness < $flashcard->deck3_delay / 24) {
                     for (; $i < $flashcard->deck3_delay / 24; $i++) {
-                        $pixurl = $this->output->pix_url('shadowclock', 'flashcard');
-                        $str .= '<img src="'.$pixurl.'" valign="bottom" title="'.$strtimetoreview.'" />';
+                        $str .= $this->output->pix_icon('shadowclock', $strtimetoreview, 'flashcard', array('valign' => 'bottom'));
                     }
                 } else if ($dayslateness > $flashcard->deck3_delay / 24) {
-                    $pixurl = $this->output->pix_url('overtime', 'flashcard');
                     for ($i = 0; $i < min($dayslateness - floor($flashcard->deck3_delay / 24), $flashcard->deck3_release / 24); $i++) {
-                        $str .= '<img src="'.$pixurl.'" valign="bottom" />';
+                        $str .= $this->output->pix_icon('overtime', '', 'flashcard', array('valign' => 'bottom'));
                     }
                 }
                 $str .= '</td>';
@@ -293,8 +279,7 @@ class mod_flashcard_renderer extends plugin_renderer_base {
                 $str .= '</table>';
             } else {
                 $str .= '<div height="12px" align="top">';
-                $pixurl = $this->output->pix_url('topempty', 'flashcard');
-                $str .= '<img src="'.$pixurl.'"  title="'.$strtimetoreview.'" />';
+                $str .= $this->output->pix_icon('topempty', $strtimetoreview, 'flashcard');
                 $str .= '</div>';
             }
         }
@@ -311,9 +296,8 @@ class mod_flashcard_renderer extends plugin_renderer_base {
                 $str .= '<tr>';
                 $str .= '<td>';
                 $str .= '<div style="padding-bottom: '.$height.'px" class="graphdeck" align="top">';
-                $pixurl = $this->output->pixurl($image, 'flashcard');
                 $title = get_string('cardsindeck', 'flashcard', $status->decks[3]->count);
-                $str .= '<img src="'.$pixurl.'" title="'.$title.'"/>';
+                $str .= $this->output->pix_icon($image, $title, 'flashcard');
                 $str .= '</div>';
                 $str .= '</td>';
                 $str .= '<td>';
@@ -321,19 +305,16 @@ class mod_flashcard_renderer extends plugin_renderer_base {
                 $dayslateness = floor((time() - $status->decks[3]->lastaccess) / DAYSECS);
                 $timetoreview = round(max(0, ($status->decks[3]->lastaccess + ($flashcard->deck4_delay * HOURSECS) - time()) / DAYSECS));
                 $strtimetoreview = get_string('timetoreview', 'flashcard', $timetoreview);
-                $pixurl = $this->output->pix_url('clock', 'flashcard');
                 for ($i = 0; $i < min($dayslateness, floor($flashcard->deck4_delay / 24)); $i++) {
-                    $str .= '<img src="'.$pixurl.'" valign="bottom" />';
+                    $str .= $this->output->pix_icon('clock', $strtimetoreview, 'flashcard');
                 }
                 if ($dayslateness < $flashcard->deck4_delay / 24) {
-                    $pixurl = $this->output->pix_url('shadowclock', 'flashcard');
                     for (; $i < $flashcard->deck4_delay / 24; $i++) {
-                        $str .= '<img src="'.$pixurl.'" valign="bottom" />';
+                        $str .= $this->output->pix_icon('shadowclock', $strtimetoreview, 'flashcard');
                     }
                 } else if ($dayslateness > $flashcard->deck4_delay / 24) {
-                    $pixurl = $this->output->pix_url('overtime', 'flashcard');
                     for ($i = 0; $i < min($dayslateness - floor($flashcard->deck4_delay / 24), $flashcard->deck4_release / 24); $i++) {
-                        $str .= '<img src="'.$pixurl.'" valign="bottom" />';
+                        $str .= $this->output->pix_icon('overtime', '', 'flashcard');
                     }
                 }
                 $str .= '</td>';
@@ -341,7 +322,7 @@ class mod_flashcard_renderer extends plugin_renderer_base {
                 $str .= '</table>';
             } else {
                 $str .= '<div height="12px" align="top">';
-                $str .= '<img src="'.$this->output->pix_url('topempty', 'flashcard').'" />';
+                $str .= $this->output->pix_icon('topempty', '', 'flashcard');
                 $str .= '</div>';
             }
         }
@@ -426,7 +407,7 @@ class mod_flashcard_renderer extends plugin_renderer_base {
         $imagefiles = $fs->get_area_files($context->id, 'mod_flashcard', $filearea, $itemid);
 
         if (empty($imagefiles)) {
-            $imagefileurl = $this->output->pix_url('notfound', 'flashcard');
+            $imagefileurl = $this->output->image_url('notfound', 'flashcard');
             $imagehtml = '<img src="'.$imagefileurl.'" width="100%" height="100%" />';
             return $imagehtml;
         }
@@ -465,8 +446,7 @@ class mod_flashcard_renderer extends plugin_renderer_base {
         $soundfiles = $fs->get_area_files($context->id, 'mod_flashcard', $filearea, $itemid);
 
         if (empty($soundfiles)) {
-            $soundfileurl = $this->output->pix_url('notfound', 'flashcard');
-            $soundhtml = '<img src="'.$soundfileurl.'" />';
+            $soundhtml = $this->output->pix_icon('notfound', '', 'flashcard');
             return $soundhtml;
         }
 
@@ -513,8 +493,7 @@ class mod_flashcard_renderer extends plugin_renderer_base {
         $videofiles = $fs->get_area_files($context->id, 'mod_flashcard', $filearea, $itemid);
 
         if (empty($videofiles)) {
-            $videofileurl = $this->output->pix_url('notfound', 'flashcard');
-            $videohtml = "<img src=\"{$videofileurl}\" />";
+            $videohtml = $this->output->pix_icon('notfound', '', 'flashcard');
             return $videohtml;
         }
 
@@ -565,25 +544,25 @@ class mod_flashcard_renderer extends plugin_renderer_base {
     public function print_cardcounts(&$flashcard, $card) {
         $str = '';
 
-        $topenabledpixurl = $this->output->pix_url('topenabled', 'flashcard');
-
         $row = '<td>';
-        $row .= '<img src="'.$topenabledpixurl.'" /> (1) </td>';
+        $row .= $this->output->pix_icon('topenabled', '', 'flashcard').' (1) </td>';
         $row .= '<td><div class="bar" style="height: 10px; width: '.(1 + @$card->deck[0]).'px"></div></td>';
         $strs[] = $row;
 
         $row = '<td>';
-        $row .= '<img src="'.$topenabledpixurl.'" /> (2) </td>';
+        $row .= $this->output->pix_icon('topenabled', '', 'flashcard').' (2) </td>';
         $row .= '<td><div class="bar" style="height: 10px; width: '.(1 + @$card->deck[1]).'px"></div></td>';
         $strs[] = $row;
 
         if ($flashcard->decks >= 3) {
-            $row = '<td><img src="'.$topenabledpixurl.'" /> (3) </td>';
+            $row = '<td>';
+            $row .= $this->output->pix_icon('topenabled', '', 'flashcard').' (3) </td>';
             $row .= '<td><div class="bar" style="height: 10px; width: '.(1 + @$card->deck[2]).'px"></div></td>';
             $strs[] = $row;
         }
         if ($flashcard->decks >= 4) {
-            $row = '<td><img src="'.$topenabledpixurl.'" /> (4) </td>';
+            $row = '<td>';
+            $row .= $this->output->pix_icon('topenabled', '', 'flashcard').' (4) </td>';
             $row .= '<td><div class="bar" style="height: 10px; width: '.(1 + @$card->deck[3]).'px"></div></td>';
             $strs[] = $row;
         }
