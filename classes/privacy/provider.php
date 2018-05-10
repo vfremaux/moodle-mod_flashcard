@@ -27,6 +27,7 @@ class provider implements \core_privacy\local\metadata\provider {
         $fields = [
             'userid' => 'privacy:metadata:flashcard_card:userid',
             'flashcardid' => 'privacy:metadata:flashcard_card:flashcardid',
+            'entryid' => 'privacy:metadata:flashcard_card:entryid',
             'deck' => 'privacy:metadata:flashcard_card:deck',
             'lastaccessed' => 'privacy:metadata:flashcard_card:lastaccessed',
         ];
@@ -76,7 +77,7 @@ class provider implements \core_privacy\local\metadata\provider {
         $params = [
             'modname'           => 'flashcard',
             'contextlevel'      => CONTEXT_MODULE,
-            'discussionuserid'  => $userid,
+            'userid'  => $userid,
         ];
  
         $contextlist->add_from_sql($sql, $params);

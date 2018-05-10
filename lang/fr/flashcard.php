@@ -163,6 +163,19 @@ $string['userdecksummary'] = 'Jeu {$a->deckid}: {$a->count} cartes {$a->cardcoun
 $string['viewed'] = 'Affichages';
 $string['video'] = 'Vidéo';
 
+$string['privacy:metadata:flashcard_card:userid'] = 'L\'identifiant de l\'utilisateur utilisant le flashcard';
+$string['privacy:metadata:flashcard_card:flashcardid'] = 'L\'identifiant de l\'instance de flashcard';
+$string['privacy:metadata:flashcard_card:entryid'] = 'L\'identfifiant de la carte dans le jeu';
+$string['privacy:metadata:flashcard_card:deck'] = 'L\identifiant de la pile de cartes dans laquelle est la carte';
+$string['privacy:metadata:flashcard_card:lastaccessed'] = 'La dernière date de tirage de la carte';
+$string['privacy:metadata:flashcard_card'] = 'Stocke la composition des piles de cartes pour chaque utilisateur';
+
+$string['privacy:metadata:flashcard_userdeck_state:userid'] = 'L\'identifiant de l\'utilisateur utilisant le flashcard';
+$string['privacy:metadata:flashcard_userdeck_state:flashcardid'] = 'L\'identifiant de l\'instance de flashcard';
+$string['privacy:metadata:flashcard_userdeck_state:deck'] = 'La pile pour laquelle l\'état est enregistré';
+$string['privacy:metadata:flashcard_userdeck_state:state'] = 'L\'état de révision de la pile par l\'utilisateur';
+$string['privacy:metadata:flashcard_userdeck_state'] = 'Stocke l\'état de la pile au regard des nécessités de révision de l\'utilisateur';
+
 $string['import_help'] = '
 <p>Vous pouvez désormais rapidement charger un flashcard avec un grand nombre de questions/réponses par la fonctionnalité
 d\'import en masse. (Seules des fiches texte/texte peuvent être massivement importées). Il vous faut juste constituer un
