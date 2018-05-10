@@ -164,6 +164,20 @@ $string['userdecksummary'] = 'Deck {$a->deckid}: {$a->count} cards ({$a->cardcou
 $string['video'] = 'Video';
 $string['viewed'] = 'Viewes';
 
+$string['privacy:metadata:flashcard_card:userid'] = 'The ID of the user having cards usage';
+$string['privacy:metadata:flashcard_card:flashcardid'] = 'The ID of the flashcard';
+$string['privacy:metadata:flashcard_card:entryid'] = 'The ID of the card in the card set';
+$string['privacy:metadata:flashcard_card:deck'] = 'The current deck UD the card entry is in for this user';
+$string['privacy:metadata:flashcard_card:lastaccessed'] = 'the time the card entry was last accessed by this user';
+$string['privacy:metadata:flashcard_card'] = 'Stores the deck content for the user';
+
+$string['privacy:metadata:flashcard_userdeck_state:userid'] = 'The ID of the user having cards usage';
+$string['privacy:metadata:flashcard_userdeck_state:flashcardid'] = 'The ID of the flashcard';
+$string['privacy:metadata:flashcard_userdeck_state:deck'] = 'The deck the state is for';
+$string['privacy:metadata:flashcard_userdeck_state:state'] = 'The state of the deck (review status)';
+$string['privacy:metadata:flashcard_userdeck_state'] = 'Stores deck states regarding to review requirement by the user';
+
+
 /* Strings for the help section */
 
 $string['modulename_help'] = '<p>
