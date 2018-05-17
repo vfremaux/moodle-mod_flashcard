@@ -16,7 +16,12 @@
 
 namespace mod_flashcard\privacy;
 
-use \core_privacy\local\request\writer;
+use core_privacy\local\metadata\collection;
+use core_privacy\local\request\approved_contextlist;
+use core_privacy\local\request\contextlist;
+use core_privacy\local\request\deletion_criteria;
+use core_privacy\local\request\helper;
+use core_privacy\local\request\writer;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -53,7 +58,7 @@ class provider implements \core_privacy\local\metadata\provider {
      * @return  contextlist   $contextlist  The list of contexts used in this plugin.
      */
   public static function get_contexts_for_userid(int $userid) : contextlist {
-        $contextlist = new \core_privacy\local\request\contextlist();
+        $contextlist = new contextlist();
 
         // Fetching flashcard_cards context should be sufficiant to get contexts where user is involved in.
         // It may have NO states if it has no deck cards.
