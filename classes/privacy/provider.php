@@ -78,13 +78,13 @@ class provider implements \core_privacy\local\metadata\provider {
                 {flashcard_card} fc ON fc.flashcardid = f.id
             WHERE fc.userid = :userid
         ";
- 
+
         $params = [
             'modname'           => 'flashcard',
             'contextlevel'      => CONTEXT_MODULE,
             'userid'  => $userid,
         ];
- 
+
         $contextlist->add_from_sql($sql, $params);
     }
 
