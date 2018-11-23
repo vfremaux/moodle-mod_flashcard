@@ -152,7 +152,7 @@ class mod_flashcard_renderer extends plugin_renderer_base {
      * @param object $status a status object to be filled by the function
      */
     public function print_deck_status(&$flashcard, $userid, &$status) {
-
+        global $OUTPUT;
         $str = '';
 
         $str = '<table width="100%">';
