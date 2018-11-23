@@ -233,7 +233,7 @@ function flashcard_get_card_status(&$flashcard) {
         WHERE
             c.flashcardid = ?
         GROUP BY
-            c.deck
+            c.deck, dd.questiontext
     ";
     $recs = $DB->get_records_sql($sql, array($flashcard->id));
 
@@ -251,7 +251,7 @@ function flashcard_get_card_status(&$flashcard) {
         WHERE
             c.flashcardid = ?
         GROUP BY
-            c.entryid
+            c.entryid, dd.questiontext
     ";
     $accesses = $DB->get_records_sql($sql, array($flashcard->id));
 

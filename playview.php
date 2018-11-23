@@ -61,7 +61,7 @@ $select = "
     deck = {$deck} AND
     id $usql
 ";
-
+if (empty($params[0])) $params = array(0=>0); //Avoid error PostgreSQL
 if ($cards = $DB->get_records_select('flashcard_card', $select, $params)) {
     foreach ($cards as $card) {
         $obj = new stdClass();
