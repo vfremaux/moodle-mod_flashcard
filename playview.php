@@ -53,14 +53,21 @@ if (empty($subquestions)) {
 
 $consumed = explode(',', @$_SESSION['flashcard_consumed']);
 $subquestions = array();
-list($usql, $params) = $DB->get_in_or_equal($consumed, SQL_PARAMS_QM, 'param0000', false); // Negative IN.
+list($usql, $inparams) = $DB->get_in_or_equal($consumed, SQL_PARAMS_QM, 'param0000', false); // Negative IN.
 
 $select = "
-    flashcardid = {$flashcard->id} AND
-    userid = {$USER->id} AND
-    deck = {$deck} AND
+    flashcardid = ? AND
+    userid = ? AND
+    deck = ? AND
     id $usql
 ";
+
+$params = array($flashcard->id, $USER->id, $deck);
+if (!empty($inparams)) {
+    foreach ($inparams as $p) {
+    $params[] = $p;
+    }
+}
 
 if ($cards = $DB->get_records_select('flashcard_card', $select, $params)) {
     foreach ($cards as $card) {

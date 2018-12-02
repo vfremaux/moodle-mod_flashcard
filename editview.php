@@ -59,7 +59,7 @@ if ($data = $mform->get_data()) {
         $akeys = preg_grep('/^a/', $keys);   // Filter out only the assigned updating.
 
         $params = array('flashcardid' => $flashcard->id);
-        $deckusers = $DB->get_records('flashcard_card', $params, 'id', 'DISTINCT userid, userid');
+        $deckusers = $DB->get_records('flashcard_card', $params, '', 'DISTINCT userid, id');
 
         foreach ($qkeys as $qkey) {
 
