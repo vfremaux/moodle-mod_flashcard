@@ -15,34 +15,20 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * A scheduled task for flashcard cron.
+ * Definition of log events
  *
- * @todo MDL-44734 This job will be split up properly.
- *
- * @package    mod_forum
- * @copyright  2018 Valery Fremaux <valery.fremaux@gmail.com>
+ * @package    mod_flashcard
+ * @category   log
+ * @copyright  213 Valery Fremaux (valery.Fremaux@gmail.com)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-namespace mod_flashcard\task;
 
-class cron_task extends \core\task\scheduled_task {
+defined('MOODLE_INTERNAL') || die();
 
-    /**
-     * Get a descriptive name for this task (shown to admins).
-     *
-     * @return string
-     */
-    public function get_name() {
-        return get_string('crontask', 'mod_flashcard');
-    }
+global $DB; // TODO: this is a hack, we should really do something with the SQL in SQL tables.
 
-    /**
-     * Run forum cron.
-     */
-    public function execute() {
-        global $CFG;
-        require_once($CFG->dirroot . '/mod/flashcard/cronlib.php');
-        fashcard_cron_task();
-    }
-
-}
+$logs = array(
+    array('module' => 'flashcard', 'action' => 'view', 'mtable' => 'flashcard', 'field' => 'name'),
+    array('module' => 'flashcard', 'action' => 'play', 'mtable' => 'flashcard', 'field' => 'name'),
+    array('module' => 'flashcard', 'action' => 'freeplay', 'mtable' => 'flashcard', 'field' => 'name'),
+);
