@@ -57,6 +57,7 @@ $string['completionallviewedgroup'] = 'Require viewing all cards';
 $string['completiondiscussionshelp'] = 'requiring that all cards are viewed at least once';
 $string['confirm'] = 'Confirm:';
 $string['counters'] = 'Counters';
+$string['crontask'] = 'Cron task for flashcard';
 $string['customisationfiles'] = 'Card customisation files';
 $string['deck'] = 'Deck';
 $string['deck1_delay'] = 'Review triggering delay (deck 1)';

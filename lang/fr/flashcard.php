@@ -57,6 +57,7 @@ $string['completionallviewedgroup'] = 'Parcouru une fois';
 $string['completiondiscussionshelp'] = 'requiring that all cards are viewed at least once';
 $string['confirm'] = 'Confirmer&nbsp;:&ensp;';
 $string['counters'] = 'Compteurs';
+$string['crontask'] = 'Erosion des révisions';
 $string['customisationfiles'] = 'Fichiers de personnalisation des cartes';
 $string['deck'] = 'Paquet de cartes';
 $string['deck1_delay'] = 'Délai de relance (jeu 1)&ensp;';

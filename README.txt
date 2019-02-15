@@ -99,3 +99,5 @@ properly summary and course overviews.
 ----------------------
 
 2017022000 : Add models per instance selection.
+
+2019011000 : Normailse the flashcard tasks.
