@@ -42,7 +42,7 @@ class cron_task extends \core\task\scheduled_task {
     public function execute() {
         global $CFG;
         require_once($CFG->dirroot . '/mod/flashcard/cronlib.php');
-        fashcard_cron_task();
+        flashcard_cron_task();
     }
 
 }
