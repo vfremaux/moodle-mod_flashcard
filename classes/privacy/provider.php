@@ -26,7 +26,6 @@ use core_privacy\local\request\writer;
 defined('MOODLE_INTERNAL') || die();
 
 class provider implements \core_privacy\local\metadata\provider,
-    \core_privacy\local\request\core_userlist_provider,
     \core_privacy\local\request\plugin\provider {
 
     public static function get_metadata(collection $collection) : collection {
@@ -125,16 +124,17 @@ class provider implements \core_privacy\local\metadata\provider,
         }
     }
 
-    public static function delete_data_for_all_users_in_context(deletion_criteria $criteria) {
+    public static function delete_data_for_all_users_in_context(\context $context) {
         global $DB;
 
-        $context = $criteria->get_context();
         if (empty($context)) {
             return;
         }
 
-        $DB->delete_records('flashcard_card', ['flashcardid' => $context->instanceid]);
-        $DB->delete_records('flashcard_userdeck_state', ['flashcardid' => $context->instanceid]);
+        $cm = $DB->get_record('course_modules', ['id' => $context->instanceid]);
+
+        $DB->delete_records('flashcard_card', ['flashcardid' => $cm->instance]);
+        $DB->delete_records('flashcard_userdeck_state', ['flashcardid' => $cm->instance]);
     }
 
     public static function delete_data_for_user(approved_contextlist $contextlist) {
@@ -145,8 +145,94 @@ class provider implements \core_privacy\local\metadata\provider,
         }
         $userid = $contextlist->get_user()->id;
         foreach ($contextlist->get_contexts() as $ctx) {
-            $DB->delete_records('flashcard_card', ['flashcardid' => $ctx->instanceid, 'userid' => $userid]);
-            $DB->delete_records('flashcard_userdeck_state', ['flashcardid' => $ctx->instanceid, 'userid' => $userid]);
+            $cm = $DB->get_record('course_modules', ['id' => $context->instanceid]);
+            $DB->delete_records('flashcard_card', ['flashcardid' => $cm->instance, 'userid' => $userid]);
+            $DB->delete_records('flashcard_userdeck_state', ['flashcardid' => $cm->instance, 'userid' => $userid]);
         }
+    }
+
+    /**
+     * Delete multiple users within a single context.
+     *
+     * @param   approved_userlist    $userlist The approved context and user information to delete information for.
+     */
+    public static function delete_data_for_users(approved_userlist $userlist) {
+        global $DB;
+
+        $context = $userlist->get_context();
+
+        if ($context->contextlevel != CONTEXT_MODULE) {
+            return;
+        }
+
+        $cm = $DB->get_record('course_modules', ['id' => $context->instanceid]);
+
+        foreach ($userlist->get_userids() as $uid) {
+            $DB->delete_records('flashcard_card', ['flashcardid' => $cm->instance, 'userid' => $uid]);
+            $DB->delete_records('flashcard_userdeck_state', ['flashcardid' => $cm->instance, 'userid' => $uid]);
+        }
+
+    }
+
+    /**
+     * Get the list of users who have data within a context.
+     *
+     * @param   userlist    $userlist   The userlist containing the list of users who have data in this context/plugin combination.
+     *
+     */
+    public static function get_users_in_context(userlist $userlist) {
+        $context = $userlist->get_context();
+
+        if (!is_a($context, \context_module::class)) {
+            return;
+        }
+
+        // Find users in cards.
+        $sql = "
+            SELECT
+                fc.userid
+            FROM
+                  {course_modules} cm,
+                  {modules} m,
+                  {flashcard} f,
+                  {flashcard_card} fc
+            WHERE
+                cm.module = m.id AND
+                AND m.name = :modname
+                cm.instance = f.id AND
+                f.id = fc.flashcardid AND
+                cm.id = :contextid
+        ";
+
+        $params = [
+            'contextid'     => $context->instanceid,
+            'modname'     => 'flashcard'
+        ];
+
+        $userlist->add_from_sql('userid', $sql, $params);
+
+        // Find users with ratings.
+        $sql = "
+            SELECT
+                fuds.userid
+            FROM
+                  {course_modules} cm,
+                  {modules} m,
+                  {flashcard} f,
+                  {flashcard_userdeck_state} fuds
+            WHERE
+                cm.module = m.id AND
+                AND m.name = :modname
+                cm.instance = f.id AND
+                f.id = fuds.flashcardid AND
+                cm.id = :contextid
+        ";
+
+        $params = [
+            'contextid'     => $context->instanceid,
+            'modname'     => 'flashcard'
+        ];
+        $userlist->add_from_sql('userid', $sql, $params);
+
     }
 }
