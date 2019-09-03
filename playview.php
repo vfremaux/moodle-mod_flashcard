@@ -65,7 +65,11 @@ $select = "
 $params = array($flashcard->id, $USER->id, $deck);
 if (!empty($inparams)) {
     foreach ($inparams as $p) {
-    $params[] = $p;
+        if (empty($p)) {
+            // Fixes PostGreSQL behaviour. https://github.com/vfremaux/moodle-mod_flashcard/issues/14#issuecomment-527197394
+            $p = 0;
+        }
+        $params[] = $p;
     }
 }
 
