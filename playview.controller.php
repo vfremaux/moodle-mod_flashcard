@@ -100,7 +100,7 @@ if ($action == 'igotit') {
             // Deck does not matter here, all viewed cards in all decks... usually the first one.
             $allseencards = $DB->count_records('flashcard_card', array('userid' => $USER->id, 'flashcardid' => $flashcard->id));
             $allcards = count($subquestions); // See playview.php.
-            if ($seencards >= min($allcards, $flashcard->completionallviewed)) {
+            if ($allseencards >= min($allcards, $flashcard->completionallviewed)) {
                 // Update completion state.
                 $completion = new completion_info($course);
                 $completion->update_state($cm, COMPLETION_COMPLETE);
@@ -135,7 +135,7 @@ if ($action == 'ifailed') {
             $params = array('userid' => $USER->id, 'flashcardid' => $flashcard->id);
             $allseencards = $DB->count_records('flashcard_card', $params);
             $allcards = count($subquestions); // See playview.php.
-            if ($seencards >= min($allcards, $flashcard->completionallviewed)) {
+            if ($allseencards >= min($allcards, $flashcard->completionallviewed)) {
                 // Update completion state.
                 $completion->update_state($cm, COMPLETION_COMPLETE);
             }

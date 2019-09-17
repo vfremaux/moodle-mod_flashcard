@@ -238,18 +238,22 @@ class mod_flashcard_mod_form extends moodleform_mod {
         $mform->addGroup($group, 'completionallviewedgroup', $label, array(' '), false);
         $mform->disabledIf('completionallviewedgroup', 'completionallgoodenabled', 'checked');
 
-        $group = array();
+        // $group = array();
         $label = get_string('completionallgoodenabled', 'flashcard');
+        $mform->addElement('checkbox', 'completionallgoodenabled', '', $label);
+        /*
         $group[] =& $mform->createElement('checkbox', 'completionallgoodenabled', '', $label);
         $label = get_string('completionallgoodgroup', 'flashcard');
         $mform->addGroup($group, 'completionallgoodgroup', $label, array(' '), false);
+        */
 
-        return array('completionallviewedgroup', 'completionallgoodgroup');
+        // return array('completionallviewedgroup', 'completionallgoodgroup');
+        return array('completionallviewedgroup', 'completionallgoodenabled');
     }
 
     public function completion_rule_enabled($data) {
         return (!empty($data['completionallviewedenabled']) && $data['completionallviewed'] != 0) ||
-            (!empty($data['completionallgood']));
+            (!empty($data['completionallgoodenabled']));
     }
 
     public function data_preprocessing(&$defaultvalues) {
@@ -264,7 +268,7 @@ class mod_flashcard_mod_form extends moodleform_mod {
         if (empty($defaultvalues['completionallviewed'])) {
             $defaultvalues['completionallviewed'] = 999;
         }
-        $defaultvalues['completionallgoodenabled'] = !empty($defaultvalues['completionallgood']) ? 1 : 0;
+        // $defaultvalues['completionallgoodenabled'] = !empty($defaultvalues['completionallgoodenabled']) ? 1 : 0;
     }
 
     public function set_data($data) {
