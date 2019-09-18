@@ -218,23 +218,42 @@ function flashcard_get_card_status(&$flashcard) {
     global $DB;
 
     // Get decks by card.
-    $sql = "
-        SELECT
-           CONCAT(dd.questiontext, '_', c.deck),
-           dd.questiontext as question,
-           COUNT(c.id) as amount,
-           c.deck AS deck
-        FROM
-            {flashcard_deckdata} dd
-        LEFT JOIN
-            {flashcard_card} c
-        ON
-            c.entryid = dd.id
-        WHERE
-            c.flashcardid = ?
-        GROUP BY
-            c.deck
-    ";
+    if ($CFG->dbtype == 'sqlsrv') {
+        $sql = "
+            SELECT
+                dd.questiontext + '_' + CAST(c.deck AS NVARCHAR(MAX)),
+                dd.questiontext AS question,
+                COUNT(c.id) AS amount,
+                c.deck AS deck
+            FROM
+                {flashcard_deckdata} dd
+            LEFT JOIN
+                {flashcard_card} c
+            ON
+                c.entryid = dd.id
+            WHERE
+                c.flashcardid = ?
+            GROUP BY
+                c.deck, dd.questiontext, dd.questiontext
+        ";
+    } else {
+        $sql = "
+            SELECT
+                CONCAT(CONCAT(dd.questiontext, '_'), c.deck),
+                dd.questiontext AS question,
+                COUNT(c.id) AS amount, c.deck AS deck
+            FROM
+                {flashcard_deckdata} dd
+            LEFT JOIN
+                {flashcard_card} c
+            ON
+                c.entryid = dd.id
+            WHERE
+                c.flashcardid = ?
+            GROUP BY
+                c.deck, dd.questiontext
+        ";
+    }
     $recs = $DB->get_records_sql($sql, array($flashcard->id));
 
     // Get accessed by card.
@@ -251,7 +270,7 @@ function flashcard_get_card_status(&$flashcard) {
         WHERE
             c.flashcardid = ?
         GROUP BY
-            c.entryid
+            c.entryid, dd.questiontext
     ";
     $accesses = $DB->get_records_sql($sql, array($flashcard->id));
 

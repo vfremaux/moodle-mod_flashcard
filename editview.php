@@ -59,7 +59,8 @@ if ($data = $mform->get_data()) {
         $akeys = preg_grep('/^a/', $keys);   // Filter out only the assigned updating.
 
         $params = array('flashcardid' => $flashcard->id);
-        $deckusers = $DB->get_records('flashcard_card', $params, 'id', 'DISTINCT userid, userid');
+        // Fixes PostGreSQL behaviour. https://github.com/vfremaux/moodle-mod_flashcard/issues/14#issuecomment-527197394
+        $deckusers = $DB->get_records('flashcard_card', $params, 'userid', 'DISTINCT userid, userid');
 
         foreach ($qkeys as $qkey) {
 
