@@ -25,7 +25,9 @@ use core_privacy\local\request\writer;
 
 defined('MOODLE_INTERNAL') || die();
 
-class provider implements \core_privacy\local\metadata\provider {
+class provider implements \core_privacy\local\metadata\provider,
+    \core_privacy\local\request\core_userlist_provider,
+    \core_privacy\local\request\plugin\provider {
 
     public static function get_metadata(collection $collection) : collection {
 
@@ -78,13 +80,13 @@ class provider implements \core_privacy\local\metadata\provider {
                 {flashcard_card} fc ON fc.flashcardid = f.id
             WHERE fc.userid = :userid
         ";
- 
+
         $params = [
             'modname'           => 'flashcard',
             'contextlevel'      => CONTEXT_MODULE,
             'userid'  => $userid,
         ];
- 
+
         $contextlist->add_from_sql($sql, $params);
     }
 
@@ -94,6 +96,7 @@ class provider implements \core_privacy\local\metadata\provider {
      * @param   approved_contextlist    $contextlist    The approved contexts to export information for.
      */
     public static function export_user_data(approved_contextlist $contextlist) {
+        global $DB;
 
         $user = $contextlist->get_user();
 

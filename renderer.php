@@ -153,191 +153,54 @@ class mod_flashcard_renderer extends plugin_renderer_base {
      */
     public function print_deck_status(&$flashcard, $userid, &$status) {
 
-        $str = '';
+        $template = new StdClass();
 
-        $str = '<table width="100%">';
-        $str .= '<tr valign="bottom">';
-        $str .= '<td width="30%" align="center">';
+        for ($i = 0; $i < $flashcard->decks; $i++) {
+            $cardsettpl = new StdClass;
+            if ($status->decks[$i]->count) {
+                $cardsettpl->hascards = true;
+                $image = ($status->decks[$i]->reactivate) ? 'topenabled' : 'topdisabled';
+                $cardsettpl->height = $status->decks[$i]->count * 3;
+                $title = get_string('cardsindeck', 'flashcard', $status->decks[$i]->count);
+                $cardsettpl->icon = $this->output->pix_icon($image, $title, 'flashcard');
 
-        // Print for deck 1.
-        if ($status->decks[0]->count) {
-            $image = ($status->decks[0]->reactivate) ? 'topenabled' : 'topdisabled';
-            $height = $status->decks[0]->count * 3;
-            $str .= '<table>';
-            $str .= '<tr><td>';
-            $str .= '<div style="padding-bottom: '.$height.'px" class="graphdeck" align="top">';
-            $title = get_string('cardsindeck', 'flashcard', $status->decks[0]->count);
-            $str .= $OUTPUT->pix_icon($image, $title, 'flashcard');
-            $str .= '</div>';
-            $str .= '</td>';
+                $dayslateness = floor((time() - $status->decks[$i]->lastaccess) / DAYSECS);
 
-            $str .= '<td>';
-            $dayslateness = floor((time() - $status->decks[0]->lastaccess) / DAYSECS);
-
-            $timetoreview = round(max(0, ($status->decks[0]->lastaccess + ($flashcard->deck1_delay * HOURSECS) - time()) / DAYSECS));
-            $strtimetoreview = get_string('timetoreview', 'flashcard', $timetoreview);
-            for ($i = 0; $i < min($dayslateness, floor($flashcard->deck1_delay / 24)); $i++) {
-                $str .= $this->output->pix_icon('clock', $strtimetoreview, 'flashcard', array('valign' => 'bottom'));
-            }
-            if ($dayslateness < $flashcard->deck1_delay / 24) {
-                for (; $i < $flashcard->deck1_delay / 24; $i++) {
-                    $str .= $this->output->pix_icon('shadowclock', $strtimetoreview, 'flashcard', array('valign' => 'bottom'));
-                }
-            } else if ($dayslateness > $flashcard->deck1_delay / 24) {
-                // Deck 1 has no release limit as cards can stay here as long as not viewed.
-                for ($i = 0; $i < min($dayslateness - floor($flashcard->deck1_delay / 24), 4); $i++) {
-                    $str .= $this->output->pix_icon('overtime', $strtimetoreview, 'flashcard', array('valign' => 'bottom'));
-                }
-            }
-            $str .= '</td>';
-            $str .= '</tr>';
-            $str .= '</table>';
-        } else {
-            $str .= '<div height="12px" align="top">';
-            $str .= $this->output->pix_icon('topempty', '', 'flashcard');
-            $str .= '</div>';
-        }
-
-        $str .= '</td>';
-        $str .= '<td>'. $this->output->pix_icon('a/r_breadcrumb', '', 'core', array('class' => 'right breadcrumb icon')).'</td>';
-        $str .= '<td width="30%" align="center">';
-
-        // Print for deck 2.
-        if ($status->decks[1]->count) {
-            $image = ($status->decks[1]->reactivate) ? 'topenabled' : 'topdisabled';
-            $height = $status->decks[1]->count * 3;
-            $str .= '<table>';
-            $str .= '<tr>';
-            $str .= '<td>';
-            $str .= '<div style="padding-bottom: '.$height.'px" class="graphdeck" align="top">';
-            $title = get_string('cardsindeck', 'flashcard', $status->decks[1]->count);
-            $str .= $this->output->pix_icon($image, $title, 'flashcard');
-            $str .= '</div>';
-            $str .= '</td>';
-            $str .= '<td>';
-            $dayslateness = floor((time() - $status->decks[1]->lastaccess) / DAYSECS);
-            $timetoreview = round(max(0, ($status->decks[1]->lastaccess + ($flashcard->deck2_delay * HOURSECS) - time()) / DAYSECS));
-            $strtimetoreview = get_string('timetoreview', 'flashcard', $timetoreview);
-            for ($i = 0; $i < min($dayslateness, floor($flashcard->deck2_delay / 24)); $i++) {
-                $str .= $this->output->pix_icon('clock', $strtimetoreview, 'flashcard', array('valign' => 'bottom'));
-            }
-            if ($dayslateness < $flashcard->deck2_delay / 24) {
-                for (; $i < $flashcard->deck2_delay / 24; $i++) {
-                    $str .= $this->output->pix_icon('shadowclock', $strtimetoreview, 'flashcard', array('valign' => 'bottom'));
-                }
-            } else if ($dayslateness > $flashcard->deck2_delay / 24) {
-                for ($i = 0; $i < min($dayslateness - floor($flashcard->deck2_delay / 24), $flashcard->deck2_release / 24); $i++) {
-                    $str .= $this->output->pix_icon('overtime', $strtimetoreview, 'flashcard');
-                }
-            }
-            $str .= '</td>';
-            $str .= '</tr>';
-            $str .= '</table>';
-        } else {
-            $str .= '<div height="12px" align="top">';
-            $str .= $this->output->pix_icon('topempty', '', 'flashcard');
-            $str .= '</div>';
-        }
-
-        if ($flashcard->decks >= 3) {
-            $str .= '</td>';
-            $str .= '<td>'.$this->output->pix_icon('a/r_breadcrumb', 'right breadcrumb icon').'</td>';
-            $str .= '<td width="30%" align="center">';
-
-            // Print for deck 3.
-            if ($status->decks[2]->count) {
-                $image = ($status->decks[2]->reactivate) ? 'topenabled' : 'topdisabled';
-                $height = $status->decks[2]->count * 3;
-                $str .= '<table>';
-                $str .= '<tr>';
-
-                $str .= '<td>';
-                $str .= '<div style="padding-bottom: '.$height.'px" class="graphdeck" align="top">';
-                $title = get_string('cardsindeck', 'flashcard', $status->decks[2]->count);
-                $str .= $this->output->pix_icon($image, $title, 'flashcard');
-                $str .= '</div>';
-                $str .= '</td>';
-
-                $str .= '<td>';
-                $dayslateness = floor((time() - $status->decks[2]->lastaccess) / DAYSECS);
-                $timetoreview = round(max(0, ($status->decks[2]->lastaccess + ($flashcard->deck3_delay * HOURSECS) - time()) / DAYSECS));
+                $delaykey = "deck{$i}_delay";
+                $timetoreview = round(max(0, ($status->decks[$i]->lastaccess + ($flashcard->$delaykey * HOURSECS) - time()) / DAYSECS));
                 $strtimetoreview = get_string('timetoreview', 'flashcard', $timetoreview);
-                for ($i = 0; $i < min($dayslateness, floor($flashcard->deck3_delay / 24)); $i++) {
-                    $str .= $this->output->pix_icon('clock', $strtimetoreview, 'flashcard', array('valign' => 'bottom'));
+                for ($j = 0; $j < min($dayslateness, floor($flashcard->$delaykey / 24)); $j++) {
+                    $clocktpl = new StdClass;
+                    $clocktpl->latemark = $this->output->pix_icon('clock', $strtimetoreview, 'flashcard', array('valign' => 'bottom'));
+                    $cardsettpl->clocks[] = $clocktpl;
                 }
-                if ($dayslateness < $flashcard->deck3_delay / 24) {
-                    for (; $i < $flashcard->deck3_delay / 24; $i++) {
-                        $str .= $this->output->pix_icon('shadowclock', $strtimetoreview, 'flashcard', array('valign' => 'bottom'));
+                if ($dayslateness < $flashcard->$delaykey / 24) {
+                    for (; $j < $flashcard->$delaykey / 24; $j++) {
+                        $clocktpl = new StdClass;
+                        $clocktpl->latemark = $this->output->pix_icon('shadowclock', $strtimetoreview, 'flashcard', array('valign' => 'bottom'));
+                        $cardsettpl->clocks[] = $clocktpl;
                     }
-                } else if ($dayslateness > $flashcard->deck3_delay / 24) {
-                    for ($i = 0; $i < min($dayslateness - floor($flashcard->deck3_delay / 24), $flashcard->deck3_release / 24); $i++) {
-                        $str .= $this->output->pix_icon('overtime', '', 'flashcard', array('valign' => 'bottom'));
+                } else if ($dayslateness > $flashcard->$delaykey / 24) {
+                    // Deck 1 has no release limit as cards can stay here as long as not viewed.
+                    for ($j = 0; $j < min($dayslateness - floor($flashcard->$delaykey / 24), 4); $j++) {
+                        $clocktpl = new StdClass;
+                        $clocktpl->latemark = $this->output->pix_icon('overtime', $strtimetoreview, 'flashcard', array('valign' => 'bottom'));
+                        $cardsettpl->clocks[] = $clocktpl;
                     }
                 }
-                $str .= '</td>';
-                $str .= '</tr>';
-                $str .= '</table>';
             } else {
-                $str .= '<div height="12px" align="top">';
-                $str .= $this->output->pix_icon('topempty', $strtimetoreview, 'flashcard');
-                $str .= '</div>';
+                $cardsettpl->hascards = false;
             }
+            $template->cardset[] = $cardsettpl;
         }
-        if ($flashcard->decks >= 4) {
-            $str .= '</td>';
-            $str .= '<td>'.$this->output->pix_icon('a/r_breadcrumb', 'right breadcrumb icon').'</td>';
-            $str .= '<td width="30%" align="center">';
-
-            // Print for deck 4.
-            if ($status->decks[3]->count) {
-                $image = ($status->decks[3]->reactivate) ? 'topenabled' : 'topdisabled';
-                $height = $status->decks[3]->count * 3;
-                $str .= '<table>';
-                $str .= '<tr>';
-                $str .= '<td>';
-                $str .= '<div style="padding-bottom: '.$height.'px" class="graphdeck" align="top">';
-                $title = get_string('cardsindeck', 'flashcard', $status->decks[3]->count);
-                $str .= $this->output->pix_icon($image, $title, 'flashcard');
-                $str .= '</div>';
-                $str .= '</td>';
-                $str .= '<td>';
-
-                $dayslateness = floor((time() - $status->decks[3]->lastaccess) / DAYSECS);
-                $timetoreview = round(max(0, ($status->decks[3]->lastaccess + ($flashcard->deck4_delay * HOURSECS) - time()) / DAYSECS));
-                $strtimetoreview = get_string('timetoreview', 'flashcard', $timetoreview);
-                for ($i = 0; $i < min($dayslateness, floor($flashcard->deck4_delay / 24)); $i++) {
-                    $str .= $this->output->pix_icon('clock', $strtimetoreview, 'flashcard');
-                }
-                if ($dayslateness < $flashcard->deck4_delay / 24) {
-                    for (; $i < $flashcard->deck4_delay / 24; $i++) {
-                        $str .= $this->output->pix_icon('shadowclock', $strtimetoreview, 'flashcard');
-                    }
-                } else if ($dayslateness > $flashcard->deck4_delay / 24) {
-                    for ($i = 0; $i < min($dayslateness - floor($flashcard->deck4_delay / 24), $flashcard->deck4_release / 24); $i++) {
-                        $str .= $this->output->pix_icon('overtime', '', 'flashcard');
-                    }
-                }
-                $str .= '</td>';
-                $str .= '</tr>';
-                $str .= '</table>';
-            } else {
-                $str .= '<div height="12px" align="top">';
-                $str .= $this->output->pix_icon('topempty', '', 'flashcard');
-                $str .= '</div>';
-            }
-        }
-        $str .= '</td>';
-        $str .= '</tr>';
-        $str .= '</table>';
-        $str .= '<br/>';
 
         $options['id'] = $flashcard->cm->id;
         $options['view'] = 'summary';
         $options['what'] = 'reset';
         $options['userid'] = $userid;
-        $str .= $this->output->single_button(new moodle_url('/mod/flashcard/view.php', $options), get_string('reset'), 'get');
+        $template->resetbutton = $this->output->single_button(new moodle_url('/mod/flashcard/view.php', $options), get_string('reset'));
 
-        return $str;
+        return $this->output->render_from_template('mod_flashcard/cardstatus', $template);
     }
 
     /**
@@ -369,21 +232,9 @@ class mod_flashcard_renderer extends plugin_renderer_base {
 
         $rec = $DB->get_record_sql($sql, array($flashcard->id, $userid));
 
-        $strminaccess = get_string('minaccess', 'flashcard');
-        $strmaxaccess = get_string('maxaccess', 'flashcard');
-        $stravgaccess = get_string('avgaccess', 'flashcard');
-        $strsumaccess = get_string('sumaccess', 'flashcard');
+        $template = $rec;
 
-        $str = '<table><tr valign="top"><td class="smalltext"><b>'.$strminaccess.'</b>:</td>';
-        $str .= '<td class="smalltext">'.$rec->minaccess.'</td></tr>';
-        $str .= '<tr valign="top"><td class="smalltext"><b>'.$strmaxaccess.'</b>:</td>';
-        $str .= '<td class="smalltext">'.$rec->maxaccess.'</td></tr>';
-        $str .= '<tr valign="top"><td class="smalltext"><b>'.$stravgaccess.'</b>:</td>';
-        $str .= '<td class="smalltext">'.$rec->avgaccess.'</td></tr>';
-        $str .= '<tr valign="top"><td class="smalltext"><b>'.$strsumaccess.'</b>:</td>';
-        $str .= '<td class="smalltext">'.$rec->sumaccess.'</td></tr></table>';
-
-        return $str;
+        return $this->output->render_from_template('mod_flashcard/deckcounts', $template);
     }
 
     /**
@@ -542,36 +393,19 @@ class mod_flashcard_renderer extends plugin_renderer_base {
      * @param object $card
      */
     public function print_cardcounts(&$flashcard, $card) {
-        $str = '';
 
-        $row = '<td>';
-        $row .= $this->output->pix_icon('topenabled', '', 'flashcard').' (1) </td>';
-        $row .= '<td><div class="bar" style="height: 10px; width: '.(1 + @$card->deck[0]).'px"></div></td>';
-        $strs[] = $row;
-
-        $row = '<td>';
-        $row .= $this->output->pix_icon('topenabled', '', 'flashcard').' (2) </td>';
-        $row .= '<td><div class="bar" style="height: 10px; width: '.(1 + @$card->deck[1]).'px"></div></td>';
-        $strs[] = $row;
+        $template = new Stdclass;
+        $template->width0 = (1 + @$card->deck[0]);
+        $template->width1 = (1 + @$card->deck[1]);
 
         if ($flashcard->decks >= 3) {
-            $row = '<td>';
-            $row .= $this->output->pix_icon('topenabled', '', 'flashcard').' (3) </td>';
-            $row .= '<td><div class="bar" style="height: 10px; width: '.(1 + @$card->deck[2]).'px"></div></td>';
-            $strs[] = $row;
+            $template->width2 = (1 + @$card->deck[2]);
         }
         if ($flashcard->decks >= 4) {
-            $row = '<td>';
-            $row .= $this->output->pix_icon('topenabled', '', 'flashcard').' (4) </td>';
-            $row .= '<td><div class="bar" style="height: 10px; width: '.(1 + @$card->deck[3]).'px"></div></td>';
-            $strs[] = $row;
+            $template->width3 = (1 + @$card->deck[3]);
         }
 
-        $str = '<table>';
-        $str .= '<tr valign="middle">'.implode('</tr><tr valign="middle">', $strs).'</tr>';
-        $str .= '</table>';
-
-        return $str;
+        return $this->output->render_from_template('mod_flashcard/cardcounts', $template);
     }
 
     public function playview(&$flashcard, &$cm, &$cards, &$subquestions) {
@@ -692,158 +526,99 @@ class mod_flashcard_renderer extends plugin_renderer_base {
 
     public function finishtable() {
 
-        $str = '<div id="finished" style="display: none;" class="finished">';
-        $str .= '<table width="100%" height="100%">';
-        $str .= '<tr>';
-        $str .= '<td align="center" valign="middle" class="emptyset">';
-        $str .= get_string('emptyset', 'flashcard');
-        $str .= '</td>';
-        $str .= '</tr>';
-        $str .= '</table>';
-        $str .= '</div>';
-
-        return $str;
+        $template = new StdClass;
+        return $this->output->render_from_template('mod_flashcard/finished', $template);
     }
 
     public function freebuttons(&$subquestions) {
         global $COURSE;
 
-        $str = '';
+        $template = new StdClass;
+        $template->courseurl = new moodle_url('/course/view.php', array('id' => $COURSE->id));
 
-        $str .= '<tr>';
-        $str .= '<td width="200px">';
-        $str .= '<p>'.get_string('cardsremaining', 'flashcard').': <span id="remain">'.count($subquestions).'</span></p>';
-        $str .= '</td>';
-        $str .= '</tr>';
-        $str .= '<tr>';
-        $str .= '<td width="200px">';
-        $str .= '<input id="next"
-                        type="button"
-                        value="'.get_string('next', 'flashcard').'"
-                        onclick="javascript:next_card()" />';
-        $str .= '</td>';
-        $str .= '</tr>';
-        $str .= '<tr>';
-        $str .= '<td width="200px">';
-        $str .= '<input id="previous"
-                        type="button"
-                        value="'.get_string('previous', 'flashcard').'"
-                        onclick="javascript:previous_card()" />';
-        $str .= '</td>';
-        $str .= '</tr>';
-        $str .= '<tr>';
-        $str .= '<td width="200px">';
-        $str .= '<input id="remove"
-                        type="button"
-                        value="'.get_string('removecard', 'flashcard').'"
-                        onclick="javascript:remove_card()" />';
-        $str .= '</td>';
-        $str .= '</tr>';
-        $str .= '<tr>';
-        $str .= '<td width="200px">';
-        $str .= '<input type="button"
-                        value="'.get_string('reset', 'flashcard').'"
-                        onclick="javascript:location.reload()" />';
-        $str .= '</td>';
-        $str .= '</tr>';
-        $str .= '<tr>';
-        $str .= '<td width="200px" align="center" colspan="2">';
-        $courseurl = new moodle_url('/course/view.php', array('id' => $COURSE->id));
-        $str .= '<br/><a href="'.$courseurl.'">'.get_string('backtocourse', 'flashcard').'</a>';
-        $str .= '</td>';
-        $str .= '</tr>';
-
-        return $str;
+        return $this->output->render_from_template('mod_flashcard/freebuttons', $template);
     }
 
     public function check_decks(&$flashcard, &$cm, &$decks) {
 
-        $str = '';
 
-        $boostrapdivider = 12 / $flashcard->decks;
+        $template = new StdClass;
 
-        $str .= '<div class="container-fluid m-b-1">'; // Table.
-        $str .= '<div class="row-fluid">'; // Row.
+        $template->boostrapdivider = 12 / $flashcard->decks;
 
-        $str .= '<div class="col-md-'.$boostrapdivider.' span'.$boostrapdivider.'">'; // Cell.
+        $decktpl = new StdClass;
+        $decktpl->header = $this->output->heading(get_string('difficultcards', 'flashcard'));
 
-        $str .= $this->output->heading(get_string('difficultcards', 'flashcard'));
-
-        $str .= get_string('cardsindeck', 'flashcard', 0 + @$decks->decks[0]->count);
-        $str .= '<br/>';
+        $decktpl->strdeck = get_string('cardsindeck', 'flashcard', 0 + @$decks->decks[0]->count);
         if (@$decks->decks[0]->count == 0) {
-             $str .= $this->print_deck($flashcard, $cm, 0);
+             $decktpl->deck = $this->print_deck($flashcard, $cm, 0);
         } else {
             if ($decks->decks[0]->reactivate) {
-                $str .= $this->print_deck($flashcard, $cm, 1);
+                $decktpl->deck = $this->print_deck($flashcard, $cm, 1);
             } else {
-                $str .= $this->print_deck($flashcard, $cm, -1);
+                $decktpl->deck = $this->print_deck($flashcard, $cm, -1);
             }
         }
-        $str .= '</div>'; // Cell.
+        $template->decks[] = $decktpl;
 
-        $str .= '<div class="col-md-'.$boostrapdivider.' span'.$boostrapdivider.'">'; // Cell.
-
+        $decktpl = new StdClass;
         if ($flashcard->decks < 3) {
-            $str .= $this->output->heading(get_string('easycards', 'flashcard'));
+            $decktpl->header = $this->output->heading(get_string('easycards', 'flashcard'));
         } else {
-            $str .= $this->output->heading(get_string('mediumeffortcards', 'flashcard'));
+            $decktpl->header = $this->output->heading(get_string('mediumeffortcards', 'flashcard'));
         }
 
-        $str .= get_string('cardsindeck', 'flashcard', 0 + @$decks->decks[1]->count);
-        $str .= '<br/>';
+        $decktpl->strdeck = get_string('cardsindeck', 'flashcard', 0 + @$decks->decks[1]->count);
+
         if (@$decks->decks[1]->count == 0) {
-             $str .= $this->print_deck($flashcard, $cm, 0);
+             $decktpl->deck = $this->print_deck($flashcard, $cm, 0);
         } else {
             if ($decks->decks[1]->reactivate) {
-                $str .= $this->print_deck($flashcard, $cm, 2);
+                $decktpl->deck = $this->print_deck($flashcard, $cm, 2);
             } else {
-                $str .= $this->print_deck($flashcard, $cm, -2);
+                $decktpl->deck = $this->print_deck($flashcard, $cm, -2);
             }
         }
-        $str .= '</div>'; // Cell.
+        $template->decks[] = $decktpl;
 
         if ($flashcard->decks >= 3) {
-            $str .= '<div class="col-md-'.$boostrapdivider.' span'.$boostrapdivider.'">'; // Cell.
 
-            $str .= $this->output->heading(get_string('easycards', 'flashcard'));
+            $decktpl = new StdClass;
+            $decktpl->header = $this->output->heading(get_string('easycards', 'flashcard'));
 
-            $str .= get_string('cardsindeck', 'flashcard', 0 + @$decks->decks[2]->count);
-            $str .= '<br/>';
+            $decktpl->strdeck = get_string('cardsindeck', 'flashcard', 0 + @$decks->decks[2]->count);
+
             if (@$decks->decks[2]->count == 0) {
-                 $str .= $this->print_deck($flashcard, $cm, 0);
+                 $decktpl->deck = $this->print_deck($flashcard, $cm, 0);
             } else {
                 if ($decks->decks[2]->reactivate) {
-                    $str .= $this->print_deck($flashcard, $cm, 3);
+                    $decktpl->deck = $this->print_deck($flashcard, $cm, 3);
                 } else {
-                    $str .= $this->print_deck($flashcard, $cm, -3);
+                    $decktpl->deck = $this->print_deck($flashcard, $cm, -3);
                 }
             }
-            $str .= '</div>'; // Cell.
+            $template->decks[] = $decktpl;
         }
 
         if ($flashcard->decks >= 4) {
-            $str .= '<div class="col-md-'.$boostrapdivider.' span'.$boostrapdivider.'">'; // Cell.
 
-            $str .= $this->output->heading(get_string('trivialcards', 'flashcard'));
+            $decktpl = new StdClass;
+            $decktpl->header = $this->output->heading(get_string('trivialcards', 'flashcard'));
 
-            $str .= get_string('cardsindeck', 'flashcard', 0 + @$decks->decks[3]->count);
-            $str .= '<br/>';
+            $decktpl->strdeck = get_string('cardsindeck', 'flashcard', 0 + @$decks->decks[3]->count);
+
             if (@$decks->decks[3]->count == 0) {
-                 $str .= $this->print_deck($flashcard, $cm, 0);
+                 $decktpl->deck = $this->print_deck($flashcard, $cm, 0);
             } else {
                 if ($decks->decks[3]->reactivate) {
-                    $str .= $this->print_deck($flashcard, $cm, 4);
+                    $decktpl->deck = $this->print_deck($flashcard, $cm, 4);
                 } else {
-                    $str .= $this->print_deck($flashcard, $cm, -4);
+                    $decktpl->deck = $this->print_deck($flashcard, $cm, -4);
                 }
             }
-            $str .= '</div>'; // Cell.
+            $template->decks[] = $decktpl;
         }
 
-        $str .= '</div>'; // Row.
-        $str .= '</div>'; // Table.
-
-        return $str;
+        return $this->output->render_from_template('mod_flashcard/decks', $template);
     }
 }
