@@ -232,7 +232,7 @@ class mod_flashcard_mod_form extends moodleform_mod {
         $group = array();
         $label = get_string('completionallviewed', 'flashcard');
         $group[] =& $mform->createElement('checkbox', 'completionallviewedenabled', '', $label);
-        $group[] =& $mform->createElement('text', 'completionallviewed', '', array('size' => 3));
+        $group[] =& $mform->createElement('text', 'completionallviewed', 999, array('size' => 3));
         $mform->setType('completionallviewed', PARAM_INT);
         $label = get_string('completionallviewedgroup', 'flashcard');
         $mform->addGroup($group, 'completionallviewedgroup', $label, array(' '), false);
@@ -265,9 +265,6 @@ class mod_flashcard_mod_form extends moodleform_mod {
          * numbers to be 1, this will not apply unless checkbox is ticked.
          */
         $defaultvalues['completionallviewedenabled'] = !empty($defaultvalues['completionallviewed']) ? 1 : 0;
-        if (empty($defaultvalues['completionallviewed'])) {
-            $defaultvalues['completionallviewed'] = 999;
-        }
         // $defaultvalues['completionallgoodenabled'] = !empty($defaultvalues['completionallgoodenabled']) ? 1 : 0;
     }
 
