@@ -167,6 +167,9 @@ class mod_flashcard_renderer extends plugin_renderer_base {
                 $dayslateness = floor((time() - $status->decks[$i]->lastaccess) / DAYSECS);
 
                 $delaykey = "deck{$i}_delay";
+                if (empty($flashcard->$delaykey)) {
+                    $flashcard->$delaykey = 0;
+                }
                 $timetoreview = round(max(0, ($status->decks[$i]->lastaccess + ($flashcard->$delaykey * HOURSECS) - time()) / DAYSECS));
                 $strtimetoreview = get_string('timetoreview', 'flashcard', $timetoreview);
                 for ($j = 0; $j < min($dayslateness, floor($flashcard->$delaykey / 24)); $j++) {

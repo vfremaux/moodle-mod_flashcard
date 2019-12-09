@@ -90,6 +90,7 @@ class provider implements \core_privacy\local\metadata\provider,
         ];
 
         $contextlist->add_from_sql($sql, $params);
+        return $contextlist;
     }
 
     /**

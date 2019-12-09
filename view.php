@@ -292,12 +292,16 @@ switch ($view) {
 
 if ($course->format == 'page') {
     include_once($CFG->dirroot.'/course/format/page/xlib.php');
-    page_print_page_format_navigation($cm, $backtocourse = false);
+    echo '<center>';
+    page_print_page_format_navigation($cm, true);
+    echo '</center>';
 } else {
     if ($COURSE->format != 'singleactivity') {
         $buttonurl = new moodle_url('/course/view.php', array('id' => $course->id));
         $label = get_string('backtocourse', 'flashcard');
+        echo '<center>';
         echo $OUTPUT->single_button($buttonurl, $label, 'post', array('class' => 'flashcard-backtocourse'));
+        echo '</center>';
     }
 }
 
@@ -305,6 +309,8 @@ $event->add_record_snapshot('course_modules', $cm);
 $event->add_record_snapshot('course', $course);
 $event->add_record_snapshot('flashcard', $flashcard);
 $event->trigger();
+
+
 
 // Finish the page.
 
