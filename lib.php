@@ -113,6 +113,10 @@ function flashcard_add_instance($flashcard) {
         flashcard_save_draft_customimage($flashcard, $ci);
     }
 
+    // weird hack
+    // Quickform fails getting thios value in $data.
+    $flashcard->completionallviewed = clean_param($_POST['completionallviewed'], PARAM_INT);
+
     $newid = $DB->insert_record('flashcard', $flashcard);
 
     // Import all information from question.
@@ -158,6 +162,10 @@ function flashcard_update_instance($flashcard) {
     foreach ($customimages as $ci) {
         flashcard_save_draft_customimage($flashcard, $ci);
     }
+
+    // weird hack
+    // Quickform fails getting thios value in $data.
+    $flashcard->completionallviewed = clean_param($_POST['completionallviewed'], PARAM_INT);
 
     $return = $DB->update_record('flashcard', $flashcard);
 
