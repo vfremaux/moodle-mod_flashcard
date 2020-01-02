@@ -26,7 +26,7 @@ defined('MOODLE_INTERNAL') || die();
 require_once($CFG->dirroot.'/lib/ddllib.php');
 require_once($CFG->dirroot.'/mod/flashcard/locallib.php');
 require_once($CFG->dirroot.'/mod/flashcard/mailtemplatelib.php');
-require_once($CFG->libdir.'/eventslib.php');
+require_once($CFG->libdir.'/eventslib.php'); // Up to M3.5
 
 /**
  * Indicates API features that the forum supports.
