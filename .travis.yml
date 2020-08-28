@@ -22,8 +22,8 @@ php:
 
 env:
   global:
-    - MOODLE_BRANCH=MOODLE_37_STABLE
-    - PLUGINS_BRANCH=MOODLE_37_WORKING
+    - MOODLE_BRANCH=MOODLE_39_STABLE
+    - PLUGINS_BRANCH=MOODLE_39_WORKING
   matrix:
     - DB=mariadb
     - DB=pgsql
