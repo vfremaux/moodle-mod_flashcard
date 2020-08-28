@@ -271,7 +271,7 @@ class mod_flashcard_mod_form extends moodleform_mod {
     public function set_data($data) {
         global $CFG;
 
-        if ($data->coursemodule) {
+        if (!empty($data->coursemodule)) {
             $context = context_module::instance($data->coursemodule);
 
             $maxbytes = $CFG->maxbytes;
