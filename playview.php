@@ -51,7 +51,11 @@ if (empty($subquestions)) {
     return;
 }
 
-$consumed = explode(',', @$_SESSION['flashcard_consumed']);
+if (!isset($SESSION->flashcard_consumed)) {
+    $consumed = [];
+} else {
+    $consumed = explode(',', $SESSION->flashcard_consumed);
+}
 $subquestions = array();
 list($usql, $inparams) = $DB->get_in_or_equal($consumed, SQL_PARAMS_QM, 'param0000', false); // Negative IN.
 
