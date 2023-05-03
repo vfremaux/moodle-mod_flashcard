@@ -61,7 +61,7 @@ class provider implements \core_privacy\local\metadata\provider,
      * @param   int           $userid       The user to search.
      * @return  contextlist   $contextlist  The list of contexts used in this plugin.
      */
-  public static function get_contexts_for_userid(int $userid) : contextlist {
+    public static function get_contexts_for_userid(int $userid) : contextlist {
         $contextlist = new contextlist();
 
         // Fetching flashcard_cards context should be sufficiant to get contexts where user is involved in.
@@ -104,7 +104,7 @@ class provider implements \core_privacy\local\metadata\provider,
         $user = $contextlist->get_user();
 
         foreach ($contextlist->get_contexts() as $ctx) {
-            $instance = writer::withcontext($ctx);
+            $instance = writer::with_context($ctx);
 
             $data = new StdClass;
 
