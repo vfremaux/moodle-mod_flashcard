@@ -40,7 +40,17 @@ $page = optional_param('page', '', PARAM_ACTION); // Page.
 $action = optional_param('what', '', PARAM_ACTION); // Command.
 
 $thisurl = new moodle_url('/mod/flashcard/view.php');
-$url = new moodle_url('/mod/flashcard/view.php', array('id' => $id));
+$params = array('id' => $id);
+if (!empty($view)) {
+    $params['view'] = $view;
+}
+if (!empty($page)) {
+    $params['page'] = $page;
+}
+if (!empty($action)) {
+    $params['what'] = $action;
+}
+$url = new moodle_url('/mod/flashcard/view.php', $params);
 
 $PAGE->set_url($url);
 if ($id) {
@@ -64,6 +74,8 @@ if ($id) {
         print_error('errorinvalidflashcardid', 'flashcard');
     }
 }
+$PAGE->set_cm($cm);
+$PAGE->set_activity_record($flashcard);
 
 // Security.
 
@@ -175,26 +187,6 @@ if ($flashcard->models & FLASHCARD_MODEL_FREEUSE) {
     $row[] = new tabobject('freeplay', $taburl, $tabname);
 }
 
-if (has_capability('mod/flashcard:manage', $context)) {
-
-    $tabname = get_string('teachersummary', 'flashcard');
-    $params = array('view' => 'summary', 'id' => $cm->id, 'page' => 'byusers');
-    $taburl = new moodle_url('/mod/flashcard/view.php', $params);
-    $row[] = new tabobject('summary', $taburl, $tabname);
-
-    $tabname = get_string('edit', 'flashcard');
-    $params = array('view' => 'manage', 'id' => $cm->id);
-    $taburl = new moodle_url('/mod/flashcard/view.php', $params);
-    $row[] = new tabobject('manage', $taburl, $tabname);
-
-    if (($flashcard->questionsmediatype == FLASHCARD_MEDIA_TEXT) &&
-            ($flashcard->answersmediatype == FLASHCARD_MEDIA_TEXT)) {
-        $tabname = get_string('import', 'flashcard');
-        $params = array('what' => 'import', 'view' => 'manage', 'id' => $cm->id);
-        $taburl = new moodle_url('/mod/flashcard/view.php', $params);
-        $row[] = new tabobject('import', $taburl, $tabname);
-    }
-}
 $tabrows[] = $row;
 
 $activated = array();
@@ -296,6 +288,8 @@ if ($course->format == 'page') {
     page_print_page_format_navigation($cm, true);
     echo '</center>';
 } else {
+    /*
+    // Nav principle obsolete in moodle 4
     if ($COURSE->format != 'singleactivity') {
         $buttonurl = new moodle_url('/course/view.php', array('id' => $course->id));
         $label = get_string('backtocourse', 'flashcard');
@@ -303,6 +297,7 @@ if ($course->format == 'page') {
         echo $OUTPUT->single_button($buttonurl, $label, 'post', array('class' => 'flashcard-backtocourse'));
         echo '</center>';
     }
+    */
 }
 
 $event->add_record_snapshot('course_modules', $cm);

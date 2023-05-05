@@ -92,7 +92,7 @@ function flashcard_cron_task() {
                 foreach ($users as $u) {
                     $decks = flashcard_get_deck_status($flashcard, $u->id);
                     foreach ($decks->decks as $deck) {
-                        if (@$deck->reactivate) {
+                        if (!empty($deck->reactivate)) {
                             $params = array('userid' => $u->id, 'flashcardid' => $flashcard->id, 'deck' => $deck->deckid);
                             if ($state = $DB->get_record('flashcard_userdeck_state', $params)) {
                                 if ($state->state) {

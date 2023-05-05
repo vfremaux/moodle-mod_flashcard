@@ -51,16 +51,27 @@ if (empty($subquestions)) {
     return;
 }
 
-$consumed = explode(',', @$_SESSION['flashcard_consumed']);
+if (!isset($SESSION->flashcard_consumed)) {
+    $consumed = [];
+} else {
+    $consumed = explode(',', $SESSION->flashcard_consumed);
+}
 $subquestions = array();
-list($usql, $inparams) = $DB->get_in_or_equal($consumed, SQL_PARAMS_QM, 'param0000', false); // Negative IN.
-
-$select = "
-    flashcardid = ? AND
-    userid = ? AND
-    deck = ? AND
-    id $usql
-";
+if (!empty($consumed)) {
+    list($usql, $inparams) = $DB->get_in_or_equal($consumed, SQL_PARAMS_QM, 'param0000', false); // Negative IN.
+    $select = "
+        flashcardid = ? AND
+        userid = ? AND
+        deck = ? AND
+        id $usql
+    ";
+} else {
+    $select = "
+        flashcardid = ? AND
+        userid = ? AND
+        deck = ?
+    ";
+}
 
 $params = array($flashcard->id, $USER->id, $deck);
 if (!empty($inparams)) {
