@@ -79,8 +79,10 @@ if ($data = $mform->get_data()) {
                 // Do NOT try to add unfilled cards.
                 // Ugly hack to get back some data lost in form bounce...
                 $data->$qkey = $_REQUEST[$qkey];
+                clean_param($data->$qkey, PARAM_TEXT);
                 $akey = preg_replace('/^q/', 'a', $qkey);
                 $data->$akey = $_REQUEST[$akey];
+                clean_param($data->$akey, PARAM_TEXT);
 
                 $card = new StdClass;
                 $card->flashcardid = $flashcard->id;
