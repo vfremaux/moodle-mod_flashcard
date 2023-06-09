@@ -115,7 +115,7 @@ function flashcard_add_instance($flashcard) {
 
     // weird hack
     // Quickform fails getting thios value in $data.
-    $flashcard->completionallviewed = clean_param($_POST['completionallviewed'], PARAM_INT);
+    $flashcard->completionallviewed = clean_param(@$_POST['completionallviewed'], PARAM_INT);
 
     $newid = $DB->insert_record('flashcard', $flashcard);
 
@@ -165,7 +165,7 @@ function flashcard_update_instance($flashcard) {
 
     // weird hack
     // Quickform fails getting thios value in $data.
-    $flashcard->completionallviewed = clean_param($_POST['completionallviewed'], PARAM_INT);
+    $flashcard->completionallviewed = clean_param(@$_POST['completionallviewed'], PARAM_INT);
 
     $return = $DB->update_record('flashcard', $flashcard);
 
@@ -244,8 +244,14 @@ function flashcard_user_complete($course, $user, $mod, $flashcard) {
     $params = array('userid' => $user->id, 'flashcardid' => $flashcard->id);
     if ($usercards = $DB->get_records('flashcard_card', $params)) {
         foreach ($usercards as $uc) {
-            @$cardsdeck[$uc->deck]++;
-            $deckaccesscount[$uc->deck] = 0 + @$deckaccesscount[$uc->deck] + $uc->accesscount;
+            if (!array_key_exists($uc->deck, $cardsdeck)) {
+                $cardsdeck[$uc->deck] = 0;
+            }
+            $cardsdeck[$uc->deck]++;
+            if (!array_key_exists($uc->deck, $deckaccesscount)) {
+                $deckaccesscount[$uc->deck] = 0;
+            }
+            $deckaccesscount[$uc->deck] += $uc->accesscount;
         }
     }
 
