@@ -181,7 +181,7 @@ $string['import_help'] = '
 <p>Vous pouvez désormais rapidement charger un flashcard avec un grand nombre de questions/réponses par la fonctionnalité
 d\'import en masse. (Seules des fiches texte/texte peuvent être massivement importées). Il vous faut juste constituer un
 fichier texte contenant la liste formatée de vos paries de questions/réponses et coller ce texte dans la zone de texte d\'import.
-Vous pouvez décider de la forme de ce fichier, sur la base de séparaeurs les plus courants, sous Linux ou sous Windows. L\'un des
+Vous pouvez décider de la forme de ce fichier, sur la base de séparateurs les plus courants, sous Linux ou sous Windows. L\'un des
 formats les plus classiques est le format "une paire par ligne", utilisant un deux-points (\':\') ou une virgule comme
 séparateur entre les questions et les réponses.</p>
 <p>Les questions doivent toujours être placées en premier, et DOIVENT avoir une réponse exprimée. Les lignes blanches ou
