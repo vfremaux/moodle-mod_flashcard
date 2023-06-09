@@ -33,6 +33,7 @@ $plugin->requires = 2020060900;  // Requires this Moodle version (3.6 and above)
 $plugin->component = 'mod_flashcard'; // Full name of the plugin (used for diagnostics).
 $plugin->release = '3.9.0 (Build 2019121100)';
 $plugin->maturity = MATURITY_STABLE;
+$plugin->supported = [39, 311];
 
 // Non Moodle attributes.
 $plugin->codeincrement = '3.9.0005';

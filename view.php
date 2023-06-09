@@ -40,7 +40,17 @@ $page = optional_param('page', '', PARAM_ACTION); // Page.
 $action = optional_param('what', '', PARAM_ACTION); // Command.
 
 $thisurl = new moodle_url('/mod/flashcard/view.php');
-$url = new moodle_url('/mod/flashcard/view.php', array('id' => $id));
+$params = array('id' => $id);
+if (!empty($view)) {
+    $params['view'] = $view;
+}
+if (!empty($page)) {
+    $params['page'] = $page;
+}
+if (!empty($action)) {
+    $params['what'] = $action;
+}
+$url = new moodle_url('/mod/flashcard/view.php', $params);
 
 $PAGE->set_url($url);
 if ($id) {
