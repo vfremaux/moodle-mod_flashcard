@@ -74,6 +74,7 @@ if ($id) {
         print_error('errorinvalidflashcardid', 'flashcard');
     }
 }
+// M4
 $PAGE->set_cm($cm);
 $PAGE->set_activity_record($flashcard);
 
