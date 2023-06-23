@@ -330,10 +330,19 @@ class mod_flashcard_mod_form extends moodleform_mod {
 
         // Turn off completion settings if the checkboxes aren't ticked.
         if (!empty($data->completionunlocked)) {
-            // Weird effect of form resubmission. but why ?
-            $data->completionallviewedenabled = @$_POST['completionallviewedenabled'];
-            $data->completionallviewed = @$_POST['completionallviewed'];
-            $data->completionallgoodenabled = @$_POST['completionallgoodenabled'];
+            // Weird effect of form resubmission. nothing in submited values. but why ?
+            $data->completionallviewedenabled = false;
+            if (!empty($_POST['completionallviewedenabled'])) {
+                $data->completionallviewedenabled = clean_param($_POST['completionallviewedenabled'], PARAM_BOOL);
+            }
+            $data->completionallviewed = false;
+            if (!empty($_POST['completionallviewed'])) {
+                $data->completionallviewed = clean_param($_POST['completionallviewed'], PARAM_BOOL);
+            }
+            $data->completionallgoodenabled = false;
+            if (!empty($_POST['completionallgoodenabled'])) {
+                $data->completionallgoodenabled = clean_param($_POST['completionallgoodenabled'], PARAM_BOOL);
+            }
 
             $autocompletion = !empty($data->completion) && $data->completion == COMPLETION_TRACKING_AUTOMATIC;
 

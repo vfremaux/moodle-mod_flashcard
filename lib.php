@@ -76,6 +76,10 @@ function flashcard_supports($feature) {
         case FEATURE_SHOW_DESCRIPTION: {
             return true;
         }
+        // 4.1
+        case FEATURE_MOD_PURPOSE: {
+            return MOD_PURPOSE_CONTENT;
+        }
 
         default: {
             return null;
@@ -244,8 +248,14 @@ function flashcard_user_complete($course, $user, $mod, $flashcard) {
     $params = array('userid' => $user->id, 'flashcardid' => $flashcard->id);
     if ($usercards = $DB->get_records('flashcard_card', $params)) {
         foreach ($usercards as $uc) {
-            @$cardsdeck[$uc->deck]++;
-            $deckaccesscount[$uc->deck] = 0 + @$deckaccesscount[$uc->deck] + $uc->accesscount;
+            if (!array_key_exists($uc->deck, $cardsdeck)) {
+                $cardsdeck[$uc->deck] = 0;
+            }
+            $cardsdeck[$uc->deck]++;
+            if (!array_key_exists($uc->deck, $deckaccesscount)) {
+                $deckaccesscount[$uc->deck] = 0;
+            }
+            $deckaccesscount[$uc->deck] += $uc->accesscount;
         }
     }
 
@@ -556,4 +566,27 @@ function flashcard_dbcleaner_add_keys() {
     );
 
     return $keys;
+}
+
+function flashcard_extend_settings_navigation(settings_navigation $settingsnav, navigation_node $flashcardnode) {
+    global $DB;
+
+    if (has_capability('mod/flashcard:manage', $settingsnav->get_page()->context)) {
+
+        $params = array('view' => 'summary', 'id' => $settingsnav->get_page()->cm->id, 'page' => 'byusers');
+        $reportlink = new moodle_url("/mod/flashcard/view.php", $params);
+        $flashcardnode->add(get_string('teachersummary', 'flashcard'), $reportlink, navigation_node::TYPE_CONTAINER);
+
+        $params = array('view' => 'manage', 'id' => $settingsnav->get_page()->cm->id);
+        $reportlink = new moodle_url("/mod/flashcard/view.php", $params);
+        $flashcardnode->add(get_string('edit', 'flashcard'), $reportlink, navigation_node::TYPE_SETTING);
+
+        $flashcard = $DB->get_record('flashcard', ['id' => $settingsnav->get_page()->cm->instance]);
+        if (($flashcard->questionsmediatype == FLASHCARD_MEDIA_TEXT) &&
+                ($flashcard->answersmediatype == FLASHCARD_MEDIA_TEXT)) {
+            $params = array('what' => 'import', 'view' => 'manage', 'id' => $settingsnav->get_page()->cm->id);
+            $reportlink = new moodle_url("/mod/flashcard/view.php", $params);
+            $flashcardnode->add(get_string('import', 'flashcard'), $reportlink, navigation_node::TYPE_SETTING);
+        }
+    }
 }

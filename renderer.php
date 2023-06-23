@@ -552,8 +552,12 @@ class mod_flashcard_renderer extends plugin_renderer_base {
         $decktpl = new StdClass;
         $decktpl->header = $this->output->heading(get_string('difficultcards', 'flashcard'));
 
-        $decktpl->strdeck = get_string('cardsindeck', 'flashcard', 0 + @$decks->decks[0]->count);
-        if (@$decks->decks[0]->count == 0) {
+        if (empty($decks->decks[0]->count)) {
+            $decks->decks[0]->count = 0;
+        }
+
+        $decktpl->strdeck = get_string('cardsindeck', 'flashcard', $decks->decks[0]->count);
+        if ($decks->decks[0]->count == 0) {
              $decktpl->deck = $this->print_deck($flashcard, $cm, 0);
         } else {
             if ($decks->decks[0]->reactivate) {
@@ -571,9 +575,13 @@ class mod_flashcard_renderer extends plugin_renderer_base {
             $decktpl->header = $this->output->heading(get_string('mediumeffortcards', 'flashcard'));
         }
 
-        $decktpl->strdeck = get_string('cardsindeck', 'flashcard', 0 + @$decks->decks[1]->count);
+        if (empty($decks->decks[1]->count)) {
+            $decks->decks[1]->count = 0;
+        }
 
-        if (@$decks->decks[1]->count == 0) {
+        $decktpl->strdeck = get_string('cardsindeck', 'flashcard', $decks->decks[1]->count);
+
+        if ($decks->decks[1]->count == 0) {
              $decktpl->deck = $this->print_deck($flashcard, $cm, 0);
         } else {
             if ($decks->decks[1]->reactivate) {
@@ -589,9 +597,13 @@ class mod_flashcard_renderer extends plugin_renderer_base {
             $decktpl = new StdClass;
             $decktpl->header = $this->output->heading(get_string('easycards', 'flashcard'));
 
-            $decktpl->strdeck = get_string('cardsindeck', 'flashcard', 0 + @$decks->decks[2]->count);
+            if (empty($decks->decks[2]->count)) {
+                $decks->decks[2]->count = 0;
+            }
 
-            if (@$decks->decks[2]->count == 0) {
+            $decktpl->strdeck = get_string('cardsindeck', 'flashcard', 0 + $decks->decks[2]->count);
+
+            if ($decks->decks[2]->count == 0) {
                  $decktpl->deck = $this->print_deck($flashcard, $cm, 0);
             } else {
                 if ($decks->decks[2]->reactivate) {
@@ -608,9 +620,13 @@ class mod_flashcard_renderer extends plugin_renderer_base {
             $decktpl = new StdClass;
             $decktpl->header = $this->output->heading(get_string('trivialcards', 'flashcard'));
 
-            $decktpl->strdeck = get_string('cardsindeck', 'flashcard', 0 + @$decks->decks[3]->count);
+            if (empty($decks->decks[3]->count)) {
+                $decks->decks[3]->count = 0;
+            }
 
-            if (@$decks->decks[3]->count == 0) {
+            $decktpl->strdeck = get_string('cardsindeck', 'flashcard', 0 + $decks->decks[3]->count);
+
+            if ($decks->decks[3]->count == 0) {
                  $decktpl->deck = $this->print_deck($flashcard, $cm, 0);
             } else {
                 if ($decks->decks[3]->reactivate) {
