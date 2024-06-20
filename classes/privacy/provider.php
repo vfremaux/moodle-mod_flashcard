@@ -136,6 +136,9 @@ class provider implements \core_privacy\local\metadata\provider,
         }
 
         $cm = $DB->get_record('course_modules', ['id' => $context->instanceid]);
+        if (!$cm) {
+            return;
+        }
 
         $DB->delete_records('flashcard_card', ['flashcardid' => $cm->instance]);
         $DB->delete_records('flashcard_userdeck_state', ['flashcardid' => $cm->instance]);
@@ -202,7 +205,7 @@ class provider implements \core_privacy\local\metadata\provider,
                   {flashcard_card} fc
             WHERE
                 cm.module = m.id AND
-                AND m.name = :modname
+                m.name = :modname AND
                 cm.instance = f.id AND
                 f.id = fc.flashcardid AND
                 cm.id = :contextid
@@ -226,7 +229,7 @@ class provider implements \core_privacy\local\metadata\provider,
                   {flashcard_userdeck_state} fuds
             WHERE
                 cm.module = m.id AND
-                AND m.name = :modname
+                m.name = :modname AND
                 cm.instance = f.id AND
                 f.id = fuds.flashcardid AND
                 cm.id = :contextid
