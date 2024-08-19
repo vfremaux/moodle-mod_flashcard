@@ -43,7 +43,7 @@ function flashcard_compile_mail_template($template, $infomap, $lang = '') {
     }
     $lang = substr($lang, 0, 2); // Be sure we are in moodle 2.
 
-    $notification = implode('', flashcard_get_mail_template($template, $lang));
+    $notification = flashcard_get_mail_template($template, $lang);
     foreach ($infomap as $akey => $avalue) {
         $notification = str_replace("<%%$akey%%>", $avalue, $notification);
     }
@@ -58,6 +58,6 @@ function flashcard_compile_mail_template($template, $infomap, $lang = '') {
  */
 function flashcard_get_mail_template($virtual, $lang = '') {
 
-    return new lang_string($virtual.'_tpl', 'flashcard', '', $lang);
+    return new lang_string($virtual.'_tpl', 'mod_flashcard', '', $lang);
 
 }
