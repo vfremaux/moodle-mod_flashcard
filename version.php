@@ -28,7 +28,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version  = 2025011400;  // The current module version (Date: YYYYMMDDXX).
+$plugin->version  = 2025072200;  // The current module version (Date: YYYYMMDDXX).
 $plugin->requires = 2022112801;  // Requires this Moodle version (3.6 and above).
 $plugin->component = 'mod_flashcard'; // Full name of the plugin (used for diagnostics).
 $plugin->release = '4.5.0 (Build 2019121103)';
