@@ -30,9 +30,9 @@
 defined('MOODLE_INTERNAL') || die();
 
 /**
- * useful templating functions from an older project of mine, hacked for Moodle
- * @param template the template's file name from $CFG->sitedir
- * @param infomap a hash containing pairs of parm => data to replace in template
+ * Useful templating functions from an older project of mine, hacked for Moodle
+ * @param string $template the template's file name from $CFG->sitedir
+ * @param array $infomap a hash containing pairs of param => data to replace in template
  * @return a fully resolved template where all data has been injected
  */
 function flashcard_compile_mail_template($template, $infomap, $lang = '') {
@@ -43,21 +43,23 @@ function flashcard_compile_mail_template($template, $infomap, $lang = '') {
     }
     $lang = substr($lang, 0, 2); // Be sure we are in moodle 2.
 
-    $notification = implode('', flashcard_get_mail_template($template, $lang));
+    $notification = flashcard_get_mail_template($template, $lang);
     foreach ($infomap as $akey => $avalue) {
         $notification = str_replace("<%%$akey%%>", $avalue, $notification);
+        // Also assume mustache syntax.
+        $notification = str_replace("{{$akey}}", $avalue, $notification);
     }
     return $notification;
 }
 
 /**
- * resolves and get the content of a Mail template, acoording to the user's current language.
- * @param virtual the virtual mail template name
- * @param lang if default language must be overriden
+ * resolves and get the content of a Mail template, according to the user's current language.
+ * @param string $virtual the virtual mail template name
+ * @param string $lang if default language must be overriden
  * @return string the template's content or false if no template file is available
  */
 function flashcard_get_mail_template($virtual, $lang = '') {
 
-    return new lang_string($virtual.'_tpl', 'flashcard', '', $lang);
+    return new lang_string($virtual.'_tpl', 'mod_flashcard', '', $lang);
 
 }
