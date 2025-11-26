@@ -18,7 +18,6 @@
  * Strings for component 'flashcard', language 'en'
  *
  * @package     mod_flashcard
- * @category    mod
  * @copyright   Valery Fremaux, Tomasz Muras
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -49,10 +48,10 @@ $string['cardsindeck'] = 'Remains : {$a} card(s)';
 $string['cardsread'] = 'Card(s) read: ';
 $string['cardsremaining'] = 'Cards Remaining';
 $string['commands'] = '';
-$string['completionallgoodenabled'] = 'Student must bring all cards in last deck to complete';
+$string['completiondetail::allgood'] = 'Student must bring all cards in last deck to complete';
 $string['completionallgoodgroup'] = 'Require all cards are known';
 $string['completionallgoodhelp'] = 'requiring all cards are in last deck to complete';
-$string['completionallviewed'] = 'Student must have viewed all cards once or at least some amount of them (cards):';
+$string['completiondetail:allviewed'] = 'Student must have viewed all cards once or at least some amount of them (cards):';
 $string['completionallviewedgroup'] = 'Require viewing all cards';
 $string['completiondiscussionshelp'] = 'requiring that all cards are viewed at least once';
 $string['confirm'] = 'Confirm:';

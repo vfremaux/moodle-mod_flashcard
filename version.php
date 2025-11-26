@@ -18,7 +18,6 @@
  * Version details.
  *
  * @package     mod_flashcard
- * @category    mod
  * @author      Tomasz Muras
  * @author      Valery Fremaux (valery.fremaux@gmail.com)
  * @copyright   2011 onwards Tomasz Muras
@@ -28,12 +27,12 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version  = 2025011400;  // The current module version (Date: YYYYMMDDXX).
+$plugin->version  = 2025090200;  // The current module version (Date: YYYYMMDDXX).
 $plugin->requires = 2022112801;  // Requires this Moodle version (3.6 and above).
 $plugin->component = 'mod_flashcard'; // Full name of the plugin (used for diagnostics).
-$plugin->release = '4.5.0 (Build 2019121103)';
+$plugin->release = '4.5.0 (Build 2025090200)';
 $plugin->maturity = MATURITY_STABLE;
-$plugin->supported = [401, 405];
+$plugin->supported = [403, 405];
 
 // Non Moodle attributes.
 $plugin->codeincrement = '4.5.0005';
