@@ -19,7 +19,7 @@
  *
  * @todo MDL-44734 This job will be split up properly.
  *
- * @package    mod_forum
+ * @package    mod_flashcard
  * @copyright  2018 Valery Fremaux <valery.fremaux@gmail.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */

@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * @package mod-flashcard
+ * @package mod_flashcard
  * @category mod
  * @author Tomasz Muras <nexor1984@gmail.com>
  */
@@ -94,7 +94,7 @@ function xmldb_flashcard_upgrade($oldversion = 0) {
         $table->add_field('lastaccessed', XMLDB_TYPE_INTEGER, '11', XMLDB_UNSIGNED, null, null, null, null, '0');
 
         // Adding keys to table flashcard_card.
-        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
 
         // Launch create table for flashcard_card.
         $result = $result && $dbman->create_table($table);
@@ -154,7 +154,7 @@ function xmldb_flashcard_upgrade($oldversion = 0) {
         $table->add_field('answertext', XMLDB_TYPE_TEXT, 'small', null, null, null, null, null, null);
 
         // Adding keys to table flashcard_deckdata.
-        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
 
         // Launch create table for flashcard_deckdata.
         $dbman->create_table($table);
@@ -213,7 +213,7 @@ function xmldb_flashcard_upgrade($oldversion = 0) {
             questionsmediatype != ".FLASHCARD_MEDIA_TEXT." OR
             answersmediatype != ".FLASHCARD_MEDIA_TEXT."
         ";
-        $flashcards = $DB->get_records_select('flashcard', $select, array());
+        $flashcards = $DB->get_records_select('flashcard', $select, []);
 
         $fs = get_file_storage();
 
@@ -223,7 +223,7 @@ function xmldb_flashcard_upgrade($oldversion = 0) {
                     continue;
                 }
                 $context = context_module::instance($cm->id);
-                $cards = $DB->get_records('flashcard_deckdata', array('flashcardid' => $f->id));
+                $cards = $DB->get_records('flashcard_deckdata', ['flashcardid' => $f->id]);
                 if ($cards) {
                     foreach ($cards as $c) {
                         if ($f->questionsmediatype != FLASHCARD_MEDIA_TEXT) {
@@ -255,7 +255,7 @@ function xmldb_flashcard_upgrade($oldversion = 0) {
         }
 
         // Workaround for MDL-26469.
-        $record = $DB->get_record('modules', array('name' => 'flashcard'));
+        $record = $DB->get_record('modules', ['name' => 'flashcard']);
         $record->cron = 3600;
         $DB->update_record('modules', $record);
 
@@ -308,7 +308,7 @@ function xmldb_flashcard_upgrade($oldversion = 0) {
         $table->add_field('state', XMLDB_TYPE_INTEGER, '4', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, '0');
 
         // Adding keys to table flashcard_deckdata.
-        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
 
         // Launch create table for flashcard_deckdata.
         if (!$dbman->table_exists($table)) {

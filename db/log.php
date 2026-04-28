@@ -27,8 +27,8 @@ defined('MOODLE_INTERNAL') || die();
 
 global $DB; // TODO: this is a hack, we should really do something with the SQL in SQL tables.
 
-$logs = array(
-    array('module' => 'flashcard', 'action' => 'view', 'mtable' => 'flashcard', 'field' => 'name'),
-    array('module' => 'flashcard', 'action' => 'play', 'mtable' => 'flashcard', 'field' => 'name'),
-    array('module' => 'flashcard', 'action' => 'freeplay', 'mtable' => 'flashcard', 'field' => 'name'),
-);
+$logs = [
+    ['module' => 'flashcard', 'action' => 'view', 'mtable' => 'flashcard', 'field' => 'name'],
+    ['module' => 'flashcard', 'action' => 'play', 'mtable' => 'flashcard', 'field' => 'name'],
+    ['module' => 'flashcard', 'action' => 'freeplay', 'mtable' => 'flashcard', 'field' => 'name'],
+];

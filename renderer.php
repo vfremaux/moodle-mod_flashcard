@@ -39,7 +39,7 @@ class mod_flashcard_renderer extends plugin_renderer_base {
         if ($value) {
             $draftitemid = file_get_submitted_draft_itemid($filearea);
             $maxbytes = 100000;
-            $options = array('subdirs' => 0, 'maxbytes' => $maxbytes, 'maxfiles' => 1);
+            $options = ['subdirs' => 0, 'maxbytes' => $maxbytes, 'maxfiles' => 1];
             file_prepare_draft_area($draftitemid, $contextid, 'mod_flashcard', $filearea, $cardid, $options);
         } else {
             $draftitemid = file_get_unused_draft_itemid();
@@ -67,15 +67,15 @@ class mod_flashcard_renderer extends plugin_renderer_base {
         $str .= $this->output->render($fp);
         $str .= '<input type="hidden" name="'.$elname.'" id="'.$id.'" value="'.$draftitemid.'" class="filepickerhidden"/>';
 
-        $module = array(
+        $module = [
             'name' => 'form_filepicker',
             'fullpath' => '/lib/form/filepicker.js',
-            'requires' => array('core_filepicker', 'node', 'node-event-simulate')
-        );
+            'requires' => ['core_filepicker', 'node', 'node-event-simulate'],
+        ];
 
-        $PAGE->requires->js_init_call('M.form_filepicker.init', array($fp->options), true, $module);
+        $PAGE->requires->js_init_call('M.form_filepicker.init', [$fp->options], true, $module);
 
-        $params = array(
+        $params = [
             'env' => 'filepicker',
             'action' => 'browse',
             'itemid' => $draftitemid,
@@ -85,7 +85,7 @@ class mod_flashcard_renderer extends plugin_renderer_base {
             'ctx_id' => $PAGE->context->id,
             'course' => $PAGE->course->id,
             'sesskey' => sesskey(),
-        );
+        ];
         $nonjsfilepicker = new moodle_url('/repository/draftfiles_manager.php', $params);
 
         // Non js file picker.
@@ -128,7 +128,7 @@ class mod_flashcard_renderer extends plugin_renderer_base {
         }
 
         if ($deck > 0) {
-            $params = array('view' => 'play', 'id' => $cm->id, 'deck' => $deck, 'what' => 'initialize');
+            $params = ['view' => 'play', 'id' => $cm->id, 'deck' => $deck, 'what' => 'initialize'];
             $linkurl = new moodle_url('/mod/flashcard/view.php', $params);
             $img = '<img src="'.$decktoreviewurl.'"/>';
             $str .= '<a href="'.$linkurl.'" title="'.get_string('playwithme', 'flashcard').'">'.$img.'</a>';
@@ -136,7 +136,7 @@ class mod_flashcard_renderer extends plugin_renderer_base {
 
         if ($deck < 0) {
             $deck = -$deck;
-            $params = array('view' => 'play', 'id' => $cm->id, 'deck' => $deck, 'what' => 'initialize');
+            $params = ['view' => 'play', 'id' => $cm->id, 'deck' => $deck, 'what' => 'initialize'];
             $linkurl = new moodle_url('/mod/flashcard/view.php', $params);
             $img = '<img src="'.$deckreviewedurl.'"/>';
             $str .= '<a href="'.$linkurl.'" title="'.get_string('reinforce', 'flashcard').'">'.$img.'</a>';
@@ -174,20 +174,20 @@ class mod_flashcard_renderer extends plugin_renderer_base {
                 $strtimetoreview = get_string('timetoreview', 'flashcard', $timetoreview);
                 for ($j = 0; $j < min($dayslateness, floor($flashcard->$delaykey / 24)); $j++) {
                     $clocktpl = new StdClass;
-                    $clocktpl->latemark = $this->output->pix_icon('clock', $strtimetoreview, 'flashcard', array('valign' => 'bottom'));
+                    $clocktpl->latemark = $this->output->pix_icon('clock', $strtimetoreview, 'flashcard', ['valign' => 'bottom']);
                     $cardsettpl->clocks[] = $clocktpl;
                 }
                 if ($dayslateness < $flashcard->$delaykey / 24) {
                     for (; $j < $flashcard->$delaykey / 24; $j++) {
                         $clocktpl = new StdClass;
-                        $clocktpl->latemark = $this->output->pix_icon('shadowclock', $strtimetoreview, 'flashcard', array('valign' => 'bottom'));
+                        $clocktpl->latemark = $this->output->pix_icon('shadowclock', $strtimetoreview, 'flashcard', ['valign' => 'bottom']);
                         $cardsettpl->clocks[] = $clocktpl;
                     }
                 } else if ($dayslateness > $flashcard->$delaykey / 24) {
                     // Deck 1 has no release limit as cards can stay here as long as not viewed.
                     for ($j = 0; $j < min($dayslateness - floor($flashcard->$delaykey / 24), 4); $j++) {
                         $clocktpl = new StdClass;
-                        $clocktpl->latemark = $this->output->pix_icon('overtime', $strtimetoreview, 'flashcard', array('valign' => 'bottom'));
+                        $clocktpl->latemark = $this->output->pix_icon('overtime', $strtimetoreview, 'flashcard', ['valign' => 'bottom']);
                         $cardsettpl->clocks[] = $clocktpl;
                     }
                 }
@@ -233,7 +233,7 @@ class mod_flashcard_renderer extends plugin_renderer_base {
                 userid = ?
         ";
 
-        $rec = $DB->get_record_sql($sql, array($flashcard->id, $userid));
+        $rec = $DB->get_record_sql($sql, [$flashcard->id, $userid]);
 
         $template = $rec;
 
@@ -418,7 +418,7 @@ class mod_flashcard_renderer extends plugin_renderer_base {
         $deck = required_param('deck', PARAM_INT);
 
         $random = rand(0, count($subquestions) - 1);
-        $subquestion = $DB->get_record('flashcard_deckdata', array('id' => $subquestions[$random]->entryid));
+        $subquestion = $DB->get_record('flashcard_deckdata', ['id' => $subquestions[$random]->entryid]);
 
         $back = 'question';
         $front = 'answer';
@@ -500,22 +500,22 @@ class mod_flashcard_renderer extends plugin_renderer_base {
         $str .= '<div id="flashcard-controls">';
         $str .= '<p>'.get_string('cardsremaining', 'flashcard').': <span id="remain">'.count($subquestions).'</span></p>';
 
-        $params = array('id' => $cm->id,
+        $params = ['id' => $cm->id,
                         'what' => 'igotit',
                         'view' => 'play',
                         'deck' => $deck,
-                        'cardid' => $subquestions[$random]->cardid);
+                        'cardid' => $subquestions[$random]->cardid];
         $label = get_string('igotit', 'flashcard');
-        $attrs = array('class' => 'flashcard_playbutton');
+        $attrs = ['class' => 'flashcard_playbutton'];
         $str .= $this->output->single_button(new moodle_url('view.php', $params), $label, 'post', $attrs);
 
-        $params = array('id' => $cm->id,
+        $params = ['id' => $cm->id,
                         'what' => 'ifailed',
                         'view' => 'play',
                         'deck' => $deck,
-                        'cardid' => $subquestions[$random]->cardid);
+                        'cardid' => $subquestions[$random]->cardid];
         $label = get_string('ifailed', 'flashcard');
-        $attrs = array('class' => 'flashcard-playbutton');
+        $attrs = ['class' => 'flashcard-playbutton'];
         $str .= $this->output->single_button(new moodle_url('view.php', $params), $label, 'post', $attrs);
 
         $str .= '<div class="flashcard-screenlinks">';
@@ -537,13 +537,12 @@ class mod_flashcard_renderer extends plugin_renderer_base {
         global $COURSE;
 
         $template = new StdClass;
-        $template->courseurl = new moodle_url('/course/view.php', array('id' => $COURSE->id));
+        $template->courseurl = new moodle_url('/course/view.php', ['id' => $COURSE->id]);
 
         return $this->output->render_from_template('mod_flashcard/freebuttons', $template);
     }
 
     public function check_decks(&$flashcard, &$cm, &$decks) {
-
 
         $template = new StdClass;
 

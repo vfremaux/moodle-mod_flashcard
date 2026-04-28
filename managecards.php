@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * @package   mod_flashbard
+ * @package   mod_flashcard
  * @category  mod
  */
 defined('MOODLE_INTERNAL') || die ();
@@ -25,7 +25,7 @@ if ($action) {
 }
 
 $pagesize = 20;
-$allcards = $DB->count_records('flashcard_deckdata', array('flashcardid' => $flashcard->id));
+$allcards = $DB->count_records('flashcard_deckdata', ['flashcardid' => $flashcard->id]);
 
 $page = optional_param('page', 0, PARAM_INT);
 $from = $page * $pagesize;
@@ -34,16 +34,16 @@ $from = $page * $pagesize;
 
 echo $out;
 
-$cards = $DB->get_records('flashcard_deckdata', array('flashcardid' => $flashcard->id), 'id', '*', $from, $pagesize);
+$cards = $DB->get_records('flashcard_deckdata', ['flashcardid' => $flashcard->id], 'id', '*', $from, $pagesize);
 
 $backstr = get_string('backside', 'flashcard');
 $frontstr = get_string('frontside', 'flashcard');
 
 $table = new html_table();
-$table->head = array('', "<b>$backstr</b>", "<b>$frontstr</b>", '');
-$table->size = array('10%', '40%', '40%', '10%');
+$table->head = ['', "<b>$backstr</b>", "<b>$frontstr</b>", ''];
+$table->size = ['10%', '40%', '40%', '10%'];
 $table->width = '100%';
-$table->align = array('center', 'center', 'center', 'center');
+$table->align = ['center', 'center', 'center', 'center'];
 
 $i = 0;
 if ($cards) {
@@ -78,16 +78,16 @@ if ($cards) {
             $front = format_text($card->answertext, FORMAT_MOODLE);
         }
 
-        $pix = '<img src="'.$OUTPUT->image_url('t/edit').'" />';
-        $params = array('id' => $id, 'view' => 'edit', 'what' => 'update', 'cardid' => $card->id);
+        $pix = '<img class="icon" src="'.$OUTPUT->image_url('t/edit').'" />';
+        $params = ['id' => $id, 'view' => 'edit', 'what' => 'update', 'cardid' => $card->id];
         $editurl = new moodle_url('/mod/flashcard/view.php', $params);
         $command = '<a href="'.$editurl.'">'.$pix.'</a>';
 
-        $pix = '<img src="'.$OUTPUT->image_url('t/delete').'" />';
-        $params = array('id' => $id, 'view' => 'manage', 'what' => 'delete', 'items[]' => $card->id);
+        $pix = '<img class="icon" src="'.$OUTPUT->image_url('t/delete').'" />';
+        $params = ['id' => $id, 'view' => 'manage', 'what' => 'delete', 'items[]' => $card->id];
         $deleteurl = new moodle_url('/mod/flashcard/view.php', $params);
         $command .= ' <a href="'.$deleteurl.'">'.$pix.'</a>';
-        $table->data[] = array($check, $back, $front, $command);
+        $table->data[] = [$check, $back, $front, $command];
         $i++;
     }
 
@@ -102,7 +102,7 @@ if ($cards) {
     echo html_writer::table($table);
     echo '</form>';
     echo '<center>';
-    $url = new moodle_url('/mod/flashcard/view.php', array('id' => $id, 'view' => 'manage'));
+    $url = new moodle_url('/mod/flashcard/view.php', ['id' => $id, 'view' => 'manage']);
     echo $OUTPUT->paging_bar($allcards, $page, $pagesize, $url, 'page');
     echo '</center>';
 } else {
@@ -120,10 +120,10 @@ if ($cards) {
     echo '<a href="'.$jshandler.'">'.$deleteselectionstr.'</a> - ';
 }
 
-$params = array('id' => $id, 'view' => 'edit', 'what' => 'addone', 'sesskey' => sesskey());
+$params = ['id' => $id, 'view' => 'edit', 'what' => 'addone', 'sesskey' => sesskey()];
 $addurl = new moodle_url('/mod/flashcard/view.php', $params);
 echo '<a href="'.$addurl.'">'.$addone.'</a> - ';
 
-$params = array('id' => $id, 'view' => 'edit', 'what' => 'addthree', 'sesskey' => sesskey());
+$params = ['id' => $id, 'view' => 'edit', 'what' => 'addthree', 'sesskey' => sesskey()];
 $addthreeurl = new moodle_url('/mod/flashcard/view.php', $params);
 echo '<a href="'.$addthreeurl.'">'.$addthree.'</a></div>';

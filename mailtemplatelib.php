@@ -21,7 +21,7 @@
  * templates that should reside in a mail/{$lang} directory within the
  * module space.
  *
- * @package extralibs
+ * @package mod_flashcard
  * @category third-party libs
  * @author Valery Fremaux (France) (valery@valeisti.fr)
  * @date 2008/03/03

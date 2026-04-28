@@ -27,30 +27,30 @@ class backup_flashcard_activity_structure_step extends backup_activity_structure
 
     protected function define_structure() {
 
-        $flashcard = new backup_nested_element('flashcard', array('id'), array(
+        $flashcard = new backup_nested_element('flashcard', ['id'], [
                     'name', 'intro', 'introformat', 'timemodified', 'starttime', 'endtime', 'questionid', 'models',
                     'autodowngrade', 'decks', 'deck2_release', 'deck3_release', 'deck4_release', 'deck1_delay',
                     'deck2_delay', 'deck3_delay', 'deck4_delay', 'questionsmediatype', 'answersmediatype',
                     'audiostart', 'flipdeck', 'custombackfileid', 'customfrontfileid', 'customemptyfileid',
                     'customreviewfileid', 'customreviewedfileid', 'customreviewemptyfileid',
-                    'completionallviewed', 'completionallgood'));
+                    'completionallviewed', 'completionallgood']);
 
         $decks = new backup_nested_element('group_decks');
 
-        $deck = new backup_nested_element('deck', array('id'), array(
-                    'questiontext', 'answertext'));
+        $deck = new backup_nested_element('deck', ['id'], [
+                    'questiontext', 'answertext']);
 
         $cards = new backup_nested_element('group_cards');
 
-        $card = new backup_nested_element('card', array('id'), array(
-                    'userid', 'entryid', 'deck', 'lastaccessed', 'accesscount'
-                        ));
+        $card = new backup_nested_element('card', ['id'], [
+                    'userid', 'entryid', 'deck', 'lastaccessed', 'accesscount',
+                        ]);
 
         $deckstates = new backup_nested_element('deckstates');
 
-        $deckstate = new backup_nested_element('deckstate', array('id'), array(
-                    'userid', 'deck', 'state'
-                        ));
+        $deckstate = new backup_nested_element('deckstate', ['id'], [
+                    'userid', 'deck', 'state',
+                        ]);
 
         $flashcard->add_child($decks);
         $decks->add_child($deck);
@@ -62,12 +62,12 @@ class backup_flashcard_activity_structure_step extends backup_activity_structure
         $deckstates->add_child($deckstate);
 
         // Sources.
-        $flashcard->set_source_table('flashcard', array('id' => backup::VAR_ACTIVITYID));
-        $deck->set_source_table('flashcard_deckdata', array('flashcardid' => backup::VAR_PARENTID));
+        $flashcard->set_source_table('flashcard', ['id' => backup::VAR_ACTIVITYID]);
+        $deck->set_source_table('flashcard_deckdata', ['flashcardid' => backup::VAR_PARENTID]);
 
         if ($this->get_setting_value('userinfo')) {
-            $card->set_source_table('flashcard_card', array('flashcardid' => backup::VAR_PARENTID));
-            $deckstate->set_source_table('flashcard_userdeck_state', array('flashcardid' => backup::VAR_PARENTID));
+            $card->set_source_table('flashcard_card', ['flashcardid' => backup::VAR_PARENTID]);
+            $deckstate->set_source_table('flashcard_userdeck_state', ['flashcardid' => backup::VAR_PARENTID]);
         }
 
         // Define id annotations.

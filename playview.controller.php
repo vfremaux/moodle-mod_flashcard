@@ -34,7 +34,7 @@ defined('MOODLE_INTERNAL') || die();
 
 if ($action == 'initialize') {
     $select = "flashcardid = ? AND userid = ? AND deck = ? ";
-    if ($initials = $DB->get_records_select('flashcard_card', $select, array($flashcard->id, $USER->id, $deck))) {
+    if ($initials = $DB->get_records_select('flashcard_card', $select, [$flashcard->id, $USER->id, $deck])) {
         $_SESSION['flashcard_initials'] = implode("','", array_keys($initials));
     }
     unset($_SESSION['flashcard_consumed']);
@@ -54,7 +54,7 @@ if ($action == 'reset') {
 if ($action == 'igotit') {
     $card = new StdClass();
     $card->id = required_param('cardid', PARAM_INT);
-    $card = $DB->get_record('flashcard_card', array('id' => $card->id));
+    $card = $DB->get_record('flashcard_card', ['id' => $card->id]);
     $olddeck = $card->deck;
     if ($card->deck < $flashcard->decks) {
         $card->deck = $deck + 1;
@@ -85,7 +85,7 @@ if ($action == 'igotit') {
 
             if ($olddeck == $flashcard->decks - 1) {
 
-                $conditions = array('userid' => $USER->id, 'flashcardid' => $flashcard->id, 'deck' => $flashcard->decks);
+                $conditions = ['userid' => $USER->id, 'flashcardid' => $flashcard->id, 'deck' => $flashcard->decks];
                 $lastdeckcards = $DB->count_records('flashcard_card', $conditions);
                 $allcards = count($subquestions); // See playview.php.
 
@@ -98,7 +98,7 @@ if ($action == 'igotit') {
         } else if ($flashcard->completionallviewed) {
             // Allgood superseedes allviewed.
             // Deck does not matter here, all viewed cards in all decks... usually the first one.
-            $allseencards = $DB->count_records('flashcard_card', array('userid' => $USER->id, 'flashcardid' => $flashcard->id));
+            $allseencards = $DB->count_records('flashcard_card', ['userid' => $USER->id, 'flashcardid' => $flashcard->id]);
             $allcards = count($subquestions); // See playview.php.
             if ($allseencards >= min($allcards, $flashcard->completionallviewed)) {
                 // Update completion state.
@@ -114,7 +114,7 @@ if ($action == 'igotit') {
 if ($action == 'ifailed') {
     $card = new StdClass();
     $card->id = required_param('cardid', PARAM_INT);
-    $card = $DB->get_record('flashcard_card', array('id' => $card->id));
+    $card = $DB->get_record('flashcard_card', ['id' => $card->id]);
     $card->lastaccessed = time();
     $card->accesscount++;
 
@@ -132,7 +132,7 @@ if ($action == 'ifailed') {
     if ($completion->is_enabled($cm)) {
         if ($flashcard->completionallviewed) {
             // Deck does not matter here, all viewed cards in all decks... usually the first one.
-            $params = array('userid' => $USER->id, 'flashcardid' => $flashcard->id);
+            $params = ['userid' => $USER->id, 'flashcardid' => $flashcard->id];
             $allseencards = $DB->count_records('flashcard_card', $params);
             $allcards = count($subquestions); // See playview.php.
             if ($allseencards >= min($allcards, $flashcard->completionallviewed)) {

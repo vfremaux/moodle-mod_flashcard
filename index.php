@@ -29,7 +29,7 @@ require_once($CFG->dirroot.'/mod/flashcard/lib.php');
 
 $id = required_param('id', PARAM_INT); // Course id.
 
-if (!$course = $DB->get_record('course', array('id' => $id))) {
+if (!$course = $DB->get_record('course', ['id' => $id])) {
     print_error('coursemisconf');
 }
 
@@ -39,7 +39,7 @@ $context = context_course::instance($course->id);
 require_login($course->id);
 
 // Trigger instances list viewed event.
-$event = \mod_flashcard\event\course_module_instance_list_viewed::create(array('context' => $context));
+$event = \mod_flashcard\event\course_module_instance_list_viewed::create(['context' => $context]);
 $event->add_record_snapshot('course', $course);
 $event->trigger();
 
@@ -50,7 +50,7 @@ $strflashcard  = get_string('modulename', 'flashcard');
 
 // Print the header.
 
-$PAGE->set_url(new moodle_url('/mod/flashcard/index.php', array('id' => $course->id)));
+$PAGE->set_url(new moodle_url('/mod/flashcard/index.php', ['id' => $course->id]));
 $PAGE->set_context($context);
 $PAGE->set_pagelayout('incourse');
 $PAGE->navbar->add($strflashcards);
@@ -61,7 +61,7 @@ echo $OUTPUT->header();
 // Get all the appropriate data.
 
 if (! $flashcards = get_all_instances_in_course('flashcard', $course)) {
-    $returnurl = new moodle_url('/course/view.php', array('id' => $course->id));
+    $returnurl = new moodle_url('/course/view.php', ['id' => $course->id]);
     $OUTPUT->notification(get_string('noflashcards', 'flashcard'), $returnurl);
     die;
 }
@@ -76,18 +76,18 @@ $strtopic = get_string('topic');
 $table = new html_table();
 
 if ($course->format == 'weeks') {
-    $table->head  = array($strweek, $strname);
-    $table->align = array('center', 'left');
+    $table->head  = [$strweek, $strname];
+    $table->align = ['center', 'left'];
 } else if ($course->format == 'topics') {
-    $table->head  = array($strtopic, $strname);
-    $table->align = array('center', 'left', 'left', 'left');
+    $table->head  = [$strtopic, $strname];
+    $table->align = ['center', 'left', 'left', 'left'];
 } else {
-    $table->head  = array($strname);
-    $table->align = array('left', 'left', 'left');
+    $table->head  = [$strname];
+    $table->align = ['left', 'left', 'left'];
 }
 
 foreach ($flashcards as $flashcard) {
-    $instanceurl = new moodle_url('/mod/flashcard/view.php', array('id' => $flashcard->coursemodule));
+    $instanceurl = new moodle_url('/mod/flashcard/view.php', ['id' => $flashcard->coursemodule]);
     if (!$flashcard->visible) {
         // Show dimmed if the mod is hidden.
         $link = '<a class="dimmed" href="'.$instanceuel.'">'.$flashcard->name.'</a>';
@@ -97,9 +97,9 @@ foreach ($flashcards as $flashcard) {
     }
 
     if ($course->format == 'weeks' or $course->format == 'topics') {
-        $table->data[] = array($flashcard->section, $link);
+        $table->data[] = [$flashcard->section, $link];
     } else {
-        $table->data[] = array($link);
+        $table->data[] = [$link];
     }
 }
 

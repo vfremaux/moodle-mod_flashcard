@@ -24,7 +24,7 @@
  */
 defined('MOODLE_INTERNAL') || die();
 
-$subquestions = $DB->get_records('flashcard_deckdata', array('flashcardid' => $flashcard->id));
+$subquestions = $DB->get_records('flashcard_deckdata', ['flashcardid' => $flashcard->id]);
 
 if (empty($subquestions)) {
     echo $out;
