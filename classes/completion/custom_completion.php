@@ -19,6 +19,7 @@ declare(strict_types=1);
 namespace mod_flashcard\completion;
 
 use core_completion\activity_custom_completion;
+use moodle_exception;
 
 /**
  * Activity custom completion subclass for the survey activity.
@@ -45,7 +46,7 @@ class custom_completion extends activity_custom_completion {
 
         // Get flashcard details.
         if (!($flashcard = $DB->get_record('flashcard', ['id' => $this->cm->instance]))) {
-            throw new Exception("Can't find flashcard {$this->cm->instance}");
+            throw new moodle_exception("Can't find flashcard {$this->cm->instance}");
         }
 
         // Completion condition 1 is have no cards in deck.
@@ -66,7 +67,7 @@ class custom_completion extends activity_custom_completion {
                     c.flashcardid = ? AND
                     c.deck = ?
             ";
-            $result = $DB->count_records_sql($sql, array($userid, $flashcard->id, $flashcard->decks));
+            $result = $DB->count_records_sql($sql, [$userid, $flashcard->id, $flashcard->decks]);
         } else if ($rule == 'completionallviewed') {
             // Allgood superseedes allviewed.
 

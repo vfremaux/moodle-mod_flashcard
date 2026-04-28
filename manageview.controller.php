@@ -41,15 +41,15 @@ if ($action == 'delete') {
 
     foreach ($items as $item) {
 
-        $card = $DB->get_record('flashcard_deckdata', array('id' => $item));
+        $card = $DB->get_record('flashcard_deckdata', ['id' => $item]);
 
         flashcard_delete_attached_files($cm, $flashcard, $card);
 
-        if (!$DB->delete_records('flashcard_deckdata', array('id' => $item))) {
+        if (!$DB->delete_records('flashcard_deckdata', ['id' => $item])) {
             print_error('errordeletecard', 'flashcard');
         }
 
-        if (!$DB->delete_records('flashcard_card', array('entryid' => $item))) {
+        if (!$DB->delete_records('flashcard_card', ['entryid' => $item])) {
             print_error('errordeletecard', 'flashcard');
         }
     }
@@ -102,7 +102,7 @@ if ($action == 'doimport') {
                 $report->cards = count($pairs);
                 $report->badcards = 0;
                 $report->goodcards = 0;
-                $inputs = array();
+                $inputs = [];
                 foreach ($pairs as $pair) {
                     if (strstr($pair, $fieldsep) === false) {
                         $report->badcards++;
@@ -121,8 +121,8 @@ if ($action == 'doimport') {
                 if ($report->badcards == 0) {
                     // Everything ok.
                     // Reset all data.
-                    $DB->delete_records('flashcard_card', array('flashcardid' => $flashcard->id));
-                    $DB->delete_records('flashcard_deckdata', array('flashcardid' => $flashcard->id));
+                    $DB->delete_records('flashcard_card', ['flashcardid' => $flashcard->id]);
+                    $DB->delete_records('flashcard_deckdata', ['flashcardid' => $flashcard->id]);
 
                     // Insert new cards.
                     foreach ($inputs as $input) {
@@ -134,7 +134,7 @@ if ($action == 'doimport') {
                     }
 
                     // Reset questionid in flashcard instance.
-                    $DB->set_field('flashcard', 'questionid', 0, array('id' => $flashcard->id));
+                    $DB->set_field('flashcard', 'questionid', 0, ['id' => $flashcard->id]);
                 }
 
                 $reportstr = get_string('importreport', 'flashcard').'<br/>';

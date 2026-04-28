@@ -31,7 +31,7 @@ class provider implements \core_privacy\local\metadata\provider,
     \core_privacy\local\request\core_userlist_provider,
     \core_privacy\local\request\plugin\provider {
 
-    public static function get_metadata(collection $collection) : collection {
+    public static function get_metadata(collection $collection): collection {
 
         $fields = [
             'userid' => 'privacy:metadata:flashcard_card:userid',
@@ -61,7 +61,7 @@ class provider implements \core_privacy\local\metadata\provider,
      * @param   int           $userid       The user to search.
      * @return  contextlist   $contextlist  The list of contexts used in this plugin.
      */
-    public static function get_contexts_for_userid(int $userid) : contextlist {
+    public static function get_contexts_for_userid(int $userid): contextlist {
         $contextlist = new contextlist();
 
         // Fetching flashcard_cards context should be sufficiant to get contexts where user is involved in.
@@ -108,16 +108,16 @@ class provider implements \core_privacy\local\metadata\provider,
 
             $data = new StdClass;
 
-            $params = array('flashcardid' => $ctx->instanceid,
-                            'userid' => $user->id);
+            $params = ['flashcardid' => $ctx->instanceid,
+                            'userid' => $user->id];
             $cards = $DB->get_records('flashcard_cards', $params);
 
             foreach ($cards as $card) {
                 $data->decks[$card->deck][] = $card;
             }
 
-            $params = array('flashcardid' => $ctx->instanceid,
-                            'userid' => $user->id);
+            $params = ['flashcardid' => $ctx->instanceid,
+                            'userid' => $user->id];
             $cards = $DB->get_records('flashcard_userdeck_state', $params);
 
             foreach ($cards as $state) {
@@ -210,7 +210,7 @@ class provider implements \core_privacy\local\metadata\provider,
 
         $params = [
             'contextid'     => $context->instanceid,
-            'modname'     => 'flashcard'
+            'modname'     => 'flashcard',
         ];
 
         $userlist->add_from_sql('userid', $sql, $params);
@@ -234,7 +234,7 @@ class provider implements \core_privacy\local\metadata\provider,
 
         $params = [
             'contextid'     => $context->instanceid,
-            'modname'     => 'flashcard'
+            'modname'     => 'flashcard',
         ];
         $userlist->add_from_sql('userid', $sql, $params);
 

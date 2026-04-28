@@ -38,9 +38,9 @@ if (!$decks = flashcard_get_deck_status($flashcard)) {
         $decks = flashcard_get_deck_status($flashcard);
     } else {
         if (has_capability('mod/flashcard:manage', $context)) {
-            $url = new moodle_url('/mod/flashcard/view.php', array('id' => $cm->id, 'view' => 'edit'));
+            $url = new moodle_url('/mod/flashcard/view.php', ['id' => $cm->id, 'view' => 'edit']);
         } else {
-            $url = new moodle_url('/course/view.php', array('id' => $course->id));
+            $url = new moodle_url('/course/view.php', ['id' => $course->id]);
         }
         echo $OUTPUT->notification(get_string('nocards', 'flashcard'));
         echo $OUTPUT->continue_button($url);

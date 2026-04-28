@@ -27,7 +27,7 @@ class restore_flashcard_activity_structure_step extends restore_activity_structu
 
     protected function define_structure() {
 
-        $paths = array();
+        $paths = [];
         $paths[] = new restore_path_element('flashcard', '/activity/flashcard');
         $paths[] = new restore_path_element('flashcard_deck', '/activity/flashcard/group_decks/deck');
 

@@ -48,26 +48,26 @@ function flashcard_cron_task() {
         }
 
         if ($flashcard->autodowngrade) {
-            $cards = $DB->get_records_select('flashcard_card', 'flashcardid = ? AND deck > 1', array($flashcard->id));
+            $cards = $DB->get_records_select('flashcard_card', 'flashcardid = ? AND deck > 1', [$flashcard->id]);
             foreach ($cards as $card) {
                 // Downgrades to deck 3 (middle low).
                 if ($flashcard->decks > 3) {
                     $t = $card->lastaccessed + ($flashcard->deck4_delay * HOURSECS + $flashcard->deck4_release * HOURSECS);
                     if ($card->deck == 4 && time() > $t) {
-                        $DB->set_field('flashcard_card', 'deck', 3, array('id' => $card->id));
+                        $DB->set_field('flashcard_card', 'deck', 3, ['id' => $card->id]);
                     }
                 }
                 // Downgrades to deck 2 (middle).
                 if ($flashcard->decks > 2) {
                     $t = $card->lastaccessed + ($flashcard->deck3_delay * HOURSECS + $flashcard->deck3_release * HOURSECS);
                     if ($card->deck == 3 && time() > $t) {
-                        $DB->set_field('flashcard_card', 'deck', 2, array('id' => $card->id));
+                        $DB->set_field('flashcard_card', 'deck', 2, ['id' => $card->id]);
                     }
                 }
                 // Downgrades to deck 1 (difficult).
                 $t = $card->lastaccessed + ($flashcard->deck2_delay * HOURSECS + $flashcard->deck2_release * HOURSECS);
                 if ($card->deck == 2 && time() > $t) {
-                    $DB->set_field('flashcard_card', 'deck', 1, array('id' => $card->id));
+                    $DB->set_field('flashcard_card', 'deck', 1, ['id' => $card->id]);
                 }
             }
         }
@@ -85,7 +85,7 @@ function flashcard_cron_task() {
                 $voiduser->lastname = '';
                 $voiduser->id = 1;
 
-                $coursename = $DB->get_field('course', 'fullname', array('id' => $flashcard->course));
+                $coursename = $DB->get_field('course', 'fullname', ['id' => $flashcard->course]);
 
                 $notified = 0;
 
@@ -93,7 +93,7 @@ function flashcard_cron_task() {
                     $decks = flashcard_get_deck_status($flashcard, $u->id);
                     foreach ($decks->decks as $deck) {
                         if (!empty($deck->reactivate)) {
-                            $params = array('userid' => $u->id, 'flashcardid' => $flashcard->id, 'deck' => $deck->deckid);
+                            $params = ['userid' => $u->id, 'flashcardid' => $flashcard->id, 'deck' => $deck->deckid];
                             if ($state = $DB->get_record('flashcard_userdeck_state', $params)) {
                                 if ($state->state) {
                                     continue;
@@ -106,11 +106,11 @@ function flashcard_cron_task() {
                                 $DB->insert_record('flashcard_userdeck_state', $state);
                             }
 
-                            $vars = array(
+                            $vars = [
                                 'FULLNAME' => fullname($u),
                                 'COURSE' => format_string($coursename),
-                                'URL' => $CFG->wwwroot.'/mod/flashcard/view.php?f='.$flashcard->id
-                            );
+                                'URL' => $CFG->wwwroot.'/mod/flashcard/view.php?f='.$flashcard->id,
+                            ];
                             $notification = flashcard_compile_mail_template('notifyreview', $vars, $u->lang);
                             $notificationhtml = flashcard_compile_mail_template('notifyreview_html', $vars, $u->lang);
                             if ($CFG->debugsmtp) {
@@ -121,7 +121,7 @@ function flashcard_cron_task() {
                             email_to_user($u, $voiduser, $subject, $notification, $notificationhtml);
 
                             // Mark it has been sent.
-                            $params = array('userid' => $u->id, 'flashcardid' => $flashcard->id, 'deck' => $deck->deckid);
+                            $params = ['userid' => $u->id, 'flashcardid' => $flashcard->id, 'deck' => $deck->deckid];
                             $DB->set_field('flashcard_userdeck_state', 'state', 1, $params);
                             $notified++;
                         }

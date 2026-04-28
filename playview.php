@@ -32,14 +32,14 @@ $PAGE->requires->js('/mod/flashcard/players/flowplayer/flowplayer.js');
 // We need it in controller.
 $deck = required_param('deck', PARAM_INT);
 
-$subquestions = $DB->get_records('flashcard_deckdata', array('flashcardid' => $flashcard->id));
+$subquestions = $DB->get_records('flashcard_deckdata', ['flashcardid' => $flashcard->id]);
 
 if ($action != '') {
     include($CFG->dirroot.'/mod/flashcard/playview.controller.php');
 }
 
 // Unmark state for this deck.
-$params = array('userid' => $USER->id, 'flashcardid' => $flashcard->id, 'deck' => $deck);
+$params = ['userid' => $USER->id, 'flashcardid' => $flashcard->id, 'deck' => $deck];
 $DB->delete_records('flashcard_userdeck_state', $params);
 
 if (empty($subquestions)) {
@@ -56,7 +56,7 @@ if (!isset($SESSION->flashcard_consumed)) {
 } else {
     $consumed = explode(',', $SESSION->flashcard_consumed);
 }
-$subquestions = array();
+$subquestions = [];
 if (!empty($consumed)) {
     list($usql, $inparams) = $DB->get_in_or_equal($consumed, SQL_PARAMS_QM, 'param0000', false); // Negative IN.
     $select = "
@@ -73,7 +73,7 @@ if (!empty($consumed)) {
     ";
 }
 
-$params = array($flashcard->id, $USER->id, $deck);
+$params = [$flashcard->id, $USER->id, $deck];
 if (!empty($inparams)) {
     foreach ($inparams as $p) {
         if (empty($p)) {

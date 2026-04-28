@@ -31,7 +31,7 @@ echo $out; // Deffered header.
 // Small controller here...
 if ($action == 'reset') {
     $userid = required_param('userid', PARAM_INT);
-    $DB->delete_records('flashcard_card', array('flashcardid' => $flashcard->id, 'userid' => $userid));
+    $DB->delete_records('flashcard_card', ['flashcardid' => $flashcard->id, 'userid' => $userid]);
 
     $completion = new completion_info($course);
     if (($flashcard->completionallgood || $flashcard->completionallviewed) && $completion->is_enabled($cm)) {
@@ -43,7 +43,7 @@ if ($action == 'reset') {
 require_once($CFG->dirroot.'/enrol/locallib.php');
 
 $coursecontext = context_course::instance($COURSE->id);
-$course = $DB->get_record('course', array('id' => $COURSE->id), '*', MUST_EXIST);
+$course = $DB->get_record('course', ['id' => $COURSE->id], '*', MUST_EXIST);
 
 $groupmode = groups_get_activity_groupmode($cm, $COURSE);
 if ($groupmode != NOGROUPS) {
@@ -59,8 +59,8 @@ $strdeckstates = get_string('deckstates', 'flashcard');
 $strcounts = get_string('counters', 'flashcard');
 
 $table = new html_table();
-$table->head = array("<b>$struser</b>", "<b>$strdeckstates</b>", "<b>$strcounts</b>");
-$table->size = array('30%', '50%', '20%');
+$table->head = ["<b>$struser</b>", "<b>$strdeckstates</b>", "<b>$strcounts</b>"];
+$table->size = ['30%', '50%', '20%'];
 $table->width = '100%';
 
 if (!empty($courseusers)) {
@@ -76,7 +76,7 @@ if (!empty($courseusers)) {
             $deckbox = get_string('notinitialized', 'flashcard');
             $countbox = '';
         }
-        $table->data[] = array($userbox, $deckbox, $countbox);
+        $table->data[] = [$userbox, $deckbox, $countbox];
     }
     echo html_writer::table($table);
 } else {

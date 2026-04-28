@@ -17,7 +17,7 @@
 /**
  * This file contains an event for when a feedback activity is viewed.
  *
- * @package    mod_feedback
+ * @package    mod_flashcard
  * @copyright  2013 Ankit Agarwal
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */

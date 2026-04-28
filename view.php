@@ -40,7 +40,7 @@ $page = optional_param('page', '', PARAM_ACTION); // Page.
 $action = optional_param('what', '', PARAM_ACTION); // Command.
 
 $thisurl = new moodle_url('/mod/flashcard/view.php');
-$params = array('id' => $id);
+$params = ['id' => $id];
 if (!empty($view)) {
     $params['view'] = $view;
 }
@@ -54,20 +54,20 @@ $url = new moodle_url('/mod/flashcard/view.php', $params);
 
 $PAGE->set_url($url);
 if ($id) {
-    if (! $cm = $DB->get_record('course_modules', array('id' => $id))) {
+    if (! $cm = $DB->get_record('course_modules', ['id' => $id])) {
         print_error('invalidcoursemodule');
     }
-    if (! $course = $DB->get_record('course', array('id' => $cm->course))) {
+    if (! $course = $DB->get_record('course', ['id' => $cm->course])) {
         print_error('coursemisconf');
     }
-    if (! $flashcard = $DB->get_record('flashcard', array('id' => $cm->instance))) {
+    if (! $flashcard = $DB->get_record('flashcard', ['id' => $cm->instance])) {
         print_error('errorinvalidflashcardid', 'flashcard');
     }
 } else {
-    if (! $flashcard = $DB->get_record('flashcard', array('id' => $f))) {
+    if (! $flashcard = $DB->get_record('flashcard', ['id' => $f])) {
         print_error('invalidcoursemodule');
     }
-    if (! $course = $DB->get_record('course', array('id' => $flashcard->course))) {
+    if (! $course = $DB->get_record('course', ['id' => $flashcard->course])) {
         print_error('coursemisconf');
     }
     if (! $cm = get_coursemodule_from_instance('flashcard', $flashcard->id, $course->id)) {
@@ -89,7 +89,7 @@ $strflashcards = get_string('modulenameplural', 'flashcard');
 $strflashcard  = get_string('modulename', 'flashcard');
 $PAGE->set_title("$course->shortname: $flashcard->name");
 $PAGE->set_heading("$course->fullname");
-$PAGE->navbar->add($strflashcards, new moodle_url('/mod/flashcard/index.php', array('id' => $course->id)));
+$PAGE->navbar->add($strflashcards, new moodle_url('/mod/flashcard/index.php', ['id' => $course->id]));
 $PAGE->navbar->add($flashcard->name);
 $PAGE->set_focuscontrol('');
 $PAGE->set_cacheable(true);
@@ -176,21 +176,21 @@ if (!preg_match("/summary|freeplay|play|checkdecks|manage|edit/", $view)) {
 
 if ($flashcard->models & FLASHCARD_MODEL_LEITNER) {
     $tabname = get_string('leitnergame', 'flashcard');
-    $params = array('id' => $cm->id, 'view' => 'checkdecks');
+    $params = ['id' => $cm->id, 'view' => 'checkdecks'];
     $taburl = new moodle_url('/mod/flashcard/view.php', $params);
     $row[] = new tabobject('play', $taburl, $tabname);
 }
 
 if ($flashcard->models & FLASHCARD_MODEL_FREEUSE) {
     $tabname = get_string('freegame', 'flashcard');
-    $params = array('view' => 'freeplay', 'id' => $cm->id);
+    $params = ['view' => 'freeplay', 'id' => $cm->id];
     $taburl = new moodle_url('/mod/flashcard/view.php', $params);
     $row[] = new tabobject('freeplay', $taburl, $tabname);
 }
 
 $tabrows[] = $row;
 
-$activated = array();
+$activated = [];
 
 // Print second line.
 
@@ -210,12 +210,12 @@ if ($view == 'edit') {
     }
 
     $tabname = get_string('byusers', 'flashcard');
-    $params = array('id' => $cm->id, 'view' => 'summary', 'page' => 'byusers');
+    $params = ['id' => $cm->id, 'view' => 'summary', 'page' => 'byusers'];
     $taburl = new moodle_url('/mod/flashcard/view.php', $params);
     $row1[] = new tabobject('byusers', $taburl, $tabname);
 
     $tabname = get_string('bycards', 'flashcard');
-    $params = array('id' => $cm->id, 'view' => 'summary', 'page' => 'bycards');
+    $params = ['id' => $cm->id, 'view' => 'summary', 'page' => 'bycards'];
     $taburl = new moodle_url('/mod/flashcard/view.php', $params);
     $row1[] = new tabobject('bycards', $taburl, $tabname);
 
@@ -227,15 +227,15 @@ $out .= print_tabs($tabrows, $currenttab, null, $activated, true);
 // Print active view.
 
 // Trigger module viewed event.
-$eventparams = array(
+$eventparams = [
     'objectid' => $flashcard->id,
     'context' => $context,
-);
+];
 
 switch ($view) {
     case 'summary': {
         if (!has_capability('mod/flashcard:manage', $context)) {
-            $params = array('view' => 'checkdecks', 'id' => $cm->id);
+            $params = ['view' => 'checkdecks', 'id' => $cm->id];
             redirect(new moodle_url('/mod/flashcard/view.php', $params));
         }
         $event = \mod_flashcard\event\course_module_viewed_summary::create($eventparams);
@@ -249,7 +249,7 @@ switch ($view) {
 
     case 'manage': {
         if (!has_capability('mod/flashcard:manage', $context)) {
-            $params = array('view' => 'checkdecks', 'id' => $cm->id);
+            $params = ['view' => 'checkdecks', 'id' => $cm->id];
             redirect(new moodle_url('/mod/flashcard/view.php', $params));
         }
         $event = \mod_flashcard\event\course_module_managed::create($eventparams);

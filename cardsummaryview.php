@@ -36,13 +36,13 @@ $strdecks = get_string('decks', 'flashcard');
 
 $table = new html_table();
 
-$table->head = array("<b>$strcard</b>", "<b>$strdecks</b>", "<b>$strviewed</b>");
-$table->size = array('30%', '35%', '35%');
+$table->head = ["<b>$strcard</b>", "<b>$strdecks</b>", "<b>$strviewed</b>"];
+$table->size = ['30%', '35%', '35%'];
 $table->width = "100%";
 
 foreach ($cards as $cardquestion => $acard) {
     $cardcounters = $renderer->print_cardcounts($flashcard, $acard);
-    $table->data[] = array(format_string($cardquestion), $cardcounters, $acard->accesscount);
+    $table->data[] = [format_string($cardquestion), $cardcounters, $acard->accesscount];
 }
 
 echo html_writer::table($table);

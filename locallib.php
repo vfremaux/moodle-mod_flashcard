@@ -58,7 +58,7 @@ function flashcard_get_lastaccessed(&$flashcard, $deck, $userid = 0) {
             userid = ? AND
             deck = ?
     ";
-    $rec = $DB->get_record_sql($sql, array($flashcard->id, $userid, $deck));
+    $rec = $DB->get_record_sql($sql, [$flashcard->id, $userid, $deck]);
     return $rec->lastaccessed;
 }
 
@@ -74,8 +74,8 @@ function flashcard_initialize(&$flashcard, $userid) {
 
     // Get all cards (all decks).
     $select = 'flashcardid = ? AND userid = ?';
-    $cards = $DB->get_records_select('flashcard_card', $select, array($flashcard->id, $userid));
-    $registered = array();
+    $cards = $DB->get_records_select('flashcard_card', $select, [$flashcard->id, $userid]);
+    $registered = [];
     if (!empty($cards)) {
         foreach ($cards as $card) {
             $registered[] = $card->entryid;
@@ -83,7 +83,7 @@ function flashcard_initialize(&$flashcard, $userid) {
     }
 
     // Get all subquestions.
-    $params = array('flashcardid' => $flashcard->id);
+    $params = ['flashcardid' => $flashcard->id];
     if ($subquestions = $DB->get_records('flashcard_deckdata', $params, '', 'id,id')) {
         foreach ($subquestions as $subquestion) {
             if (in_array($subquestion->id, $registered)) {
@@ -116,21 +116,21 @@ function flashcard_initialize(&$flashcard, $userid) {
 function flashcard_import(&$flashcard) {
     global $DB;
 
-    $question = $DB->get_record('question', array('id' => $flashcard->questionid));
+    $question = $DB->get_record('question', ['id' => $flashcard->questionid]);
 
     if ($question->qtype != 'match') {
         notice("Not a match question. Internal error");
         return;
     }
 
-    $options = $DB->get_record('question_match', array('question' => $question->id));
+    $options = $DB->get_record('question_match', ['question' => $question->id]);
     list($usql, $params) = $DB->get_in_or_equal(explode(',', $options->subquestions));
     $select = "id $usql AND answertext != '' AND questiontext != ''";
     if ($subquestions = $DB->get_records_select('question_match_sub', $select, $params)) {
 
         // Cleanup the flashcard.
-        $DB->delete_records('flashcard_card', array('flashcardid' => $flashcard->id));
-        $DB->delete_records('flashcard_deckdata', array('flashcardid' => $flashcard->id));
+        $DB->delete_records('flashcard_card', ['flashcardid' => $flashcard->id]);
+        $DB->delete_records('flashcard_deckdata', ['flashcardid' => $flashcard->id]);
 
         // Transfer data.
         foreach ($subquestions as $subquestion) {
@@ -162,23 +162,23 @@ function flashcard_get_deck_status(&$flashcard, $userid = 0) {
 
     $dk3 = 0;
     $dk4 = 0;
-    $dk1 = $DB->count_records('flashcard_card', array('flashcardid' => $flashcard->id, 'userid' => $userid, 'deck' => 1));
+    $dk1 = $DB->count_records('flashcard_card', ['flashcardid' => $flashcard->id, 'userid' => $userid, 'deck' => 1]);
     $status = new StdClass();
     $status->decks[0] = new StdClass();
     $status->decks[0]->count = $dk1;
     $status->decks[0]->deckid = 1;
-    $dk2 = $DB->count_records('flashcard_card', array('flashcardid' => $flashcard->id, 'userid' => $userid, 'deck' => 2));
+    $dk2 = $DB->count_records('flashcard_card', ['flashcardid' => $flashcard->id, 'userid' => $userid, 'deck' => 2]);
     $status->decks[1] = new StdClass();
     $status->decks[1]->count = $dk2;
     $status->decks[1]->deckid = 2;
     if ($flashcard->decks >= 3) {
-        $dk3 = $DB->count_records('flashcard_card', array('flashcardid' => $flashcard->id, 'userid' => $userid, 'deck' => 3));
+        $dk3 = $DB->count_records('flashcard_card', ['flashcardid' => $flashcard->id, 'userid' => $userid, 'deck' => 3]);
         $status->decks[2] = new StdClass();
         $status->decks[2]->count = $dk3;
         $status->decks[2]->deckid = 3;
     }
     if ($flashcard->decks >= 4) {
-        $dk4 = $DB->count_records('flashcard_card', array('flashcardid' => $flashcard->id, 'userid' => $userid, 'deck' => 4));
+        $dk4 = $DB->count_records('flashcard_card', ['flashcardid' => $flashcard->id, 'userid' => $userid, 'deck' => 4]);
         $status->decks[3] = new StdClass();
         $status->decks[3]->count = $dk4;
         $status->decks[3]->deckid = 4;
@@ -254,7 +254,7 @@ function flashcard_get_card_status(&$flashcard) {
                 c.deck, dd.questiontext
         ";
     }
-    $recs = $DB->get_records_sql($sql, array($flashcard->id));
+    $recs = $DB->get_records_sql($sql, [$flashcard->id]);
 
     // Get accessed by card.
     $sql = "
@@ -272,9 +272,9 @@ function flashcard_get_card_status(&$flashcard) {
         GROUP BY
             c.entryid, dd.questiontext
     ";
-    $accesses = $DB->get_records_sql($sql, array($flashcard->id));
+    $accesses = $DB->get_records_sql($sql, [$flashcard->id]);
 
-    $cards = array();
+    $cards = [];
     foreach (array_values($recs) as $rec) {
         if ($rec->deck == 1) {
             $cards[$rec->question]->deck[0] = $rec->amount;

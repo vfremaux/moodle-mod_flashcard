@@ -30,25 +30,25 @@ require_once($CFG->dirroot.'/mod/flashcard/editview_form.php');
 $usercontext = context_user::instance($USER->id);
 
 if ($cardid = optional_param('cardid', 0, PARAM_INT)) {
-    $card = $DB->get_record('flashcard_deckdata', array('id' => $cardid));
+    $card = $DB->get_record('flashcard_deckdata', ['id' => $cardid]);
 }
-$formurl = new moodle_url('/mod/flashcard/view.php', array('view' => 'edit'));
-$params = array('flashcard' => $flashcard, 'cmid' => $cm->id, 'cmd' => $action, 'cardid' => $cardid);
+$formurl = new moodle_url('/mod/flashcard/view.php', ['view' => 'edit']);
+$params = ['flashcard' => $flashcard, 'cmid' => $cm->id, 'cmd' => $action, 'cardid' => $cardid];
 $mform = new CardEdit_Form($formurl, $params);
 
 if ($mform->is_cancelled()) {
-    redirect(new moodle_url('/mod/flashcard/view.php', array('id' => $id, 'view' => 'manage')));
+    redirect(new moodle_url('/mod/flashcard/view.php', ['id' => $id, 'view' => 'manage']));
 }
 
 if ($data = $mform->get_data()) {
 
-    $validqkeys = array();
+    $validqkeys = [];
 
     // Add or update cards.
 
     if ($data->what == 'update') {
         $akeys[] = 'a0';
-        $validqkeys['q0'] = $DB->get_record('flashcard_deckdata', array('id' => $data->cardid));
+        $validqkeys['q0'] = $DB->get_record('flashcard_deckdata', ['id' => $data->cardid]);
     } else {
 
         // Prepare all new cards we need.
@@ -58,7 +58,7 @@ if ($data = $mform->get_data()) {
         $qkeys = preg_grep('/^q/', $keys);   // Filter out only the status.
         $akeys = preg_grep('/^a/', $keys);   // Filter out only the assigned updating.
 
-        $params = array('flashcardid' => $flashcard->id);
+        $params = ['flashcardid' => $flashcard->id];
         // Fixes PostGreSQL behaviour. https://github.com/vfremaux/moodle-mod_flashcard/issues/14#issuecomment-527197394
         $deckusers = $DB->get_records('flashcard_card', $params, 'userid', 'DISTINCT userid, userid');
 
@@ -104,7 +104,7 @@ if ($data = $mform->get_data()) {
                         $usercard->accesscount = 0;
                         $DB->insert_record('flashcard_card', $usercard);
 
-                        $params = array('flashcardid' => $flashcard->id, 'userid' => $duid);
+                        $params = ['flashcardid' => $flashcard->id, 'userid' => $duid];
                         $DB->set_field('flashcard_userdeck_state', 'state', 0, $params);
                     }
                 }
@@ -215,7 +215,7 @@ if ($data = $mform->get_data()) {
         }
     }
 
-    redirect(new moodle_url('/mod/flashcard/view.php', array('id' => $id, 'view' => 'manage')));
+    redirect(new moodle_url('/mod/flashcard/view.php', ['id' => $id, 'view' => 'manage']));
 }
 
 // Print deferred header.

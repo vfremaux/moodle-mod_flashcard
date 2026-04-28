@@ -84,21 +84,21 @@ class CardEdit_Form extends moodleform {
         $mediatype = $this->_customdata['flashcard']->$key;
 
         if ($mediatype == FLASHCARD_MEDIA_IMAGE) {
-            $options = array('maxfiles' => 1, 'maxbytes' => $COURSE->maxbytes, 'accepted_types' => array('.jpg', '.png', '.gif'));
+            $options = ['maxfiles' => 1, 'maxbytes' => $COURSE->maxbytes, 'accepted_types' => ['.jpg', '.png', '.gif']];
             $mform->addElement('filepicker', $sideprefix.$podid, '', null, $options);
         } else if ($mediatype == FLASHCARD_MEDIA_SOUND) {
-            $options = array('maxfiles' => 1, 'maxbytes' => $COURSE->maxbytes, 'accepted_types' => array('.mp3', '.swf'));
+            $options = ['maxfiles' => 1, 'maxbytes' => $COURSE->maxbytes, 'accepted_types' => ['.mp3', '.swf']];
             $mform->addElement('filepicker', $sideprefix.$podid, '', null, $options);
         } else if ($mediatype == FLASHCARD_MEDIA_VIDEO) {
-            $options = array('maxfiles' => 1, 'maxbytes' => $COURSE->maxbytes, 'accepted_types' => array('.mp4', '.flv'));
+            $options = ['maxfiles' => 1, 'maxbytes' => $COURSE->maxbytes, 'accepted_types' => ['.mp4', '.flv']];
             $mform->addElement('filepicker', $sideprefix.$podid, '', null, $options);
         } else if ($mediatype == FLASHCARD_MEDIA_IMAGE_AND_SOUND) {
-            $options = array('maxbytes' => $COURSE->maxbytes, 'accepted_types' => array('.jpg', '.png', '.gif'));
+            $options = ['maxbytes' => $COURSE->maxbytes, 'accepted_types' => ['.jpg', '.png', '.gif']];
             $mform->addElement('filepicker', $sideprefix.'i'.$podid, get_string('image', 'flashcard'), null, $options);
-            $options = array('maxbytes' => $COURSE->maxbytes, 'accepted_types' => array('.mp3', '.swf'));
+            $options = ['maxbytes' => $COURSE->maxbytes, 'accepted_types' => ['.mp3', '.swf']];
             $mform->addElement('filepicker', $sideprefix.'s'.$podid, get_string('sound', 'flashcard'), null, $options);
         } else {
-            $mform->addElement('textarea', $sideprefix.$podid, '', array('cols' => 60, 'rows' => 4));
+            $mform->addElement('textarea', $sideprefix.$podid, '', ['cols' => 60, 'rows' => 4]);
         }
     }
 
@@ -110,7 +110,7 @@ class CardEdit_Form extends moodleform {
         global $DB;
 
         if ($cardid = $this->_customdata['cardid']) {
-            $card = $DB->get_record('flashcard_deckdata', array('id' => $cardid));
+            $card = $DB->get_record('flashcard_deckdata', ['id' => $cardid]);
 
             $flashcard = $this->_customdata['flashcard'];
 
@@ -163,7 +163,7 @@ class CardEdit_Form extends moodleform {
                 print_error('errorunsupportedformat', 'flashcard');
         }
 
-        $fileoptions = array('subdirs' => 0, 'maxbytes' => $COURSE->maxbytes, 'maxfiles' => 1);
+        $fileoptions = ['subdirs' => 0, 'maxbytes' => $COURSE->maxbytes, 'maxfiles' => 1];
 
         if ($mediatype != FLASHCARD_MEDIA_IMAGE_AND_SOUND) {
             $elmname = $sideprefix.'0';

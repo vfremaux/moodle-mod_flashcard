@@ -25,14 +25,14 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$tasks = array(
-    array(
+$tasks = [
+    [
         'classname' => 'mod_flashcard\task\cron_task',
         'blocking' => 0,
         'minute' => '0',
         'hour' => '0',
         'day' => '*',
         'month' => '*',
-        'dayofweek' => '*'
-    )
-);
+        'dayofweek' => '*',
+    ],
+];
