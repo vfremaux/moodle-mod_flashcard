@@ -72,17 +72,15 @@ if ($data = $mform->get_data()) {
             if (preg_match('/qi?/', $qkey)) {
 
                 // If empty question, do not add.
-                if ($_REQUEST[$qkey] == '') {
+                if (optional_param($qkey, '', PARAM_TEXT) == '') {
                     continue;
                 }
 
                 // Do NOT try to add unfilled cards.
                 // Ugly hack to get back some data lost in form bounce...
-                $data->$qkey = $_REQUEST[$qkey];
-                clean_param($data->$qkey, PARAM_TEXT);
+                $data->$qkey = optional_param($qkey, '', PARAM_TEXT);
                 $akey = preg_replace('/^q/', 'a', $qkey);
-                $data->$akey = $_REQUEST[$akey];
-                clean_param($data->$akey, PARAM_TEXT);
+                $data->$akey = optional_param($akey, '', PARAM_TEXT);
 
                 $card = new StdClass;
                 $card->flashcardid = $flashcard->id;
