@@ -31,9 +31,13 @@
  */
 defined('MOODLE_INTERNAL') || die();
 
+require_capability('mod/flashcard:manage', $context);
+
 /* ******************************* Delete a set of records **************************** */
 
 if ($action == 'delete') {
+
+    require_sesskey();
 
     if (!isset($items)) {
         $items = required_param_array('items', PARAM_INT);

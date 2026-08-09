@@ -33,25 +33,28 @@ defined('MOODLE_INTERNAL') || die();
 /* ********************************** initialize a deck *************************************** */
 
 if ($action == 'initialize') {
+    require_sesskey();
     $select = "flashcardid = ? AND userid = ? AND deck = ? ";
     if ($initials = $DB->get_records_select('flashcard_card', $select, array($flashcard->id, $USER->id, $deck))) {
-        $_SESSION['flashcard_initials'] = implode("','", array_keys($initials));
+        $SESSION->flashcard_initials = implode("','", array_keys($initials));
     }
-    unset($_SESSION['flashcard_consumed']);
+    unset($SESSION->flashcard_consumed);
 }
 
 /* ********************************** reset a deck *************************************** */
 
 if ($action == 'reset') {
-    $initials = explode("','", $_SESSION['flashcard_initials']);
+    require_sesskey();
+    $initials = explode("','", $SESSION->flashcard_initials);
     list($usql, $params) = $DB->get_in_or_equal(array_keys($initials));
     $DB->set_field_select('flashcard_card', 'deck', $deck, "id $usql ", $params);
-    unset($_SESSION['flashcard_consumed']);
+    unset($SESSION->flashcard_consumed);
 }
 
 /* ********************************* a card was declared right ************************ */
 
 if ($action == 'igotit') {
+    require_sesskey();
     $card = new StdClass();
     $card->id = required_param('cardid', PARAM_INT);
     $card = $DB->get_record('flashcard_card', array('id' => $card->id));
@@ -60,10 +63,10 @@ if ($action == 'igotit') {
         $card->deck = $deck + 1;
     } else {
         // If in last deck, consume it !!
-        if (array_key_exists('flashcard_consumed', $_SESSION)) {
-            $_SESSION['flashcard_consumed'] .= ','.$card->id;
+        if (isset($SESSION->flashcard_consumed)) {
+            $SESSION->flashcard_consumed .= ','.$card->id;
         } else {
-            $_SESSION['flashcard_consumed'] = $card->id;
+            $SESSION->flashcard_consumed = $card->id;
         }
     }
     $card->lastaccessed = time();
@@ -112,6 +115,7 @@ if ($action == 'igotit') {
 /* **************************** a card was declared wrong **************************** */
 
 if ($action == 'ifailed') {
+    require_sesskey();
     $card = new StdClass();
     $card->id = required_param('cardid', PARAM_INT);
     $card = $DB->get_record('flashcard_card', array('id' => $card->id));
@@ -121,10 +125,10 @@ if ($action == 'ifailed') {
     if (!$DB->update_record('flashcard_card', $card)) {
         print_error('dbcouldnotupdate', 'flashcard', '', get_string('cardinfo', 'flashcard'));
     }
-    if (array_key_exists('flashcard_consumed', $_SESSION)) {
-        $_SESSION['flashcard_consumed'] .= ','.$card->id;
+    if (isset($SESSION->flashcard_consumed)) {
+        $SESSION->flashcard_consumed .= ','.$card->id;
     } else {
-        $_SESSION['flashcard_consumed'] = $card->id;
+        $SESSION->flashcard_consumed = $card->id;
     }
 
     // Note allgood cannot win with a failed card as card do not move.

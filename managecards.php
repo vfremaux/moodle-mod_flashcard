@@ -84,7 +84,7 @@ if ($cards) {
         $command = '<a href="'.$editurl.'">'.$pix.'</a>';
 
         $pix = '<img src="'.$OUTPUT->image_url('t/delete').'" />';
-        $params = array('id' => $id, 'view' => 'manage', 'what' => 'delete', 'items[]' => $card->id);
+        $params = array('id' => $id, 'view' => 'manage', 'what' => 'delete', 'items[]' => $card->id, 'sesskey' => sesskey());
         $deleteurl = new moodle_url('/mod/flashcard/view.php', $params);
         $command .= ' <a href="'.$deleteurl.'">'.$pix.'</a>';
         $table->data[] = array($check, $back, $front, $command);
@@ -94,7 +94,7 @@ if ($cards) {
     echo '<center>';
     echo $OUTPUT->paging_bar($allcards, $page, $pagesize, $url.'?id='.$id.'&view=manage', 'page');
     echo '</center>';
-    echo '<form name="deletecards" action="'.$url.'" method="get">';
+    echo '<form name="deletecards" action="'.$url.'" method="post">';
     echo '<input type="hidden" name="sesskey" value="'.sesskey().'" />';
     echo '<input type="hidden" name="view" value="manage" />';
     echo '<input type="hidden" name="what" value="delete" />';

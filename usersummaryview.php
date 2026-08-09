@@ -26,10 +26,13 @@
  */
 defined('MOODLE_INTERNAL') || die();
 
+require_capability('mod/flashcard:manage', $context);
+
 echo $out; // Deffered header.
 
 // Small controller here...
 if ($action == 'reset') {
+    require_sesskey();
     $userid = required_param('userid', PARAM_INT);
     $DB->delete_records('flashcard_card', array('flashcardid' => $flashcard->id, 'userid' => $userid));
 

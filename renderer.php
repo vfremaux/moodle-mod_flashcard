@@ -128,7 +128,7 @@ class mod_flashcard_renderer extends plugin_renderer_base {
         }
 
         if ($deck > 0) {
-            $params = array('view' => 'play', 'id' => $cm->id, 'deck' => $deck, 'what' => 'initialize');
+            $params = array('view' => 'play', 'id' => $cm->id, 'deck' => $deck, 'what' => 'initialize', 'sesskey' => sesskey());
             $linkurl = new moodle_url('/mod/flashcard/view.php', $params);
             $img = '<img src="'.$decktoreviewurl.'"/>';
             $str .= '<a href="'.$linkurl.'" title="'.get_string('playwithme', 'flashcard').'">'.$img.'</a>';
@@ -136,7 +136,7 @@ class mod_flashcard_renderer extends plugin_renderer_base {
 
         if ($deck < 0) {
             $deck = -$deck;
-            $params = array('view' => 'play', 'id' => $cm->id, 'deck' => $deck, 'what' => 'initialize');
+            $params = array('view' => 'play', 'id' => $cm->id, 'deck' => $deck, 'what' => 'initialize', 'sesskey' => sesskey());
             $linkurl = new moodle_url('/mod/flashcard/view.php', $params);
             $img = '<img src="'.$deckreviewedurl.'"/>';
             $str .= '<a href="'.$linkurl.'" title="'.get_string('reinforce', 'flashcard').'">'.$img.'</a>';
