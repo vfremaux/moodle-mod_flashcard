@@ -111,8 +111,8 @@ function flashcard_cron_task() {
                                 'COURSE' => format_string($coursename),
                                 'URL' => $CFG->wwwroot.'/mod/flashcard/view.php?f='.$flashcard->id
                             );
-                            $notification = flashcard_compile_mail_template('notifyreview', $vars, $u->lang);
-                            $notificationhtml = flashcard_compile_mail_template('notifyreview_html', $vars, $u->lang);
+                            $notification = flashcard_compile_mail_template('notify_review', $vars, $u->lang);
+                            $notificationhtml = flashcard_compile_mail_template('notify_review_html', $vars, $u->lang);
                             if ($CFG->debugsmtp) {
                                 mtrace("Sending Review Notification Mail Notification to ".fullname($u).'<br/>'.$notificationhtml);
                             }
