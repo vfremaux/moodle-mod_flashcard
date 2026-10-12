@@ -65,7 +65,19 @@ class mod_flashcard_mod_form extends moodleform_mod {
         $mform->addGroup($enddatearray, 'endfrom', get_string('endtime', 'flashcard'), ' ', false);
         $mform->disabledIf('endfrom', 'endtimeenable');
 
-        if (!$questions = $DB->get_records_select('question', "qtype='match'", null, 'id, name')) {
+        // Fixing category warnings
+        $sql = "
+            SELECT q.id, q.name, qbe.questioncategoryid AS category
+              FROM {question} q
+              JOIN {question_versions} qv
+                ON qv.questionid = q.id
+              JOIN {question_bank_entries} qbe
+                ON qbe.id = qv.questionbankentryid
+            WHERE q.qtype = :qtype
+            ORDER BY q.id, q.name
+        ";
+
+        if (!$questions = $DB->get_records_sql($sql, ['qtype' => 'match'])) {
             $questions = array();
         } else {
             // Prepared for 1.9 questionbanck compatibility.
